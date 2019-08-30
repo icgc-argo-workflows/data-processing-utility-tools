@@ -1,0 +1,8 @@
+endpoint_url: "https://object.cancercollaboratory.org:9080"
+bucket_name: "argo-test"
+payload_jsons:
+  class: File
+  path: input/dna_alignment.test.json
+s3_credential_file:
+  class: File
+  path: /Users/lxiang/.aws/credentials
