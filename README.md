@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/icgc-argo/dna-seq-processing-tools.svg?branch=master)](https://travis-ci.org/icgc-argo/dna-seq-processing-tools)
+[![Build Status](https://travis-ci.org/icgc-argo/data-processing-utility-tools.svg?branch=master)](https://travis-ci.org/icgc-argo/data-processing-utility-tools)
 # DNA sequencing reads processing
 
 This repository keeps a collect of data processing tools for DNA-Seq analysis. All tools are defined using Common Workflow Language (CWL).
@@ -6,7 +6,7 @@ This repository keeps a collect of data processing tools for DNA-Seq analysis. A
 Eevery tool is self-sufficient, can be independently developed, tested, released and used. This clean isolation allows maximum flexibility, maintainability and portability.
 
 These tools are building blocks to create multi-step data analysis workflows as needed, like the
-workflows here: https://github.com/icgc-argo/dna-seq-processing-wfs
+workflows here: https://github.com/icgc-argo/dna-seq-processing-wfs and here: https://github.com/icgc-argo/variant-calling-wfs
 
 ## Development
 As tools are meant to be independent from each other, arguably a better choice is to
