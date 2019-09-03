@@ -5,4 +5,4 @@ payload_json:
   path: input/dna_alignment.test.json
 s3_credential_file:
   class: File
-  path: /Users/lxiang/.aws/credentials
+  path: input/fake-credentials
