@@ -32,10 +32,7 @@ inputs:
 outputs:
   download_file:
     type: File
+    secondaryFiles: [ ".bai", ".crai", ".tbi", ".idx" ]
     outputBinding:
-      glob: ["*.bam", "*.cram", "*.vcf.gz"]
+      glob: ['*.bam', '*.cram', '*.vcf.gz']
 
-  download_file_index:
-    type: ["null", File]
-    outputBinding:
-      glob: [".bai", ".crai", ".tbi", ".idx"]
