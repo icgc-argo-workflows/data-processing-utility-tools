@@ -121,6 +121,7 @@ def main(args):
         with open("template", "r") as f:
             payload = json.load(f)
 
+        # get inputs of the payload
         lane_seq_list = []
         for res_file in args.input_metadata_aligned_seq:
             lane_seq = {}
@@ -155,7 +156,55 @@ def main(args):
         payload['files']['aligned_seq_index'].pop('_mocked_system_properties', None)
 
     elif args.bundle_type == 'sanger_ssm_call':
-        pass
+        payload_template_url = "https://raw.githubusercontent.com/icgc-argo/argo-metadata-schemas/%s/schemas/_example_docs/50.sanger_ssm_call.01.ok.json" % args.payload_schema_version
+        cmd = "curl -o template --retry 10 %s" % payload_template_url
+        run_cmd(cmd)
+
+        with open("template", "r") as f:
+            payload = json.load(f)
+
+        # get inputs of the payload
+        for res_file in args.input_metadata_aligned_seq:
+            input_file = {}
+            with open(res_file, 'r') as f:
+                res_json = json.load(f)
+            payload['program'] = res_json.get('program')
+
+            input_file['dna_alignment_id'] = res_json.get('id')
+            input_file['files'] = {}
+            input_file['files']['aligned_dna_seq'] = res_json['files']['aligned_seq']
+            input_file['files']['aligned_dna_seq'].update({"bundle_id": res_json.get('id')})
+            if input_file['files']['aligned_dna_seq']['name'].endswith('bam'):
+                input_file['files']['aligned_dna_seq'].update({"secondary_file": '.bai'})
+            elif input_file['files']['aligned_dna_seq']['name'].endswith('cram'):
+                input_file['files']['aligned_dna_seq'].update({"secondary_file": '.crai'})
+            else:
+                sys.exit('\n%s: Unknown file type')
+
+            if res_json.get('info') and res_json.get('info').get('specimen_type'):
+                if 'normal' in res_json.get('info').get('specimen_type').lower():
+                    payload['inputs']['normal'] = input_file
+                else:
+                    payload['inputs']['tumour'] = input_file
+            else:
+                sys.exit('\n%s: Not enough information to proceed!')
+
+        # get files of the payload
+        payload['files']['vcf'].update(get_files_info(args.file_to_upload))
+
+        # get index files of the payload
+        if os.path.exists(args.file_to_upload + ".tbi"):
+            payload['files']['vcf_index'].update(get_files_info(args.file_to_upload + ".tbi"))
+        elif os.path.exists(args.file_to_upload + ".idx"):
+            payload['files']['vcf_index'].update(get_files_info(args.file_to_upload + ".idx"))
+        else:
+            sys.exit('\n%s: Missing index file')
+
+        payload['files']['vcf'].pop('_final_doc', None)
+        payload['files']['vcf'].pop('_mocked_system_properties', None)
+        payload['files']['vcf_index'].pop('_final_doc', None)
+        payload['files']['vcf_index'].pop('_mocked_system_properties', None)
+
 
     else:
         sys.exit('\n%s: Unknown bundle_type')
