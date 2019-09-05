@@ -2,10 +2,9 @@ cwlVersion: v1.1
 class: CommandLineTool
 id: extract-files-from-tarball
 requirements:
-- class: InlineJavascriptRequirement
 - class: ShellCommandRequirement
-- class: NetworkAccess
-  networkAccess: true
+- class: DockerRequirement
+  dockerPull: 'alpine:3.10'
 
 baseCommand: [ tar ]
 
