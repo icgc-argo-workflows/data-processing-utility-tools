@@ -1,12 +1,12 @@
 class: CommandLineTool
 cwlVersion: v1.1
-id: get-payload
+id: ceph-get-payload
 requirements:
 - class: ShellCommandRequirement
 - class: NetworkAccess
   networkAccess: true
 - class: DockerRequirement
-  dockerPull: 'quay.io/icgc-argo/get-payload:get-payload.0.1.0'
+  dockerPull: 'quay.io/icgc-argo/ceph-get-payload:ceph-get-payload.0.1.0'
 
 baseCommand: [ 'ceph-get-payload.py' ]
 
