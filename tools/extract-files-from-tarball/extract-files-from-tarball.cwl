@@ -20,7 +20,7 @@ inputs:
 
 outputs:
   output_files:
-    type: File[]
+    type: File
     secondaryFiles: ['.bai', '.crai', '.tbi', '.idx', 'md5']
     outputBinding:
       glob: ['*$(inputs.pattern)', '*$(inputs.pattern).bam', '*$(inputs.pattern).cram', '*$(inputs.pattern).vcf.gz']
