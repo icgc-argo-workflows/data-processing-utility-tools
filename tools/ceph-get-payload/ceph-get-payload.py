@@ -46,10 +46,17 @@ def main(args):
     else:
         sys.exit('Unknown or unimplemented bundle_type: %s' % args.bundle_type)
 
-    p = run_command('aws --endpoint-url %s s3 cp s3://%s/%s/ . --recursive --exclude "*" --include "*.json"' % (
+    ret = run_command("aws --endpoint-url %s s3 ls s3://%s/%s/  --recursive | grep 'json' | sort | tail -n 1 | awk '{print $4}'" % (
         args.endpoint_url,
         args.bucket_name,
         object_key))
+
+    recent_payload = ret.stdout.decode('ascii').rstrip('\n')
+    
+    p = run_command('aws --endpoint-url %s s3 cp s3://%s/%s .' % (
+        args.endpoint_url,
+        args.bucket_name,
+        recent_payload))
 
     if p.returncode != 0:
         sys.exit('Get payload failed. Err: %s' % p.stderr)
