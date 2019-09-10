@@ -33,7 +33,7 @@ inputs:
       prefix: -c
   upload_file:
     type: File
-    secondaryFiles: [ ".bai?", ".crai?", ".tbi?" ]
+    secondaryFiles: [ ".bai?", ".crai?", ".tbi?", ".idx?" ]
     inputBinding:
       prefix: -f
 
