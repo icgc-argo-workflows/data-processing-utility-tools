@@ -1,0 +1,4 @@
+tarball:
+  path: input/test.caveman.tgz
+  class: File
+pattern: flagged.muts
