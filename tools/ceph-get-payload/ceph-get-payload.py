@@ -46,7 +46,7 @@ def main(args):
     else:
         sys.exit('Unknown or unimplemented bundle_type: %s' % args.bundle_type)
 
-    ret = run_command("aws --endpoint-url %s s3 ls s3://%s/%s/  --recursive | grep 'json' | sort | tail -n 1 | awk '{print $4}'" % (
+    ret = run_command("aws --endpoint-url %s s3 ls s3://%s/%s/  --recursive | grep '\.json$' | sort | tail -n 1 | awk '{print $4}'" % (
         args.endpoint_url,
         args.bucket_name,
         object_key))
