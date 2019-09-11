@@ -1,0 +1,8 @@
+endpoint_url: "https://object.cancercollaboratory.org:9080"
+bucket_name: "argo-test"
+payload_json:
+  class: File
+  path: input/sanger_ssm_call.test.json
+s3_credential_file:
+  class: File
+  path: input/fake-credentials
