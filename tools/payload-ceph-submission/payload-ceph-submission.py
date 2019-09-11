@@ -69,7 +69,7 @@ def main(args):
                                         payload['info']['sample_submitter_id']+'.'+specimen_type,
                                         payload['type'])
 
-    if payload['type'] in ['sequencing_experiment', 'dna_alignment_qc']:
+    if payload['type'] in ['sequencing_experiment', 'dna_alignment_qc', 'sanger_ssm_call']:
         payload_object = os.path.join(payload_bucket_basepath, payload_fname)
         if payload['type'] == 'sequencing_experiment':
             payload.pop('info', None)  # sequencing_experiment does not need it
