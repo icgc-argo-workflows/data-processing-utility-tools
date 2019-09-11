@@ -6,7 +6,7 @@ requirements:
 - class: NetworkAccess
   networkAccess: true
 - class: DockerRequirement
-  dockerPull: 'quay.io/icgc-argo/s3-upload:s3-upload.0.1.2'
+  dockerPull: 'quay.io/icgc-argo/s3-upload:s3-upload.0.1.3'
 
 baseCommand: [ 's3-upload.py' ]
 
@@ -33,7 +33,7 @@ inputs:
       prefix: -c
   upload_file:
     type: File
-    secondaryFiles: [ ".bai?", ".crai?" ]
+    secondaryFiles: [ ".bai?", ".crai?", ".tbi?", ".idx?" ]
     inputBinding:
       prefix: -f
 

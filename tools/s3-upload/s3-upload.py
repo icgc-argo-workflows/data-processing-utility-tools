@@ -50,7 +50,7 @@ def main(args):
     f = args.upload_file
     filename_to_file[os.path.basename(f)] = f
     # add secondary files if any
-    for sf in ('.bai', '.crai'):
+    for sf in ('.bai', '.crai', '.tbi', '.idx'):
         sfile = "%s%s" % (f, sf)
         if os.path.isfile(sfile):
             sfile_filename_to_file[os.path.basename(sfile)] = sfile
@@ -133,6 +133,34 @@ def main(args):
             filename = payload['files'][object]['name']
             object_key = "%s/dna_alignment/%s/%s/%s" % (path_prefix,
                                                         bam_cram,
+                                                        bundle_id,
+                                                        object_id)
+
+            file_to_upload = filename_to_file[filename]
+            p = run_command('aws --endpoint-url %s s3 cp %s s3://%s/%s' % (
+                    args.endpoint_url,
+                    file_to_upload,
+                    args.bucket_name,
+                    object_key)
+                )
+
+            if p.returncode != 0:
+                sys.exit('Object upload failed: %s; err: %s' % (object_key, p.stderr))
+
+    elif args.bundle_type == 'sanger_ssm_call':
+        """
+        payload_object_key = "%s/dna_alignment/%s/%s.json" % (
+            path_prefix,
+            bam_cram,
+            bundle_id)
+        if not object_exists(args.endpoint_url, 's3://%s/%s' % (args.bucket_name, payload_object_key)):
+            sys.exit('Not able to access object store, or payload object does not exist: s3://%s/%s' % (args.bucket_name, payload_object_key))
+        """
+
+        for object in payload['files']:
+            object_id = payload['files'][object]['object_id']
+            filename = payload['files'][object]['name']
+            object_key = "%s/sanger_ssm_call/%s/%s" % (path_prefix,
                                                         bundle_id,
                                                         object_id)
 
