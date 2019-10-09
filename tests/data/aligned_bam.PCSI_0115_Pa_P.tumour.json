@@ -1,6 +1,6 @@
 {
   "type": "dna_alignment",
-  "program": "PACA-CA",
+  "program_id": "PACA-CA",
   "inputs": {
     "reference_genome": {},
     "lane_seq": [
@@ -10,7 +10,7 @@
           "lane_seq": {
             "type": "lane_seq_submission.bam_file.data_object",
             "name": "121031_h239_0164_AC1F4JACXX_2_NoIndex.lane.bam",
-            "local_path": "/var/lib/cwl/stgb4d7da9f-8028-40dc-a655-6fadafa9567b/121031_h239_0164_AC1F4JACXX_2_NoIndex.lane.bam",
+            "path": "/var/lib/cwl/stgb4d7da9f-8028-40dc-a655-6fadafa9567b/121031_h239_0164_AC1F4JACXX_2_NoIndex.lane.bam",
             "size": 41577816850,
             "checksum": "07e99807439fbf9e19aeaaa1e07f2aba",
             "checksum_type": "md5",
@@ -46,7 +46,7 @@
     "aligned_seq": {
       "type": "dna_alignment.aligned_seq.data_object",
       "name": "fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam",
-      "local_path": "/var/lib/cwl/stg69f56738-35fa-4fd1-8b76-50ffc05d190a/fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam",
+      "path": "/var/lib/cwl/stg69f56738-35fa-4fd1-8b76-50ffc05d190a/fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam",
       "size": 37323294413,
       "checksum": "3e598a9bf0f2641be9ab4a2346b3cd0a",
       "checksum_type": "md5",
@@ -55,7 +55,7 @@
     "aligned_seq_index": {
       "type": "dna_alignment.aligned_seq_index.data_object",
       "name": "fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam.bai",
-      "local_path": "/var/lib/cwl/stg69f56738-35fa-4fd1-8b76-50ffc05d190a/fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam.bai",
+      "path": "/var/lib/cwl/stg69f56738-35fa-4fd1-8b76-50ffc05d190a/fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam.bai",
       "size": 8693224,
       "checksum": "5a030ea86b12f81b87babcc4051422ca",
       "checksum_type": "md5",
@@ -66,8 +66,8 @@
   "info": {
     "library_strategy": "WXS",
     "program_id": "PACA-CA",
-    "donor_submitter_id": "PCSI_0115",
-    "sample_submitter_id": "PCSI_0115_Pa_P",
+    "submitter_donor_id": "PCSI_0115",
+    "submitter_sample_id": "PCSI_0115_Pa_P",
     "specimen_type": "Primary tumour - solid tissue"
   }
 }

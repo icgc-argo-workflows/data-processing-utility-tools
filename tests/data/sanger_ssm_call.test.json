@@ -1,6 +1,6 @@
 {
   "type": "sanger_ssm_call",
-  "program": "PACA-CA",
+  "program_id": "PACA-CA",
   "inputs": {
     "tumour": {
       "dna_alignment_id": "0dac8a7a-6a02-417c-8e7b-7010fe4244cf",
@@ -8,7 +8,7 @@
         "aligned_dna_seq": {
           "type": "dna_alignment.aligned_seq.data_object",
           "name": "fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam",
-          "local_path": "/var/lib/cwl/stg69f56738-35fa-4fd1-8b76-50ffc05d190a/fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam",
+          "path": "/var/lib/cwl/stg69f56738-35fa-4fd1-8b76-50ffc05d190a/fb35bb4c-6ff6-5133-abea-b67855d45379.1.20190823.wgs.grch38.bam",
           "size": 37323294413,
           "checksum": "3e598a9bf0f2641be9ab4a2346b3cd0a",
           "checksum_type": "md5",
@@ -24,7 +24,7 @@
         "aligned_dna_seq": {
           "type": "dna_alignment.aligned_seq.data_object",
           "name": "fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam",
-          "local_path": "/var/lib/cwl/stg9b4a93e9-0a1b-4eaf-8435-3e207e94b2df/fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam",
+          "path": "/var/lib/cwl/stg9b4a93e9-0a1b-4eaf-8435-3e207e94b2df/fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam",
           "size": 10158383715,
           "checksum": "d390082ed2cc735ea76921e18ad0bc8a",
           "checksum_type": "md5",
@@ -59,7 +59,7 @@
     "vcf": {
       "type": "sanger_ssm_call.vcf.data_object",
       "name": "PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz",
-      "local_path": "/var/lib/cwl/stgb7dc8ee5-05e2-498f-8618-7f340cc17641/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz",
+      "path": "/var/lib/cwl/stgb7dc8ee5-05e2-498f-8618-7f340cc17641/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz",
       "size": 0,
       "checksum": "d41d8cd98f00b204e9800998ecf8427e",
       "checksum_type": "md5",
@@ -68,7 +68,7 @@
     "vcf_index": {
       "type": "sanger_ssm_call.vcf_index.data_object",
       "name": "PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.tbi",
-      "local_path": "/var/lib/cwl/stgb7dc8ee5-05e2-498f-8618-7f340cc17641/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.tbi",
+      "path": "/var/lib/cwl/stgb7dc8ee5-05e2-498f-8618-7f340cc17641/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.tbi",
       "size": 0,
       "checksum": "d41d8cd98f00b204e9800998ecf8427e",
       "checksum_type": "md5",
@@ -79,8 +79,8 @@
   "info": {
     "library_strategy": "WXS",
     "program_id": "PACA-CA",
-    "donor_submitter_id": "PCSI_0115",
-    "sample_submitter_id": "PCSI_0115_Pa_P",
+    "submitter_donor_id": "PCSI_0115",
+    "submitter_sample_id": "PCSI_0115_Pa_P",
     "specimen_type": "Primary tumour - solid tissue"
   }
 }

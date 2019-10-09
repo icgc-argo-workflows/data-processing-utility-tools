@@ -1,6 +1,6 @@
 {
   "type": "dna_alignment",
-  "program": "PACA-CA",
+  "program_id": "PACA-CA",
   "inputs": {
     "reference_genome": {},
     "lane_seq": [
@@ -10,7 +10,7 @@
           "lane_seq": {
             "type": "lane_seq_submission.bam_file.data_object",
             "name": "111027_SN203_0127_BC08J8ACXX_7_TTAGGC.lane.bam",
-            "local_path": "/var/lib/cwl/stg250be351-fe29-41c3-8374-d076e04e0966/111027_SN203_0127_BC08J8ACXX_7_TTAGGC.lane.bam",
+            "path": "/var/lib/cwl/stg250be351-fe29-41c3-8374-d076e04e0966/111027_SN203_0127_BC08J8ACXX_7_TTAGGC.lane.bam",
             "size": 11034321375,
             "checksum": "376aee4dfa466c76365b16abed00c069",
             "checksum_type": "md5",
@@ -46,7 +46,7 @@
     "aligned_seq": {
       "type": "dna_alignment.aligned_seq.data_object",
       "name": "fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam",
-      "local_path": "/var/lib/cwl/stg9b4a93e9-0a1b-4eaf-8435-3e207e94b2df/fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam",
+      "path": "/var/lib/cwl/stg9b4a93e9-0a1b-4eaf-8435-3e207e94b2df/fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam",
       "size": 10158383715,
       "checksum": "d390082ed2cc735ea76921e18ad0bc8a",
       "checksum_type": "md5",
@@ -55,7 +55,7 @@
     "aligned_seq_index": {
       "type": "dna_alignment.aligned_seq_index.data_object",
       "name": "fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam.bai",
-      "local_path": "/var/lib/cwl/stg9b4a93e9-0a1b-4eaf-8435-3e207e94b2df/fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam.bai",
+      "path": "/var/lib/cwl/stg9b4a93e9-0a1b-4eaf-8435-3e207e94b2df/fac431ea-807a-5566-9b71-f09df137b194.1.20190823.wgs.grch38.bam.bai",
       "size": 7720184,
       "checksum": "fea2ecc25b43a20b771cc4f4af437b33",
       "checksum_type": "md5",
@@ -66,8 +66,8 @@
   "info": {
     "library_strategy": "WXS",
     "program_id": "PACA-CA",
-    "donor_submitter_id": "PCSI_0115",
-    "sample_submitter_id": "PCSI_0115_Ly_R",
+    "submitter_donor_id": "PCSI_0115",
+    "submitter_sample_id": "PCSI_0115_Ly_R",
     "specimen_type": "Normal - blood derived"
   }
 }

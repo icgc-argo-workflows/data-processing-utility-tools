@@ -1,8 +1,8 @@
 {
   "type": "sequencing_experiment",
-  "program": "PACA-CA",
+  "program_id": "PACA-CA",
   "submitter_id": "TEST-EXP-135",
-  "sample_submitter_id": "PCSI_0115_Pa_P",
+  "submitter_sample_id": "PCSI_0115_Pa_P",
   "sequencing_center": "",
   "platform": "ILLUMINA",
   "platform_model": "",
@@ -10,7 +10,7 @@
   "sequencing_date": "",
   "read_group_count": 1,
   "specimen_type": "Primary tumour - solid tissue",
-  "donor_submitter_id": "PCSI_0115",
+  "submitter_donor_id": "PCSI_0115",
   "read_groups": [
     {
       "type": "read_group",
