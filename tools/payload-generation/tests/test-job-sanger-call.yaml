@@ -1,10 +1,10 @@
 payload_schema_version: 0.1.0-rc.1
 bundle_type: "sanger_ssm_call"
-input_metadata_aligned_seq:
+data_metadata_aligned_seq:
   - class: File
-    path: input/aligned_bam.PCSI_0115_Ly_R.normal.json
+    path: data/aligned_bam.PCSI_0115_Ly_R.normal.json
   - class: File
-    path: input/aligned_bam.PCSI_0115_Pa_P.tumour.json
+    path: data/aligned_bam.PCSI_0115_Pa_P.tumour.json
 file_to_upload:
   class: File
-  path: input/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz
+  path: data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz

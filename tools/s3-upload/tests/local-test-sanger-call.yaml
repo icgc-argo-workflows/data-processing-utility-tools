@@ -3,10 +3,10 @@ bucket_name: "argo-test"
 bundle_type: "sanger_ssm_call"
 payload_jsons:
 - class: File
-  path: input/sanger_ssm_call.test.json
+  path: data/sanger_ssm_call.test.json
 s3_credential_file:
   class: File
   path: /Users/lxiang/.aws/credentials
 upload_file:
   class: File
-  path: input/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz
+  path: data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz

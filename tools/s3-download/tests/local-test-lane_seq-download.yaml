@@ -2,7 +2,7 @@ endpoint_url: "https://object.cancercollaboratory.org:9080"
 bucket_name: "argo-test"
 payload_json:
   class: File
-  path: input/lane_seq_submission.test.json
+  path: data/lane_seq_submission.test.json
 s3_credential_file:
   class: File
-  path: input/fake-credentials
+  path: data/fake-credentials
