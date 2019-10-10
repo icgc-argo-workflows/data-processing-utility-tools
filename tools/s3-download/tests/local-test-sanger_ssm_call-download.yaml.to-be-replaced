@@ -5,4 +5,4 @@ payload_json:
   path: data/sanger_ssm_call.test.json
 s3_credential_file:
   class: File
-  path: data/fake-credentials
+  path: /Users/junjun/credentials

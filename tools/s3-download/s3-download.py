@@ -35,19 +35,19 @@ def main(args):
 
     path_prefix = "PCAWG2/%s/%s/%s/%s.%s" % (
                                                 payload['info']['library_strategy'],
-                                                payload['program'],
-                                                payload['info']['donor_submitter_id'],
-                                                payload['info']['sample_submitter_id'],
+                                                payload['program_id'],
+                                                payload['info']['submitter_donor_id'],
+                                                payload['info']['submitter_sample_id'],
                                                 'normal' if 'normal' in payload['info']['specimen_type'].lower() else 'tumour'
                                             )
 
     if payload['type'] == 'lane_seq_submission':
-        read_group_submitter_id = payload['inputs']['read_group_submitter_id']
+        submitter_read_group_id = payload['inputs']['submitter_read_group_id']
 
         """ don't do this for now
         payload_object_key = "%s/lane_seq_submission/%s/%s.json" % (
             path_prefix,
-            read_group_submitter_id,
+            submitter_read_group_id,
             bundle_id)
         if not object_exists(args.endpoint_url, 's3://%s/%s' % (args.bucket_name, payload_object_key)):
             sys.exit('Not able to access object store, or payload object does not exist: s3://%s/%s' % (args.bucket_name, payload_object_key))
@@ -57,7 +57,7 @@ def main(args):
             object_id = payload['files'][object]['object_id']
             filename = payload['files'][object]['name']
             object_key = "%s/lane_seq_submission/%s/%s/%s" % (path_prefix,
-                                                                read_group_submitter_id,
+                                                                submitter_read_group_id,
                                                                 bundle_id,
                                                                 object_id)
 
