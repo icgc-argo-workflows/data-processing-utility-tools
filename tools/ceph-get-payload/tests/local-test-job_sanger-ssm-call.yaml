@@ -1,11 +1,11 @@
 s3_credential_file:
   class: File
-  path: input/fake-credentials
+  path: data/fake-credentials
 endpoint_url: "https://object.cancercollaboratory.org:9080"
 bucket_name: "argo-test"
 bundle_type: "sanger_ssm_call"
 library_strategy: "WXS"
 program: "BRCA-UK"
-donor_submitter_id: "CGP_donor_1069291"
-sample_submitter_id: "PD3890a"
+submitter_donor_id: "CGP_donor_1069291"
+submitter_sample_id: "PD3890a"
 specimen_type: "Primary tumour - solid tissue"

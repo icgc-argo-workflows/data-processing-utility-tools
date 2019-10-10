@@ -1,11 +1,11 @@
 metadata:
   class: File
-  location: input/PCSI_0115_Pa_P.tumour.sequencing_experiment.json
+  location: data/PCSI_0115_Pa_P.tumour.sequencing_experiment.json
 payload:
   class: File
-  path: input/sanger_ssm_call.PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.json
+  path: data/sanger_ssm_call.PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.json
 credentials_file:
   class: File
-  path: input/fake-credentials
+  path: data/fake-credentials
 endpoint_url: "https://object.cancercollaboratory.org:9080"
 bucket_name: "argo-test"
