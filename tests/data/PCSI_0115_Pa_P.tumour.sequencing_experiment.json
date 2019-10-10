@@ -1,7 +1,7 @@
 {
   "type": "sequencing_experiment",
   "program_id": "PACA-CA",
-  "submitter_id": "TEST-EXP-135",
+  "submitter_sequencing_experiment_id": "TEST-EXP-135",
   "submitter_sample_id": "PCSI_0115_Pa_P",
   "sequencing_center": "",
   "platform": "ILLUMINA",
