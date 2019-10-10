@@ -7,7 +7,10 @@ import git
 
 repo = git.Repo(search_parent_directories=True)
 is_travis = os.environ.get('TRAVIS')
-branch_name = repo.active_branch.name
+if is_travis:
+    branch_name = os.environ.get('TRAVIS_BRANCH')
+else:
+    branch_name = repo.active_branch.name
 
 
 def pytest_generate_tests(metafunc):
