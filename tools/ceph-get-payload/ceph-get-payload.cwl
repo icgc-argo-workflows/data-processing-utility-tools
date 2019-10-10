@@ -6,7 +6,7 @@ requirements:
 - class: NetworkAccess
   networkAccess: true
 - class: DockerRequirement
-  dockerPull: 'quay.io/icgc-argo/ceph-get-payload:ceph-get-payload.0.1.0'
+  dockerPull: 'quay.io/icgc-argo/ceph-get-payload:ceph-get-payload.0.1.1'
 
 baseCommand: [ 'ceph-get-payload.py' ]
 
@@ -27,7 +27,7 @@ inputs:
     type: File
     inputBinding:
       prefix: -c
-  read_group_submitter_id:
+  submitter_read_group_id:
     type: string?
     inputBinding:
       prefix: -r
@@ -39,19 +39,19 @@ inputs:
     type: string
     inputBinding:
       prefix: -l
-  program:
+  program_id:
     type: string
     inputBinding:
       prefix: -p
-  donor_submitter_id:
+  submitter_donor_id:
     type: string
     inputBinding:
       prefix: -d
-  sample_submitter_id:
+  submitter_sample_id:
     type: string
     inputBinding:
       prefix: -s
-  specimen_type:
+  tumour_normal_designation:
     type: string
     inputBinding:
       prefix: -t

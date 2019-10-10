@@ -19,18 +19,18 @@ def main(args):
 
     path_prefix = "PCAWG2/%s/%s/%s/%s.%s" % (
                                                 args.library_strategy,
-                                                args.program,
-                                                args.donor_submitter_id,
-                                                args.sample_submitter_id,
-                                                'normal' if 'normal' in args.specimen_type.lower() else 'tumour'
+                                                args.program_id,
+                                                args.submitter_donor_id,
+                                                args.submitter_sample_id,
+                                                'normal' if 'normal' in args.tumour_normal_designation.lower() else 'tumour'
                                             )
 
     if args.bundle_type in ['lane_seq_submission', 'lane_seq_qc']:
-        if not args.read_group_submitter_id:
-            sys.exit("Missing the information of read_group_submitter_id!")
-        read_group_submitter_id = args.read_group_submitter_id
+        if not args.submitter_read_group_id:
+            sys.exit("Missing the information of submitter_read_group_id!")
+        submitter_read_group_id = args.submitter_read_group_id
 
-        object_key = "%s/lane_seq_submission/%s" % (path_prefix, read_group_submitter_id)
+        object_key = "%s/lane_seq_submission/%s" % (path_prefix, submitter_read_group_id)
 
     elif args.bundle_type == 'dna_alignment':
         if not args.seq_format:
@@ -68,13 +68,13 @@ if __name__ == "__main__":
     parser.add_argument("-n", "--bucket-name", dest="bucket_name", type=str)
     parser.add_argument("-y", "--bundle-type", dest="bundle_type", type=str)
     parser.add_argument("-c", "--s3-credential-file", dest="s3_credential_file", type=str)
-    parser.add_argument("-r", "--read-group-submitter-id", dest="read_group_submitter_id", type=str)
+    parser.add_argument("-r", "--submitter-read-group-id", dest="submitter_read_group_id", type=str)
     parser.add_argument("-f", "--seq-format", dest="seq_format", type=str)
     parser.add_argument("-l", "--library-strategy", dest="library_strategy", type=str)
-    parser.add_argument("-p", "--program", dest="program", type=str)
-    parser.add_argument("-d", "--donor-submitter-id", dest="donor_submitter_id", type=str)
-    parser.add_argument("-s", "--sample-submitter-id", dest="sample_submitter_id", type=str)
-    parser.add_argument("-t", "--specimen-type", dest="specimen_type", type=str)
+    parser.add_argument("-p", "--program-id", dest="program_id", type=str)
+    parser.add_argument("-d", "--submitter-donor-id", dest="submitter_donor_id", type=str)
+    parser.add_argument("-s", "--submitter-sample-id", dest="submitter_sample_id", type=str)
+    parser.add_argument("-t", "--tumour-normal-designation", dest="tumour_normal_designation", type=str)
 
     args = parser.parse_args()
 
