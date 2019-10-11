@@ -1,4 +1,4 @@
-payload_schema_version: 0.1.0-rc.1
+payload_schema_version: 0.1.0-rc.2
 bundle_type: "dna_alignment"
 data_metadata_aligned_seq:
   - class: File

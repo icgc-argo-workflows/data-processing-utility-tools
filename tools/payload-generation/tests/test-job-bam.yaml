@@ -1,4 +1,4 @@
-payload_schema_version: 0.1.0-rc.1
+payload_schema_version: 0.1.0-rc.2
 data_metadata_lane_seq:
   class: File
   location: data/seq_rg.json
