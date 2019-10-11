@@ -35,15 +35,15 @@ inputs:
     inputBinding:
       prefix: -a
   wf_short_name:
-    type: string
+    type: string?
     inputBinding:
       prefix: -c
   wf_version:
-    type: string
+    type: string?
     inputBinding:
       prefix: -v
   data_type:
-    type: string
+    type: string?
     inputBinding:
       prefix: -d
 

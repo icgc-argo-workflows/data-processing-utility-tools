@@ -272,20 +272,20 @@ def main(args):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("-t", "--bundle_type", dest="bundle_type",
+    parser.add_argument("-t", "--bundle_type", dest="bundle_type", type=str,
                         help="Payload type")
     parser.add_argument("-p", "--payload_schema_version", dest="payload_schema_version", help="release version of payload schema")
     parser.add_argument("-m", "--input_metadata_lane_seq", dest="input_metadata_lane_seq",
                         help="json file containing experiment, read_group and file information for sequence preprocessing")
-    parser.add_argument("-f", "--file_to_upload", dest="file_to_upload", help="File to upload to server")
+    parser.add_argument("-f", "--file_to_upload", dest="file_to_upload", type=str, help="File to upload to server")
     parser.add_argument("-a", "--input_metadata_aligned_seq", dest="input_metadata_aligned_seq", help="Analysis of lane seq submission",
                         type=str, nargs='+')
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name",
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
                         help="workflow short name")
-    parser.add_argument("-v", "--wf_version", dest="wf_version",
+    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
                         help="workflow version")
-    parser.add_argument("-d", "--data_type", dest="data_type",
-                        help="vcf data type")
+    parser.add_argument("-d", "--data_type", dest="data_type", type=str,
+                        help="data type")
     args = parser.parse_args()
 
     main(args)
