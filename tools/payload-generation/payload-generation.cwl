@@ -8,7 +8,7 @@ requirements:
 - class: InlineJavascriptRequirement
 - class: ShellCommandRequirement
 - class: DockerRequirement
-  dockerPull: 'quay.io/icgc-argo/payload-generation:payload-generation.0.1.3'
+  dockerPull: 'quay.io/icgc-argo/payload-generation:payload-generation.0.1.4'
 
 baseCommand: [ 'payload-generation.py' ]
 
@@ -34,7 +34,18 @@ inputs:
     type: File[]?
     inputBinding:
       prefix: -a
-
+  wf_short_name:
+    type: string?
+    inputBinding:
+      prefix: -c
+  wf_version:
+    type: string?
+    inputBinding:
+      prefix: -v
+  data_type:
+    type: string?
+    inputBinding:
+      prefix: -d
 
 
 outputs:

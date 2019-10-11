@@ -1,5 +1,5 @@
-payload_schema_version: 0.1.0-rc.1
-data_metadata_lane_seq:
+payload_schema_version: 0.1.0-rc.2
+input_metadata_lane_seq:
   class: File
   location: data/seq_rg.json
 bundle_type: "lane_seq_submission"
