@@ -73,12 +73,19 @@ def main(args):
 
     bundle_id = payload['id']
 
+    if 'normal' in payload['info']['tumour_normal_designation'].lower():
+        tumour_or_normal = 'normal'
+    elif 'tumour' in payload['info']['tumour_normal_designation'].lower():
+        tumour_or_normal = 'tumour'
+    else:
+        sys.exit("tumour_normal_designation info incorrect: %s" % payload['info']['tumour_normal_designation'])
+
     path_prefix = "PCAWG2/%s/%s/%s/%s.%s" % (
                                                 payload['info']['library_strategy'],
                                                 payload['program_id'],
                                                 payload['info']['submitter_donor_id'],
                                                 payload['info']['submitter_sample_id'],
-                                                'normal' if 'normal' in payload['info']['specimen_type'].lower() else 'tumour'
+                                                tumour_or_normal
                                             )
 
     if args.bundle_type == 'lane_seq_submission':
