@@ -75,19 +75,19 @@ def get_files_info(file_to_upload, filename=None):
     return payload_files
 
 def run_cmd(cmd):
-    stdout, stderr, p, success = '', '', None, True
+    p, success = None, True
     try:
-        p = subprocess.Popen([cmd],
+        p = subprocess.run([cmd],
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              shell=True)
-        p.communicate()
     except Exception as e:
         print('Execution failed: %s' % e)
         success = False
 
     if p and p.returncode != 0:
-        print('Execution failed, none zero code returned.')
+        print('\nError occurred, return code: %s. Details: %s' %
+              (p.returncode, p.stderr.decode("utf-8")), file=sys.stderr)
         success = False
 
     if not success:
@@ -268,7 +268,7 @@ def main(args):
 
     payload_fname = ".".join([args.bundle_type, os.path.basename(args.file_to_upload), 'json'])
     with open(payload_fname, 'w') as f:
-        f.write(json.dumps(payload))
+        f.write(json.dumps(payload, indent=2))
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -282,9 +282,9 @@ if __name__ == "__main__":
                         type=str, nargs='+')
     parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
                         help="workflow short name")
-    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
+    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str, choices=['sanger-wxs', 'sanger-wgs', 'broad-mutect2'],
                         help="workflow version")
-    parser.add_argument("-d", "--data_type", dest="data_type", type=str,
+    parser.add_argument("-d", "--data_type", dest="data_type", type=str, choices=['snv', 'indel', 'snv-indel', 'cnv', 'sv'],
                         help="data type")
     args = parser.parse_args()
 
