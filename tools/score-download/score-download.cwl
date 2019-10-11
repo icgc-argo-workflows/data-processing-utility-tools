@@ -9,7 +9,7 @@ requirements:
 - class: InitialWorkDirRequirement
   listing: $(inputs.seq_files)
 - class: DockerRequirement
-  dockerPull: 'quay.io/icgc-argo/score-download:score-download.0.1.4'
+  dockerPull: 'quay.io/icgc-argo/score-download:score-download.0.1.5'
 
 baseCommand: [ 'score-download.py' ]
 

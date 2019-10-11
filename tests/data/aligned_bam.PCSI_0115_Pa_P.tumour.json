@@ -68,6 +68,6 @@
     "program_id": "PACA-CA",
     "submitter_donor_id": "PCSI_0115",
     "submitter_sample_id": "PCSI_0115_Pa_P",
-    "specimen_type": "Primary tumour - solid tissue"
+    "tumour_normal_designation": "Primary tumour"
   }
 }
