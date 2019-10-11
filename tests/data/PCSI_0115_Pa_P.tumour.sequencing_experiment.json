@@ -9,7 +9,7 @@
   "library_strategy": "WXS",
   "sequencing_date": "",
   "read_group_count": 1,
-  "specimen_type": "Primary tumour - solid tissue",
+  "tumour_normal_designation": "Primary tumour",
   "submitter_donor_id": "PCSI_0115",
   "read_groups": [
     {
