@@ -234,7 +234,7 @@ def main(args):
                 else:
                     payload['inputs']['tumour'] = input_file
                     uuid_prefix = get_uuid5(res_json.get('info').get('program_id'), res_json.get('info').get('submitter_sample_id'))
-                    filename = '.'.join([uuid_prefix, res_json.get('info').get('library_strategy'),
+                    filename = '.'.join([uuid_prefix, res_json.get('info').get('library_strategy').lower(),
                                          datetime.date.today().strftime("%Y%m%d"),
                                          args.wf_short_name, args.wf_version, 'somatic',
                                          args.data_type, 'vcf', 'gz'])
