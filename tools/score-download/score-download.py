@@ -33,7 +33,7 @@ def main(args):
         with open(args.file_tsv) as f:
             rd = csv.DictReader(f, delimiter="\t")
             for row in rd:
-                files_to_download.add((row['local_path'], row['name']))
+                files_to_download.add((row['path'], row['name']))
 
         for f in files_to_download:
             file_uri, file_name = f
