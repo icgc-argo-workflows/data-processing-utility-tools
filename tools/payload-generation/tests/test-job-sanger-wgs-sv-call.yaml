@@ -7,7 +7,7 @@ input_metadata_aligned_seq:
     path: data/aligned_bam.PCSI_0115_Pa_P.tumour.json
 file_to_upload:
   class: File
-  path: data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz
+  path: data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.annot.vcf.gz
 wf_short_name: sanger-wgs
 wf_version: 0.1.1
-data_type: snv
+data_type: sv
