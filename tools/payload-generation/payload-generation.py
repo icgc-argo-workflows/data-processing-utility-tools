@@ -280,9 +280,9 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--file_to_upload", dest="file_to_upload", type=str, help="File to upload to server")
     parser.add_argument("-a", "--input_metadata_aligned_seq", dest="input_metadata_aligned_seq", help="Analysis of lane seq submission",
                         type=str, nargs='+')
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['sanger-wxs', 'sanger-wgs', 'broad-mutect2'],
                         help="workflow short name")
-    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str, choices=['sanger-wxs', 'sanger-wgs', 'broad-mutect2'],
+    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
                         help="workflow version")
     parser.add_argument("-d", "--data_type", dest="data_type", type=str, choices=['snv', 'indel', 'snv-indel', 'cnv', 'sv'],
                         help="data type")
