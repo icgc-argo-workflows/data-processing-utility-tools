@@ -9,19 +9,19 @@ import uuid
 
 
 def run_cmd(cmd):
-    stdout, stderr, p, success = '', '', None, True
+    p, success = None, True
     try:
-        p = subprocess.Popen(cmd,
+        p = subprocess.run(cmd,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              shell=True)
-        p.communicate()
     except Exception as e:
         print('Execution failed: %s' % e)
         success = False
 
     if p and p.returncode != 0:
-        print('Execution failed, none zero code returned. %s' % p.returncode)
+        print('\nError occurred, return code: %s. Details: %s' % \
+                (p.returncode, p.stderr.decode("utf-8")), file=sys.stderr)
         success = False
 
     if not success:
@@ -48,10 +48,10 @@ def main(args):
     # generate info field
     payload['info'] = {
         "library_strategy": metadata.get("library_strategy", None),
-        "program_id": metadata.get("program", None),
-        "donor_submitter_id": metadata.get("donor_submitter_id", None),
-        "sample_submitter_id": metadata.get("sample_submitter_id", None),
-        "specimen_type": metadata.get("specimen_type", None)
+        "program_id": metadata.get("program_id", None),
+        "submitter_donor_id": metadata.get("submitter_donor_id", None),
+        "submitter_sample_id": metadata.get("submitter_sample_id", None),
+        "tumour_normal_designation": metadata.get("tumour_normal_designation", None)
     }
 
     # generate object_id
@@ -61,12 +61,12 @@ def main(args):
     payload_fname = ".".join([payload['id'], 'json'])
 
     # payload bucket basepath
-    specimen_type = 'normal' if 'normal' in metadata.get("specimen_type", '').lower() else 'tumour'
+    tumour_normal_designation = 'normal' if 'normal' in metadata.get("tumour_normal_designation", '').lower() else 'tumour'
     payload_bucket_basepath = os.path.join(args.bucket_name, 'PCAWG2',
                                         payload['info']['library_strategy'],
                                         payload['info']['program_id'],
-                                        payload['info']['donor_submitter_id'],
-                                        payload['info']['sample_submitter_id']+'.'+specimen_type,
+                                        payload['info']['submitter_donor_id'],
+                                        payload['info']['submitter_sample_id']+'.'+tumour_normal_designation,
                                         payload['type'])
 
     if payload['type'] in ['sequencing_experiment', 'dna_alignment_qc', 'sanger_ssm_call']:
@@ -74,7 +74,7 @@ def main(args):
         if payload['type'] == 'sequencing_experiment':
             payload.pop('info', None)  # sequencing_experiment does not need it
     elif payload['type'] in ['lane_seq_submission', 'lane_seq_qc']:
-        payload_object = os.path.join(payload_bucket_basepath, payload['inputs']['read_group_submitter_id'], payload_fname)
+        payload_object = os.path.join(payload_bucket_basepath, payload['inputs']['submitter_read_group_id'], payload_fname)
 
     elif payload['type'] in ['dna_alignment']:
         alignment_type = "bam" if payload['files']['aligned_seq']['name'].endswith('bam') else "cram"
