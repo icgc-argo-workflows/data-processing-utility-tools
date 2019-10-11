@@ -25,7 +25,7 @@ def get_app_info(wf_name, data_type):
             "sv": ["BRASS"]
         },
         "broad-mutect2": {
-            "snv-indel": ["mutect2"]
+            "snv-indel": ["Mutect2"]
         }
     }
 
