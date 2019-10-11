@@ -4,10 +4,12 @@
   "program_id": "TEST-PRO",
   "submitter_sequencing_experiment_id": "TEST_EXP",
   "submitter_sample_id": "HCC1143_FASTQ_INPUT",
+  "submitter_donor_id": "HCC1143",
   "sequencing_center": "EXT",
   "platform": "Illumina",
   "platform_model": "HiSeq 2000",
   "library_strategy": "WGS",
+  "tumour_normal_designation": "Primary tumour",
   "sequencing_date": "2014-12-12",
   "read_group_count": 3,
   "read_groups": [
