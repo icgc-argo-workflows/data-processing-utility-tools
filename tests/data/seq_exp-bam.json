@@ -3,7 +3,7 @@
   "program_id": "TEST-PRO",
   "submitter_sequencing_experiment_id": "TEST_EXP",
   "submitter_donor_id": "HCC1143",
-  "specimen_type": "Normal - EBV immortalized",
+  "tumour_normal_designation": "Normal",
   "submitter_sample_id": "HCC1143_BAM_INPUT",
   "sequencing_center": "EXT",
   "platform": "Illumina",
