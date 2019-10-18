@@ -1,6 +1,6 @@
 endpoint_url: "https://object.cancercollaboratory.org:9080"
 bucket_name: "argo-test"
-bundle_type: "sanger_ssm_call"
+bundle_type: "somatic_variant_call"
 payload_jsons:
 - class: File
   path: data/sanger_ssm_call.test.json
@@ -9,4 +9,4 @@ s3_credential_file:
   path: /Users/lxiang/.aws/credentials
 upload_file:
   class: File
-  path: data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz
+  path: data/fb35bb4c-6ff6-5133-abea-b67855d45379.wxs.20191017.sanger-wxs.0.1.0.somatic.snv.vcf.gz
