@@ -8,7 +8,7 @@ requirements:
 - class: InlineJavascriptRequirement
 - class: ShellCommandRequirement
 - class: DockerRequirement
-  dockerPull: 'quay.io/icgc-argo/payload-generation:payload-generation.0.1.4'
+  dockerPull: 'quay.io/icgc-argo/payload-generation:payload-generation.0.1.5'
 
 baseCommand: [ 'payload-generation.py' ]
 
@@ -21,7 +21,7 @@ inputs:
     type: string
     inputBinding:
       prefix: -p
-  input_metadata_lane_seq:
+  user_submit_metadata:
     type: File?
     inputBinding:
       prefix: -m
@@ -30,7 +30,7 @@ inputs:
     inputBinding:
       prefix: -f
     secondaryFiles: [.bai?, .crai?, .tbi?, .idx?]
-  input_metadata_aligned_seq:
+  analysis_input_payload:
     type: File[]?
     inputBinding:
       prefix: -a
@@ -42,10 +42,6 @@ inputs:
     type: string?
     inputBinding:
       prefix: -v
-  data_type:
-    type: string?
-    inputBinding:
-      prefix: -d
 
 
 outputs:
