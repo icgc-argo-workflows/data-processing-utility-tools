@@ -50,4 +50,11 @@ outputs:
     outputBinding:
       glob: '$(inputs.bundle_type).*.json'
 
+  variant_call_renamed_result:
+    type: ["null", File]
+    secondaryFiles: [ ".tbi?", ".idx?" ]
+    outputBinding:
+      glob: '*.$(inputs.wf_short_name).$(inputs.wf_version).somatic.*.vcf.gz'
+
+
 
