@@ -46,6 +46,24 @@ def get_analysis_type(data_type):
 
     return analysis_type.get(data_type)
 
+def get_data_type(file_to_upload):
+    filename = os.path.basename(file_to_upload)
+    if re.match(r".*\.copynumber\.caveman\.vcf\.gz$", filename):
+        data_type = 'cnv'
+    elif re.match(r".*\.annot\.vcf\.gz$", filename):
+        data_type = 'sv'
+    elif re.match(r".*\.flagged\.vcf\.gz$", filename):
+        data_type = 'indel'
+    elif re.match(r".*\.flagged\.muts\.vcf\.gz$", filename):
+        data_type = 'snv'
+    elif re.match(r"broad-mutect2\.snv-indel\.vcf\.gz$", filename):
+        data_type = 'snv-indel'
+    else:
+        sys.exit("Unknown data_type!")
+
+    return data_type
+
+
 def get_uuid5(bid, fid):
     uuid5 = str(uuid.uuid5(uuid.UUID("6ba7b810-9dad-11d1-80b4-00c04fd430c8"), "%s/%s" % (bid, fid)))
     return uuid5
@@ -99,7 +117,7 @@ def run_cmd(cmd):
 def main(args):
 
     if args.bundle_type == 'lane_seq_submission':
-        with open(args.input_metadata_lane_seq, 'r') as f:
+        with open(args.user_submit_metadata, 'r') as f:
             metadata = json.load(f)
 
         if metadata.get("input_seq_format") == 'FASTQ':
@@ -163,7 +181,7 @@ def main(args):
 
         # get inputs of the payload
         lane_seq_list = []
-        for res_file in args.input_metadata_aligned_seq:
+        for res_file in args.analysis_input_payload:
             lane_seq = {}
             with open(res_file, 'r') as f:
                 res_json = json.load(f)
@@ -203,15 +221,17 @@ def main(args):
         with open("template", "r") as f:
             payload = json.load(f)
 
+        data_type = get_data_type(args.file_to_upload)
+
         # update analysis of the payload
-        payload['analysis']['analysis_type'] = get_analysis_type(args.data_type)
+        payload['analysis']['analysis_type'] = get_analysis_type(data_type)
         payload['analysis']['tool']['name'] = "icgc-argo/%s-variant-calling" % args.wf_short_name
         payload['analysis']['tool']['short_name'] = args.wf_short_name
         payload['analysis']['tool']['version'] = args.wf_version
-        payload['analysis']['tool']['included_apps'] = get_app_info(args.wf_short_name, args.data_type)
+        payload['analysis']['tool']['included_apps'] = get_app_info(args.wf_short_name, data_type)
 
         # get inputs of the payload
-        for res_file in args.input_metadata_aligned_seq:
+        for res_file in args.analysis_input_payload:
             input_file = {}
             with open(res_file, 'r') as f:
                 res_json = json.load(f)
@@ -237,7 +257,7 @@ def main(args):
                     filename = '.'.join([uuid_prefix, res_json.get('info').get('library_strategy').lower(),
                                          datetime.date.today().strftime("%Y%m%d"),
                                          args.wf_short_name, args.wf_version, 'somatic',
-                                         args.data_type, 'vcf', 'gz'])
+                                         data_type, 'vcf', 'gz'])
             else:
                 sys.exit('\n%s: Not enough information to proceed!')
 
@@ -275,17 +295,15 @@ if __name__ == "__main__":
     parser.add_argument("-t", "--bundle_type", dest="bundle_type", type=str,
                         help="Payload type")
     parser.add_argument("-p", "--payload_schema_version", dest="payload_schema_version", help="release version of payload schema")
-    parser.add_argument("-m", "--input_metadata_lane_seq", dest="input_metadata_lane_seq",
-                        help="json file containing experiment, read_group and file information for sequence preprocessing")
+    parser.add_argument("-m", "--user_submit_metadata", dest="user_submit_metadata",
+                        help="json file containing experiment, read_group and file information submitted from user")
     parser.add_argument("-f", "--file_to_upload", dest="file_to_upload", type=str, help="File to upload to server")
-    parser.add_argument("-a", "--input_metadata_aligned_seq", dest="input_metadata_aligned_seq", help="Analysis of lane seq submission",
+    parser.add_argument("-a", "--analysis_input_payload", dest="analysis_input_payload", help="Input payloads for the analysis",
                         type=str, nargs='+')
     parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['sanger-wxs', 'sanger-wgs', 'broad-mutect2'],
                         help="workflow short name")
     parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
                         help="workflow version")
-    parser.add_argument("-d", "--data_type", dest="data_type", type=str, choices=['snv', 'indel', 'snv-indel', 'cnv', 'sv'],
-                        help="data type")
     args = parser.parse_args()
 
     main(args)

@@ -1,6 +1,6 @@
 payload_schema_version: 0.1.0-rc.2
 bundle_type: "dna_alignment"
-input_metadata_aligned_seq:
+analysis_input_payload:
   - class: File
     path: data/lane_seq_submission.C0HVY_2.lane.bam.json
   - class: File
