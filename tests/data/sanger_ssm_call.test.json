@@ -1,5 +1,5 @@
 {
-  "type": "sanger_ssm_call",
+  "type": "somatic_variant_call",
   "program_id": "PACA-CA",
   "inputs": {
     "tumour": {
@@ -41,41 +41,40 @@
     "tool": {
       "registry": "Dockstore",
       "id": "01715899-2689-4ad1-ab97-f058894954b2",
-      "name": "sanger_ssm_call",
-      "version": "0.0.1",
+      "name": "icgc-argo/sanger-wxs-variant-calling",
+      "short_name": "sanger-wxs",
+      "version": "0.1.0",
       "included_apps": [
         "CaVEMan"
       ]
     },
     "execution": {
       "runner_name": "cwltool",
-      "runner_version": "0.2.2",
-      "job_id": "8417959d-69be-4851-afe1-27fc9820e71a",
-      "started_at": "2019-07-05T08:15:30+00:00",
-      "completed_at": "2019-07-05T08:15:30+00:00"
+      "runner_version": "1.0.20190621234233",
+      "job_id": "8417959d-69be-4851-afe1-27fc9820e71a"
     }
   },
   "files": {
     "vcf": {
-      "type": "sanger_ssm_call.vcf.data_object",
-      "name": "PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz",
-      "path": "/var/lib/cwl/stgb7dc8ee5-05e2-498f-8618-7f340cc17641/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz",
+      "type": "somatic_variant_call.vcf.data_object",
+      "name": "fb35bb4c-6ff6-5133-abea-b67855d45379.wxs.20191017.sanger-wxs.0.1.0.somatic.snv.vcf.gz",
+      "path": "/GgINaQ/fb35bb4c-6ff6-5133-abea-b67855d45379.wxs.20191017.sanger-wxs.0.1.0.somatic.snv.vcf.gz",
       "size": 0,
       "checksum": "d41d8cd98f00b204e9800998ecf8427e",
       "checksum_type": "md5",
-      "object_id": "4f071afe-813a-5b07-ad6b-0e018a5da1e2"
+      "object_id": "a10f273b-6f53-5426-acb1-2d6c56088939"
     },
     "vcf_index": {
-      "type": "sanger_ssm_call.vcf_index.data_object",
-      "name": "PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.tbi",
-      "path": "/var/lib/cwl/stgb7dc8ee5-05e2-498f-8618-7f340cc17641/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.tbi",
+      "type": "somatic_variant_call.vcf_index.data_object",
+      "name": "fb35bb4c-6ff6-5133-abea-b67855d45379.wxs.20191017.sanger-wxs.0.1.0.somatic.snv.vcf.gz.tbi",
+      "path": "/GgINaQ/fb35bb4c-6ff6-5133-abea-b67855d45379.wxs.20191017.sanger-wxs.0.1.0.somatic.snv.vcf.gz.tbi",
       "size": 0,
       "checksum": "d41d8cd98f00b204e9800998ecf8427e",
       "checksum_type": "md5",
-      "object_id": "d08f8e21-3bcc-55e9-9df8-9a541e231c38"
+      "object_id": "17d8910c-9428-50cb-ad92-3bcef468acef"
     }
   },
-  "id": "d2c43510-123a-4293-b6b0-04f963a5b9d9",
+  "id": "95e54004-8819-410c-838d-7ee52e75c905",
   "info": {
     "library_strategy": "WXS",
     "program_id": "PACA-CA",

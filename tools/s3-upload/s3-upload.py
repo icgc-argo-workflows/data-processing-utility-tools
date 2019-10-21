@@ -154,22 +154,14 @@ def main(args):
             if p.returncode != 0:
                 sys.exit('Object upload failed: %s; err: %s' % (object_key, p.stderr))
 
-    elif args.bundle_type == 'sanger_ssm_call':
-        """
-        payload_object_key = "%s/dna_alignment/%s/%s.json" % (
-            path_prefix,
-            bam_cram,
-            bundle_id)
-        if not object_exists(args.endpoint_url, 's3://%s/%s' % (args.bucket_name, payload_object_key)):
-            sys.exit('Not able to access object store, or payload object does not exist: s3://%s/%s' % (args.bucket_name, payload_object_key))
-        """
+    elif args.bundle_type == 'somatic_variant_call':
+        wf_short_name = payload['analysis']['tool']['short_name']
+        data_type = payload['files']['vcf']['name'].split('.')[-3]
 
         for object in payload['files']:
             object_id = payload['files'][object]['object_id']
             filename = payload['files'][object]['name']
-            object_key = "%s/sanger_ssm_call/%s/%s" % (path_prefix,
-                                                        bundle_id,
-                                                        object_id)
+            object_key = "%s/somatic_variant_call/%s/%s/%s/%s" % (path_prefix, wf_short_name, data_type, bundle_id, object_id)
 
             file_to_upload = filename_to_file[filename]
             p = run_command('aws --endpoint-url %s s3 cp %s s3://%s/%s' % (
