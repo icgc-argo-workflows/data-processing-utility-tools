@@ -69,16 +69,22 @@ def main(args):
                                         payload['info']['submitter_sample_id']+'.'+tumour_normal_designation,
                                         payload['type'])
 
-    if payload['type'] in ['sequencing_experiment', 'dna_alignment_qc', 'sanger_ssm_call']:
+    if payload['type'] in ['sequencing_experiment', 'dna_alignment_qc']:
         payload_object = os.path.join(payload_bucket_basepath, payload_fname)
         if payload['type'] == 'sequencing_experiment':
             payload.pop('info', None)  # sequencing_experiment does not need it
+
     elif payload['type'] in ['lane_seq_submission', 'lane_seq_qc']:
         payload_object = os.path.join(payload_bucket_basepath, payload['inputs']['submitter_read_group_id'], payload_fname)
 
     elif payload['type'] in ['dna_alignment']:
         alignment_type = "bam" if payload['files']['aligned_seq']['name'].endswith('bam') else "cram"
         payload_object = os.path.join(payload_bucket_basepath, alignment_type, payload_fname)
+
+    elif payload['type'] in ['somatic_variant_call']:
+        wf_short_name = payload['analysis']['tool']['short_name']
+        data_type = payload['files']['vcf']['name'].split('.')[-3]
+        payload_object = os.path.join(payload_bucket_basepath, wf_short_name, data_type, payload_fname)
 
     else:
         sys.exit('Unknown payload type!')
