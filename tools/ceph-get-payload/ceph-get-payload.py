@@ -25,21 +25,21 @@ def main(args):
                                                 'normal' if 'normal' in args.tumour_normal_designation.lower() else 'tumour'
                                             )
 
-    if args.bundle_type in ['lane_seq_submission', 'lane_seq_qc']:
+    if args.bundle_type in ['lane_seq_submission']:
         if not args.submitter_read_group_id:
             sys.exit("Missing the information of submitter_read_group_id!")
         submitter_read_group_id = args.submitter_read_group_id
 
         object_key = "%s/lane_seq_submission/%s" % (path_prefix, submitter_read_group_id)
 
-    elif args.bundle_type == 'dna_alignment':
+    elif args.bundle_type in ['dna_alignment']:
         if not args.seq_format:
             sys.exit("Missing the information of sequence format!")
         seq_format = args.seq_format
 
         object_key = "%s/dna_alignment/%s" % (path_prefix, seq_format)
 
-    elif args.bundle_type in ['sequencing_experiment', 'dna_alignment_qc', 'sanger_ssm_call']:
+    elif args.bundle_type in ['sequencing_experiment']:
 
         object_key = "%s/%s" % (path_prefix, args.bundle_type)
 
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-u", "--endpoint-url", dest="endpoint_url", type=str)
     parser.add_argument("-n", "--bucket-name", dest="bucket_name", type=str)
-    parser.add_argument("-y", "--bundle-type", dest="bundle_type", type=str)
+    parser.add_argument("-y", "--bundle-type", dest="bundle_type", type=str, choices=['dna_alignment', 'sequencing_experiment', 'lane_seq_submission'])
     parser.add_argument("-c", "--s3-credential-file", dest="s3_credential_file", type=str)
     parser.add_argument("-r", "--submitter-read-group-id", dest="submitter_read_group_id", type=str)
     parser.add_argument("-f", "--seq-format", dest="seq_format", type=str)

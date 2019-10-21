@@ -6,7 +6,7 @@ requirements:
 - class: NetworkAccess
   networkAccess: true
 - class: DockerRequirement
-  dockerPull: 'quay.io/icgc-argo/ceph-get-payload:ceph-get-payload.0.1.1'
+  dockerPull: 'quay.io/icgc-argo/ceph-get-payload:ceph-get-payload.0.1.2'
 
 baseCommand: [ 'ceph-get-payload.py' ]
 
