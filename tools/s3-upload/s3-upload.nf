@@ -30,6 +30,15 @@ params.payload_jsons = ""
 params.s3_credential_file = ""
 params.upload_file = ""
 
+def getSecondaryFile(main_file){  //this is kind of like CWL's secondary files
+  if (main_file.endsWith('.bam')) {
+    return main_file + '.bai'
+  } else if (main_file.endsWith('.cram')) {
+    return main_file + '.crai'
+  } else if (main_file.endsWith('.vcf.gz')) {
+    return main_file + '.tbi'
+  }
+}
 
 process s3Upload {
   container "quay.io/icgc-argo/s3-upload:s3-upload.0.1.6.0"
@@ -41,6 +50,7 @@ process s3Upload {
     path payload_json
     path s3_credential_file
     path upload_file
+    path upload_file_secondary
 
   script:
     """
