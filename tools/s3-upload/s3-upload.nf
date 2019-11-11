@@ -32,7 +32,7 @@ params.upload_file = ""
 
 
 process s3Upload {
-  container "quay.io/icgc-argo/s3-upload:s3-upload.0.1.5"
+  container "quay.io/icgc-argo/s3-upload:s3-upload.0.1.6.0"
 
   input:
     val endpoint_url
