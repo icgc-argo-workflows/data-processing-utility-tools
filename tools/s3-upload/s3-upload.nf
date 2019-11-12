@@ -23,12 +23,12 @@
 
 nextflow.preview.dsl=2
 
-params.endpoint_url = ""
-params.bucket_name = ""
-params.bundle_type = ""
-params.payload_jsons = ""
-params.s3_credential_file = ""
-params.upload_file = ""
+params.endpoint_url = "https://object.cancercollaboratory.org:9080"
+params.bucket_name = "argo-test"
+params.bundle_type = "dna_alignment"
+params.payload_jsons = "tests/data/dna_alignment.test.json"
+params.s3_credential_file = "/Users/junjun/credentials"
+params.upload_file = "tests/data/HCC1143.3.20190726.wgs.grch38.bam"
 
 def getSecondaryFile(main_file){  //this is kind of like CWL's secondary files
   if (main_file.endsWith('.bam')) {
@@ -40,7 +40,7 @@ def getSecondaryFile(main_file){  //this is kind of like CWL's secondary files
   }
 }
 
-process s3Upload {
+process s3UploadTool {
   container "quay.io/icgc-argo/s3-upload:s3-upload.0.1.6.0"
 
   input:
@@ -62,4 +62,36 @@ process s3Upload {
       -c ${s3_credential_file} \
       -f ${upload_file}
     """
+}
+
+workflow s3Upload {
+  get:
+    endpoint_url
+    bucket_name
+    bundle_type
+    payload_jsons
+    s3_credential_file
+    upload_file
+
+  main:
+    s3UploadTool(
+      endpoint_url,
+      bucket_name,
+      bundle_type,
+      payload_jsons,
+      s3_credential_file,
+      upload_file,
+      Channel.fromPath(getSecondaryFile(params.upload_file))
+    )
+}
+
+workflow {
+  s3Upload(
+    params.endpoint_url,
+    params.bucket_name,
+    params.bundle_type,
+    file(params.payload_jsons),
+    file(params.s3_credential_file),
+    file(params.upload_file)
+  )
 }

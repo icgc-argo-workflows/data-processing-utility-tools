@@ -31,9 +31,8 @@ params.s3_credential_file = "/Users/junjun/credentials"
 params.upload_file = "data/HCC1143.3.20190726.wgs.grch38.bam"
 
 
-include "../s3-upload"
+include "../s3-upload" params(params)
 
-secondary_file = getSecondaryFile(params.upload_file)
 
 workflow {
   main:
@@ -43,7 +42,6 @@ workflow {
       params.bundle_type,
       file(params.payload_jsons),
       file(params.s3_credential_file),
-      file(params.upload_file),
-      file(secondary_file)
+      file(params.upload_file)
     )
 }
