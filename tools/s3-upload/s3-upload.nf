@@ -29,6 +29,7 @@ params.bundle_type = "dna_alignment"
 params.payload_jsons = "tests/data/dna_alignment.test.json"
 params.s3_credential_file = "/Users/junjun/credentials"
 params.upload_file = "tests/data/HCC1143.3.20190726.wgs.grch38.bam"
+params.sec_upload_file = "tests/data/HCC1143.3.20190726.wgs.grch38.bam.bai"
 
 def getSecondaryFile(main_file){  //this is kind of like CWL's secondary files
   if (main_file.endsWith('.bam')) {
@@ -72,6 +73,7 @@ workflow s3Upload {
     payload_jsons
     s3_credential_file
     upload_file
+    sec_upload_file
 
   main:
     s3UploadTool(
@@ -81,7 +83,7 @@ workflow s3Upload {
       payload_jsons,
       s3_credential_file,
       upload_file,
-      Channel.fromPath(getSecondaryFile(params.upload_file))
+      sec_upload_file
     )
 }
 
@@ -92,6 +94,7 @@ workflow {
     params.bundle_type,
     file(params.payload_jsons),
     file(params.s3_credential_file),
-    file(params.upload_file)
+    file(params.upload_file),
+    file(params.sec_upload_file)
   )
 }
