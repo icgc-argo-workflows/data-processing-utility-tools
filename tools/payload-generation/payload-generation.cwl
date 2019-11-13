@@ -8,7 +8,7 @@ requirements:
 - class: InlineJavascriptRequirement
 - class: ShellCommandRequirement
 - class: DockerRequirement
-  dockerPull: 'quay.io/icgc-argo/payload-generation:payload-generation.0.1.5'
+  dockerPull: 'quay.io/icgc-argo/payload-generation:payload-generation.0.1.5.1'
 
 baseCommand: [ 'payload-generation.py' ]
 
