@@ -9,3 +9,7 @@ RUN pip3 install pendulum service_identity
 
 ENV PATH="/tools:${PATH}"
 COPY *.py /tools/
+
+ENTRYPOINT []
+
+CMD ["/bin/bash"]
