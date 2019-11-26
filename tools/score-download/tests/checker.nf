@@ -41,5 +41,4 @@ workflow {
     )
   publish:
     scoreDownload.out.download_file to: 'outdir', mode: 'copy', overwrite: true
-    scoreDownload.out[1] to: 'outdir', mode: 'copy', overwrite: true
 }
