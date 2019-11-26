@@ -1,0 +1,7 @@
+{
+  "bundle_type": "lane_seq_submission",
+  "payload_schema_version": "0.1.0-rc.2",
+  "user_submit_metadata": "data/seq_rg.json",
+  "file_to_upload": "data/D0RE2_1.lane.bam",
+  "analysis_input_payload": "NO_FILE"
+}

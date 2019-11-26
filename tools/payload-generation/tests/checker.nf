@@ -38,7 +38,7 @@ params.wf_version = ""
 include "../payload-generation" params(params)
 
 Channel
-  .fromPath(params.analysis_input_payload, checkIfExists: true)
+  .fromPath(params.analysis_input_payload, checkIfExists: false)
   .set { analysis_input_payload_ch }
 
 workflow {
@@ -55,6 +55,4 @@ workflow {
     )
   publish:
     payloadGeneration.out.payload to: 'outdir', mode: 'copy', overwrite: true
-    payloadGeneration.out[1] to: 'outdir', mode: 'copy', overwrite: true
-    payloadGeneration.out[2] to: 'outdir', mode: 'copy', overwrite: true
 }
