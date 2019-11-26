@@ -1,0 +1,11 @@
+{
+  "endpoint_url": "https://object.cancercollaboratory.org:9080",
+  "bucket_name": "argo-test",
+  "bundle_type": "somatic_variant_call",
+  "payload_jsons": [
+    "data/sanger_ssm_call.test.json"
+  ],
+  "s3_credential_file": "/Users/junjun/credentials",
+  "upload_file": "data/fb35bb4c-6ff6-5133-abea-b67855d45379.wxs.20191017.sanger-wxs.0.1.0.somatic.snv.vcf.gz",
+  "sec_upload_file": "data/fb35bb4c-6ff6-5133-abea-b67855d45379.wxs.20191017.sanger-wxs.0.1.0.somatic.snv.vcf.gz.tbi"
+}
