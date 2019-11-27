@@ -29,9 +29,10 @@ params.bundle_type = "dna_alignment"
 params.payload_jsons = "data/dna_alignment.test.json"
 params.s3_credential_file = "/Users/junjun/credentials"
 params.upload_file = "data/HCC1143.3.20190726.wgs.grch38.bam"
+params.sec_upload_file = "tests/data/HCC1143.3.20190726.wgs.grch38.bam.bai"
 
+include "../s3-upload" params(params)
 
-include "../s3-upload"
 
 workflow {
   main:
@@ -39,8 +40,9 @@ workflow {
       params.endpoint_url,
       params.bucket_name,
       params.bundle_type,
-      file(params.payload_jsons),
+      Channel.fromPath(params.payload_jsons),
       file(params.s3_credential_file),
-      file(params.upload_file)
+      file(params.upload_file),
+      file(params.sec_upload_file)
     )
 }

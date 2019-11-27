@@ -8,7 +8,11 @@ import subprocess
 
 
 def run_command(cmd):
-    return subprocess.run(cmd, capture_output=True, shell=True)
+    return subprocess.run(cmd,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            shell=True
+                        )
 
 
 def object_exists(endpoint_url, object_key):
