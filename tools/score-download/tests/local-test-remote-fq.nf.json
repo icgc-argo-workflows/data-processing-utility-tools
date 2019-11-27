@@ -1,0 +1,5 @@
+{
+  "file_tsv": "data/file-fq.sm.tsv",
+  "repository": "collab",
+  "token_file": "data/fake-token.txt"
+}

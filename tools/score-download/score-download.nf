@@ -30,7 +30,7 @@ params.token_file = "NO_FILE"
 
 
 process scoreDownload {
-  container "quay.io/icgc-argo/score-download:score-download.0.1.5"
+  container "quay.io/icgc-argo/score-download:score-download.0.1.5.1"
 
   input:
     path seq_files
@@ -39,15 +39,24 @@ process scoreDownload {
     path token_file
 
   output:
-    path "*.{bam,cram,fastq,fq,fastq.gz,fq.gz,fastq.bz2,fq.bz2,vcf.gz}", emit: download_file
-    path "*.{bam.bai,cram.crai,vcf.gz.tbi}" optional true
+    //path "*.{bam,cram,fastq,fq,fastq.gz,fq.gz,fastq.bz2,fq.bz2,vcf.gz}", emit: download_file
+    //path "*.@(bam|cram|fastq|fq|fastq.gz|fq.gz|fastq.bz2|fq.bz2|vcf.gz)", emit: download_file
+    path "*", emit: download_file
+    path "*.@(bam.bai|cram.crai|vcf.gz.tbi)" optional true
+    //path "*.bam.bai" optional true
 
   script:
     args_seq_files = seq_files.name != "NO_FILE" ? "-s ${seq_files}" : ""
     args_file_tsv = file_tsv.name != "NO_FILE" ? "-f ${file_tsv}" : ""
     args_repository = repository != "" ? "-r ${repository}" : ""
     args_token_file = token_file.name != "NO_FILE" ? "-t ${token_file}" : ""
-    """
-    score-download.py ${args_seq_files} ${args_file_tsv} ${args_repository} ${args_token_file}
-    """
+
+    if( seq_files.name != "NO_FILE" )
+      """
+      mv ${seq_files} cp.${seq_files} && ln -s cp.${seq_files} ${seq_files}
+      """
+    else
+      """
+      score-download.py ${args_seq_files} ${args_file_tsv} ${args_repository} ${args_token_file}
+      """
 }
