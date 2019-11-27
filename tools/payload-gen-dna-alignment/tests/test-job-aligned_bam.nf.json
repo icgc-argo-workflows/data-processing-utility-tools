@@ -1,0 +1,10 @@
+{
+  "input_payload": [
+    "data/lane_seq_submission.C0HVY_2.lane.bam.json",
+    "data/lane_seq_submission.D0RE2_1.lane.bam.json",
+    "data/lane_seq_submission.D0RH0_2.lane.bam.json"
+  ],
+  "file_to_upload": "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
+  "wf_short_name": "dna-seq-alignment",
+  "wf_version": "0.2.9.2"
+}
