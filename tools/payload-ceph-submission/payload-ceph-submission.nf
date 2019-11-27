@@ -31,7 +31,7 @@ params.bucket_name = ""
 
 
 process payloadCephSubmission {
-  container "quay.io/icgc-argo/payload-ceph-submission:payload-ceph-submission.0.1.6"
+  container "quay.io/icgc-argo/payload-ceph-submission:payload-ceph-submission.0.1.7.0"
 
   input:
     path credentials_file
@@ -41,7 +41,7 @@ process payloadCephSubmission {
     val bucket_name
 
   output:
-    path "*.json", emit: payload
+    path "????????-????-????-????-????????????.json", emit: payload  // <uuid>.json
 
   script:
     """

@@ -1,0 +1,7 @@
+{
+  "metadata": "data/PCSI_0115_Pa_P.tumour.sequencing_experiment.json",
+  "payload": "data/somatic_variant_call.PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.vcf.gz.json",
+  "credentials_file": "/Users/junjun/credentials",
+  "endpoint_url": "https://object.cancercollaboratory.org:9080",
+  "bucket_name": "argo-test"
+}
