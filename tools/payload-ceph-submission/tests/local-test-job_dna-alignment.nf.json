@@ -1,0 +1,7 @@
+{
+  "metadata": "data/seq_rg.json",
+  "payload": "data/dna_alignment.test.json",
+  "credentials_file": "/Users/junjun/credentials",
+  "endpoint_url": "https://object.cancercollaboratory.org:9080",
+  "bucket_name": "argo-test"
+}
