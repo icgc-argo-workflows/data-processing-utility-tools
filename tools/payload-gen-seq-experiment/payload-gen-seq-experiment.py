@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+
+import sys
+import json
+from argparse import ArgumentParser
+
+
+
+def get_wf_fullname(wf_short_name):
+    wf_fullname = {
+        "user-preprocess": "Client Side preprcess",
+        "rdpc-dna-alignment": "RDPC Side DNA Alignment"
+    }
+    return wf_fullname.get(wf_short_name)
+
+
+
+def get_files_info(input_file):
+    payload_file = {}
+    payload_file['fileName'] = input_file.get('name')
+    payload_file['fileSize'] = input_file.get('size')
+    payload_file['fileMd5sum'] = input_file.get('checksum')
+    payload_file['fileType'] = input_file.get('format')
+    payload_file['fileAccess'] = "controlled"
+    payload_file['info'] = {}
+    payload_file['info']['submitter_read_group_id'] = input_file.get('submitter_read_group_id')
+    payload_file['info']['data_type'] = input_file.get('type')
+    return payload_file
+
+def main(args):
+
+    with open(args.user_submit_metadata, 'r') as f:
+        metadata = json.load(f)
+
+    payload = {}
+    payload['program_id'] = metadata.get('program_id')
+    payload['study'] = metadata.get('program_id')
+    for item in ['submitter_sequencing_experiment_id', 'sequencing_center', 'platform', 'platform_model', 'library_strategy', 'sequencing_date', 'read_group_count']:
+        payload[item] = metadata.get(item)
+
+    # get sample of the payload
+    payload['sample'] = []
+    sample = {}
+    sample['sampleSubmitterId'] = metadata.get('submitter_sample_id')
+    sample['sampleType'] = "DNA"
+    sample['specimen'] = {}
+    sample['specimen']['specimenSubmitterId'] = metadata.get('submitter_specimen_id', None)
+    sample['specimen']['specimenClass'] = "Tumour"
+    sample['specimen']['specimenType'] = metadata.get('tumour_normal_designation')
+    sample['donor'] = {}
+    sample['donor']['donorSubmitterId'] = metadata.get('submitter_donor_id')
+    sample['donor']['donorGender'] = metadata.get('gender', None)
+    payload['sample'].append(sample)
+
+    # get workflow of the payload
+    payload['workflow'] = {}
+    payload['workflow']['name'] = get_wf_fullname(args.wf_short_name)
+    payload['workflow']['short_name'] = args.wf_short_name
+    payload['workflow']['version'] = args.wf_version
+
+    # get file and read_group of payload
+    payload['read_group'] = []
+    payload['file'] = []
+    if metadata.get("input_seq_format") == 'FASTQ':
+        read_group = metadata.get("read_groups")
+
+        #get read_group of the payload
+        for rg in read_group:
+            rg_item = {}
+            for item in ['submitter_read_group_id', 'platform_unit', 'is_paired_end', 'read_length_r1', 'read_length_r2', 'insert_size', 'sample_barcode']:
+                rg_item['item'] = rg.get(item, None)
+            payload['read_group'].append(rg_item)
+
+            # get file of the payload
+            for input_file in rg.get('files'):
+                payload['file'].append(get_files_info(input_file))
+
+    elif metadata.get("input_seq_format") == 'BAM':
+        files = metadata.get("files")
+
+        # get file of the payload
+        for input_file in files:
+            payload['file'].append(get_files_info(input_file))
+            # get read_group of the payload
+            for rg in input_file.get('read_groups'):
+                rg_item = {}
+                for item in ['submitter_read_group_id', 'platform_unit', 'is_paired_end', 'read_length_r1',
+                             'read_length_r2', 'insert_size', 'sample_barcode']:
+                    rg_item['item'] = rg.get(item, None)
+                payload['read_group'].append(rg_item)
+
+    else:
+        sys.exit('\n%s: Input files format are not FASTQ or BAM')
+
+
+    with open("payload.json", 'w') as f:
+        f.write(json.dumps(payload, indent=2))
+
+if __name__ == "__main__":
+    parser = ArgumentParser()
+    parser.add_argument("-m", "--user_submit_metadata", dest="user_submit_metadata",
+                        help="json file containing experiment, read_group and file information submitted from user")
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['user-preprocess', 'rdpc-dna-alignment'],
+                        help="workflow short name")
+    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
+                        help="workflow version")
+    args = parser.parse_args()
+
+    main(args)
