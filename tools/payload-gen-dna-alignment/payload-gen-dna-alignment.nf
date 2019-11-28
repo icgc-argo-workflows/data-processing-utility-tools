@@ -39,7 +39,7 @@ def getSecondaryFile(main_file){  //this is kind of like CWL's secondary files
   }
 }
 
-process payloadGeneration {
+process PayloadGenDnaAlignment {
   container "quay.io/icgc-argo/payload-gen-dna-alignment:payload-gen-dna-alignment.0.1.0.0"
 
   input:

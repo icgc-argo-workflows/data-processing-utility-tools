@@ -36,7 +36,7 @@ Channel
 
 workflow {
   main:
-    payloadGeneration(
+    PayloadGenDnaAlignment(
       file(params.file_to_upload),
       file(getSecondaryFile(params.file_to_upload)),
       input_payload_ch.collect(),
@@ -44,5 +44,5 @@ workflow {
       params.wf_version
     )
   publish:
-    payloadGeneration.out.payload to: 'outdir', mode: 'copy', overwrite: true
+    PayloadGenDnaAlignment.out.payload to: 'outdir', mode: 'copy', overwrite: true
 }
