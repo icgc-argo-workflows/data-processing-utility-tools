@@ -28,9 +28,9 @@
     }
   ],
   "workflow": {
-    "name": "RDPC Side DNA Alignment",
-    "short_name": "rdpc-dna-alignment",
-    "version": "0.2.9.2"
+    "name": "dna-seq-alignment",
+    "short_name": "dna-seq-alignment",
+    "version": "0.2.3.0"
   },
   "read_group": [
     {
