@@ -39,7 +39,7 @@ def getSecondaryFile(main_file){  //this is kind of like CWL's secondary files
   }
 }
 
-process payloadGeneration {
+process PayloadGenReadGroupUbam {
   container "quay.io/icgc-argo/payload-gen-read-group-ubam:payload-gen-read-group-ubam.0.1.0.0"
 
   input:
