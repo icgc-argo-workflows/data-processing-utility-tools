@@ -116,6 +116,7 @@ def main(args):
     else:
         sys.exit('\n%s: Input files format are not FASTQ or BAM')
 
+    payload['experiment'] = {}
 
     with open("payload.json", 'w') as f:
         f.write(json.dumps(payload, indent=2))
