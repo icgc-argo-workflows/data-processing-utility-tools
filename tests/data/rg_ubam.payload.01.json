@@ -1,0 +1,56 @@
+{
+  "analysisType": {
+    "name": "read_group_ubam"
+  },
+  "program_id": "TEST-PRO",
+  "study": "TEST-PRO",
+  "sample": [
+    {
+      "info": {},
+      "sampleSubmitterId": "HCC1143_FASTQ_INPUT",
+      "sampleType": "DNA",
+      "specimen": {
+        "info": {},
+        "specimenSubmitterId": "HCC1143_FASTQ_INPUT",
+        "specimenClass": "Tumour",
+        "specimenType": "Primary tumour - solid tissue"
+      },
+      "donor": {
+        "donorSubmitterId": "HCC1143",
+        "donorGender": "female",
+        "info": {}
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "sequencing_experiment_id": "a29e3ec5-b1b6-4643-9e3e-c5b1b636430e"
+    }
+  ],
+  "insert_size": 298,
+  "library_name": "Pond-147580",
+  "is_paired_end": true,
+  "platform_unit": "74_8",
+  "read_length_r1": 150,
+  "read_length_r2": 150,
+  "sample_barcode": null,
+  "submitter_read_group_id": "D0RE2.1",
+  "file": [
+    {
+      "fileName": "D0RE2_1.lane.bam",
+      "fileSize": 4551,
+      "fileMd5sum": "d57f7e84fca26d288ed81eb9dfff5fe7",
+      "fileAccess": "controlled",
+      "fileType": "BAM",
+      "info": {
+        "data_type": "Read Group Unmapped BAM"
+      }
+    }
+  ],
+  "workflow": {
+    "name": "RDPC Side DNA Alignment",
+    "short_name": "rdpc-dna-alignment",
+    "version": "0.2.9.2"
+  },
+  "experiment": {}
+}
