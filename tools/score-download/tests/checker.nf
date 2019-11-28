@@ -18,27 +18,26 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.seq_files = "NO_FILE"  // optional
-params.file_tsv = "data/file-fq.sm.tsv"
-params.repository = "collab"
+params.manifest_file = ""
+params.song_url = "https://song.qa.argo.cancercollaboratory.org"
+params.score_url = "https://score.qa.argo.cancercollaboratory.org"
 params.token_file = "/Users/junjun/access_token"
 
-
-include '../score-download'
+include "../score-download" params(params)
 
 workflow {
   main:
-    scoreDownload(
-      file(params.seq_files),
-      file(params.file_tsv),
-      params.repository,
-      file(params.token_file)
+    ScoreDownload(
+      file(params.manifest_file),
+      file(params.token_file),
+      params.song_url,
+      params.score_url
     )
   publish:
-    scoreDownload.out.download_file to: 'outdir', mode: 'copy', overwrite: true
+    ScoreDownload.out.downloaded_files to: 'outdir', mode: 'copy', overwrite: true
 }

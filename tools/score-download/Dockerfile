@@ -12,5 +12,6 @@ RUN apt-get update && \
 RUN chmod -R 777 /score-client
 
 ENV PATH="/tools:/score-client/bin:${PATH}"
+WORKDIR /tools
 
-COPY *.py /tools/
+COPY . .

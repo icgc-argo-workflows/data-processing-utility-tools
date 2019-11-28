@@ -1,7 +1,0 @@
-file_tsv:
-  class: File
-  path: data/file-fq.sm.tsv
-repository: collab
-token_file:
-  class: File
-  path: data/fake-token.txt

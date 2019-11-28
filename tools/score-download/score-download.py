@@ -1,8 +1,27 @@
 #!/usr/bin/env python3
 
+"""
+ Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
+                                                                                                               
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published
+ by the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+ Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
+ """
+
+
 import os
 import sys
-import csv
 from argparse import ArgumentParser
 import subprocess
 
@@ -18,53 +37,27 @@ def run_command(cmd):
 
 
 def main(args):
-    if args.seq_files:  # if provided as local file
-        return  # do nothing
-    else:
-        if not (args.file_tsv and args.repository and args.token_file):
-            sys.exit('Error, when seq-files is missing must provide file-tsv, repository and token-file')
+  with open(args.token_file, 'r') as t:
+    token = t.read().strip()
 
-        # read access token and set ENV variable
-        with open(args.token_file, 'r') as f:
-            os.environ["ACCESSTOKEN"] = f.read().strip()
+  os.environ["METADATA_URL"] = args.song_url
+  os.environ["STORAGE_URL"] = args.score_url
+  os.environ["ACCESSTOKEN"] = token
 
-        files_to_download = set()
-        # read TSV to get all unique files for download
-        with open(args.file_tsv) as f:
-            rd = csv.DictReader(f, delimiter="\t")
-            for row in rd:
-                files_to_download.add((row['path'], row['name']))
+  cmd = "score-client download --manifest %s --output-dir ." % args.manifest_file
 
-        for f in files_to_download:
-            file_uri, file_name = f
-            if not file_uri.startswith('score://'):
-                sys.exit("Only support file_uri with 'score://' scheme, actual file_uri: %s" % file_uri)
+  ret = run_command(cmd)
 
-            _, _, repo, _, object_id = file_uri.split('/')
-            if repo != args.repository:
-                sys.exit("File URI repository: %s differs from what's specified: %s" %
-                            (repo, args.repository)
-                        )
-
-            ret = run_command('score-client --profile %s download --object-id %s --output-dir .' %
-                                 (repo, object_id)
-                             )
-
-            if ret[0].returncode != 0:
-                sys.exit('Download failed on: %s. Error msg: %s' % (file_uri, ret[2]))
-
-            if not os.path.isfile(file_name):
-                sys.exit("Object '%s' downloaded but it does not match the expected file name '%s'" % 
-                            (file_uri, file_name)
-                        )
+  if ret[0].returncode != 0:
+    sys.exit('Download failed, error msg: %s' % ret[2])
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser.add_argument("-s", "--seq-files", dest="seq_files", nargs="+")
-    parser.add_argument("-f", "--file-tsv", dest="file_tsv")
-    parser.add_argument("-r", "--repository", dest="repository", choices=['collab','aws'])
-    parser.add_argument("-t", "--token-file", dest="token_file")
-    args = parser.parse_args()
+  parser = ArgumentParser()
+  parser.add_argument("-m", "--manifest-file", dest="manifest_file", required=True)
+  parser.add_argument("-s", "--song-url", dest="song_url", required=True)
+  parser.add_argument("-c", "--score-url", dest="score_url", required=True)
+  parser.add_argument("-t", "--token-file", dest="token_file", required=True)
+  args = parser.parse_args()
 
-    main(args)
+  main(args)

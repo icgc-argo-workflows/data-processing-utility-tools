@@ -1,5 +1,0 @@
-seq_files:
-- class: File
-  path: data/test_rg_3.bam
-- class: File
-  path: data/test_rg_3.bam.bai

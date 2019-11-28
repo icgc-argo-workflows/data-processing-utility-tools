@@ -2,7 +2,7 @@
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
- *                                                                                                               
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as published
  * by the Free Software Foundation, either version 3 of the License, or
@@ -18,45 +18,42 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.seq_files = "NO_FILE"
-params.file_tsv = "NO_FILE"
-params.repository = ""
-params.token_file = "NO_FILE"
+params.manifest_file = ""
+params.song_url = ""
+params.score_url = ""
+params.token_file = ""
 
-
-process scoreDownload {
-  container "quay.io/icgc-argo/score-download:score-download.0.1.5.1"
+process ScoreDownload {
+  container "quay.io/icgc-argo/score-download:score-download.0.2.0.0"
 
   input:
-    path seq_files
-    path file_tsv
-    val repository
+    path manifest_file
     path token_file
+    val song_url
+    val score_url
 
   output:
-    //path "*.{bam,cram,fastq,fq,fastq.gz,fq.gz,fastq.bz2,fq.bz2,vcf.gz}", emit: download_file
-    //path "*.@(bam|cram|fastq|fq|fastq.gz|fq.gz|fastq.bz2|fq.bz2|vcf.gz)", emit: download_file
-    path "*", emit: download_file
-    path "*.@(bam.bai|cram.crai|vcf.gz.tbi)" optional true
-    //path "*.bam.bai" optional true
+    path "*", emit: downloaded_files
 
   script:
-    args_seq_files = seq_files.name != "NO_FILE" ? "-s ${seq_files}" : ""
-    args_file_tsv = file_tsv.name != "NO_FILE" ? "-f ${file_tsv}" : ""
-    args_repository = repository != "" ? "-r ${repository}" : ""
-    args_token_file = token_file.name != "NO_FILE" ? "-t ${token_file}" : ""
+    """
+    score-download.py -m ${manifest_file} -s ${song_url} -c ${score_url} -t ${token_file}
+    """
+}
 
-    if( seq_files.name != "NO_FILE" )
-      """
-      mv ${seq_files} cp.${seq_files} && ln -s cp.${seq_files} ${seq_files}
-      """
-    else
-      """
-      score-download.py ${args_seq_files} ${args_file_tsv} ${args_repository} ${args_token_file}
-      """
+workflow {
+  main:
+    ScoreDownload(
+      file(params.manifest_file),
+      file(params.token_file),
+      params.song_url,
+      params.score_url
+    )
+  publish:
+    ScoreDownload.out.downloaded_files to: 'outdir', mode: 'copy', overwrite: true
 }
