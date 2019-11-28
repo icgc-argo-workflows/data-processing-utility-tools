@@ -1,0 +1,15 @@
+{
+  "analysisId": "12c998f4-468f-11e9-aa8b-73c792e0182f",
+  "file": [
+      {
+        "objectId": "32a0ad7e-acc1-5aa7-b8d9-dd860208edeb",
+        "studyId": "TEST-COLLAB",
+        "analysisId": "12c998f4-468f-11e9-aa8b-73c792e0182f",
+        "fileName": "C0HVY_2.lane.bam",
+        "fileSize": 4018,
+        "fileType": "BAM",
+        "fileMd5sum": "8d0070078bd2a5695225bbf42a0f85d1",
+        "fileAccess": "controlled"
+      }
+  ]
+}
