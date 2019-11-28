@@ -1,5 +1,5 @@
 {
-  "sequencing_experiment_analysis": "data/sequencing_experiment.01.json",
+  "sequencing_experiment_analysis": "data/seq_exp-fq.song-analysis.json",
   "file_to_upload": "data/D0RE2_1.lane.bam",
   "wf_short_name": "rdpc-dna-alignment",
   "wf_version": "0.2.9.2"
