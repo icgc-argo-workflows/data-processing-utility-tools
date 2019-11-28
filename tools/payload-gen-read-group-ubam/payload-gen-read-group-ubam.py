@@ -84,6 +84,14 @@ def get_files_info(file_to_upload, filename=None):
 
     return payload_file
 
+def get_sample_info(sample_list):
+    for sample in sample_list:
+        for item in ['sampleId', 'specimenId', 'donorId', 'studyId']:
+            sample.pop(item)
+            sample['specimen'].pop(item)
+            sample['donor'].pop(item)
+
+    return sample_list
 
 def main(args):
 
@@ -100,7 +108,7 @@ def main(args):
     payload['program_id'] = metadata.get('program_id')
     payload['study'] = metadata.get('program_id')
 
-    payload['sample'] = metadata.get('sample')
+    payload['sample'] = get_sample_info(metadata.get('sample'))
 
     payload['inputs'] = []
     payload['inputs'].append({"sequencing_experiment_id": metadata.get('analysisId')})
