@@ -87,7 +87,7 @@ def main(args):
         #get read_group of the payload
         for rg in read_group:
             rg_item = {}
-            for item in ['submitter_read_group_id', 'platform_unit', 'is_paired_end', 'read_length_r1', 'read_length_r2', 'insert_size', 'sample_barcode']:
+            for item in ['submitter_read_group_id', 'platform_unit', 'library_name', 'is_paired_end', 'read_length_r1', 'read_length_r2', 'insert_size', 'sample_barcode']:
                 rg_item[item] = rg.get(item, None)
             payload['read_group'].append(rg_item)
 
