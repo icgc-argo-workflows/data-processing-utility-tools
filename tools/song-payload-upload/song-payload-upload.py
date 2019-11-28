@@ -37,9 +37,6 @@ def main(args):
   with open(args.token_file, 'r') as t:
     token = t.read().strip()
 
-  os.environ["METADATA_URL"] = args.song_url
-  os.environ["ACCESSTOKEN"] = token
-
   headers = {
     "Authorization": "Bearer %s" % token,
     "Content-Type": "application/json",
@@ -61,7 +58,7 @@ def main(args):
     with open("%s.song-analysis.json" % song_analysis['analysisId'], "w") as o:
       o.write(json.dumps(song_analysis, indent=2))
   else:
-    sys.exit("SONG payload upload failed HTTP Status code not 200: %s" % res)
+    sys.exit("SONG payload upload failed HTTP status code not 200: %s" % res)
 
 
 if __name__ == "__main__":
