@@ -1,0 +1,56 @@
+{
+  "analysisType": {
+    "name": "read_group_ubam"
+  },
+  "program_id": "TEST-PRO",
+  "study": "TEST-PRO",
+  "sample": [
+    {
+      "info": {},
+      "sampleSubmitterId": "HCC1143_BAM_INPUT",
+      "sampleType": "DNA",
+      "specimen": {
+        "info": {},
+        "specimenSubmitterId": "TEST_EXP",
+        "specimenClass": "Tumour",
+        "specimenType": "Primary tumour - other"
+      },
+      "donor": {
+        "donorSubmitterId": "internal_donor_123456789-00",
+        "donorGender": "female",
+        "info": {}
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "sequencing_experiment_id": "0bbd6e1b-f38b-451c-bd6e-1bf38b451caa"
+    }
+  ],
+  "insert_size": 298,
+  "library_name": "Pond-147580",
+  "is_paired_end": true,
+  "platform_unit": "74_8",
+  "read_length_r1": 150,
+  "read_length_r2": 150,
+  "sample_barcode": null,
+  "submitter_read_group_id": "C0HVY.2",
+  "file": [
+    {
+      "fileName": "C0HVY_2.lane.bam",
+      "fileSize": 3990,
+      "fileMd5sum": "2a20e32f077348d97b3cf6c6cb4745c0",
+      "fileAccess": "controlled",
+      "fileType": "BAM",
+      "info": {
+        "data_type": "Read Group Unmapped BAM"
+      }
+    }
+  ],
+  "workflow": {
+    "name": "dna-seq-alignment",
+    "short_name": "dna-seq-alignment",
+    "version": "0.2.3.0"
+  },
+  "experiment": {}
+}
