@@ -1,9 +1,29 @@
 #!/usr/bin/env python3
 
+"""
+ Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published
+ by the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+ Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
+         Linda Xiang <linda.xiang@oicr.on.ca>
+ """
+
+
 import sys
 import json
 from argparse import ArgumentParser
-
 
 
 def get_wf_fullname(wf_short_name):
@@ -68,7 +88,7 @@ def main(args):
         for rg in read_group:
             rg_item = {}
             for item in ['submitter_read_group_id', 'platform_unit', 'is_paired_end', 'read_length_r1', 'read_length_r2', 'insert_size', 'sample_barcode']:
-                rg_item['item'] = rg.get(item, None)
+                rg_item[item] = rg.get(item, None)
             payload['read_group'].append(rg_item)
 
             # get file of the payload
@@ -86,7 +106,7 @@ def main(args):
                 rg_item = {}
                 for item in ['submitter_read_group_id', 'platform_unit', 'is_paired_end', 'read_length_r1',
                              'read_length_r2', 'insert_size', 'sample_barcode']:
-                    rg_item['item'] = rg.get(item, None)
+                    rg_item[item] = rg.get(item, None)
                 payload['read_group'].append(rg_item)
 
     else:
