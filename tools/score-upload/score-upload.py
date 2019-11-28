@@ -49,7 +49,7 @@ def main(args):
   ret = run_command(cmd)
 
   if ret[0].returncode != 0:
-    sys.exit('Download failed, error msg: %s' % ret[2])
+    sys.exit('Upload failed, error msg: %s' % ret[2])
 
 
 if __name__ == "__main__":
