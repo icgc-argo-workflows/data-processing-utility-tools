@@ -53,6 +53,10 @@ def main(args):
         metadata = json.load(f)
 
     payload = {}
+    payload['analysisType'] = {
+        "name": "sequencing_experiment"
+    }
+
     payload['program_id'] = metadata.get('program_id')
     payload['study'] = metadata.get('program_id')
     for item in ['submitter_sequencing_experiment_id', 'sequencing_center', 'platform', 'platform_model', 'library_strategy', 'sequencing_date', 'read_group_count']:
