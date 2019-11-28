@@ -1,0 +1,64 @@
+{
+  "analysisType": {
+    "name": "dna_alignment"
+  },
+  "inputs": [
+    {
+      "read_group_ubam_id": "14159e56-0159-475b-959e-560159c75b85"
+    },
+    {
+      "read_group_ubam_id": "5e3e5380-4c90-4901-be53-804c90f9018b"
+    },
+    {
+      "read_group_ubam_id": "83e352d7-afec-4bcc-a352-d7afecebccce"
+    }
+  ],
+  "program_id": "TEST-PRO",
+  "study": "TEST-PRO",
+  "sample": [
+    {
+      "info": {},
+      "sampleSubmitterId": "HCC1143_FASTQ_INPUT",
+      "sampleType": "DNA",
+      "specimen": {
+        "info": {},
+        "specimenSubmitterId": "HCC1143_FASTQ_INPUT",
+        "specimenClass": "Tumour",
+        "specimenType": "Primary tumour - solid tissue"
+      },
+      "donor": {
+        "donorSubmitterId": "HCC1143",
+        "donorGender": "female",
+        "info": {}
+      }
+    }
+  ],
+  "file": [
+    {
+      "fileName": "HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
+      "fileType": "BAM",
+      "fileSize": 13197,
+      "fileMd5sum": "f3a4d39960176c99bd459e7fd755edd2",
+      "fileAccess": "controlled",
+      "info": {
+        "data_type": "Aligned Reads"
+      }
+    },
+    {
+      "fileName": "HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam.bai",
+      "fileType": "BAI",
+      "fileSize": 352,
+      "fileMd5sum": "ba7b01a93c072742b99d74e4823e875c",
+      "fileAccess": "controlled",
+      "info": {
+        "data_type": "Aligned Reads Index"
+      }
+    }
+  ],
+  "workflow": {
+    "name": "RDPC Side DNA Alignment",
+    "short_name": "rdpc-dna-alignment",
+    "version": "0.2.9.2"
+  },
+  "experiment": {}
+}
