@@ -28,8 +28,7 @@ from argparse import ArgumentParser
 
 def get_wf_fullname(wf_short_name):
     wf_fullname = {
-        "user-preprocess": "Client Side preprcess",
-        "rdpc-dna-alignment": "RDPC Side DNA Alignment"
+        "dna-seq-alignment": "dna-seq-alignment"
     }
     return wf_fullname.get(wf_short_name)
 
@@ -125,7 +124,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-m", "--user_submit_metadata", dest="user_submit_metadata",
                         help="json file containing experiment, read_group and file information submitted from user")
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['user-preprocess', 'rdpc-dna-alignment'],
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
                         help="workflow short name")
     parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
                         help="workflow version")
