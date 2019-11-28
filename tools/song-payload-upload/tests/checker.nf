@@ -24,19 +24,18 @@
 nextflow.preview.dsl=2
 
 params.song_url = "https://song.qa.argo.cancercollaboratory.org"
-params.song_payload = "input/song-payload.test.json"
-params.token_file = "/Users/junjun/access_token"
+params.song_payload = ""
+params.token_file = "/home/ubuntu/.access_token"
 
-include "../song-payload-upload"
+include "../song-payload-upload" params(params)
 
 workflow {
-  main:
-    SongPayloadUpload(
-      params.song_url,
-      file(params.song_payload),
-      file(params.token_file)
-    )
+  SongPayloadUpload(
+    params.song_url,
+    file(params.song_payload),
+    file(params.token_file)
+  )
 
-  publish:
-    SongPayloadUpload.out.song_analysis to: 'outdir', mode: 'copy', overwrite: true
+  SongPayloadUpload.out.study.view()
+  SongPayloadUpload.out.analysis_id.view()
 }

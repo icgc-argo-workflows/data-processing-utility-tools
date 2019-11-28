@@ -54,9 +54,9 @@ def main(args):
     sys.exit("SONG payload upload failed, RequestException: %s" % err)
 
   if res.status_code == 200:
-    song_analysis = res.json()
-    with open("%s.song-analysis.json" % song_analysis['analysisId'], "w") as o:
-      o.write(json.dumps(song_analysis, indent=2))
+    resp = res.json()
+    resp.update({'study': study})
+    print(json.dumps(resp, indent=2))
   else:
     sys.exit("SONG payload upload failed HTTP status code not 200: %s" % res)
 

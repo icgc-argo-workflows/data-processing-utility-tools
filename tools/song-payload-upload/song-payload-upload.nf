@@ -27,7 +27,19 @@ params.song_url = ""
 params.song_payload = ""
 params.token_file = ""
 
-process SongPayloadUpload {
+import groovy.json.JsonSlurper
+
+process getStudyAndAnalysisId {
+  input:
+    val str
+  output:
+    val meta_info.study, emit: study
+    val meta_info.analysisId, emit: analysis_id
+  exec:
+    meta_info = new JsonSlurper().parseText(str)
+}
+
+process SongPayloadUploadPr {
   container "quay.io/icgc-argo/song-payload-upload:song-payload-upload.0.1.0.0"
 
   input:
@@ -36,7 +48,7 @@ process SongPayloadUpload {
     path token_file
 
   output:
-    path "*.song-analysis.json", emit: song_analysis
+    stdout()
 
   script:
     """
@@ -44,14 +56,35 @@ process SongPayloadUpload {
     """
 }
 
-workflow {
+workflow SongPayloadUpload{
+  get:
+    song_url
+    song_payload
+    token_file
+
   main:
-    SongPayloadUpload(
-      params.song_url,
-      file(params.song_payload),
-      file(params.token_file)
+    SongPayloadUploadPr(
+      song_url,
+      song_payload,
+      token_file
     )
 
-  publish:
-    SongPayloadUpload.out.song_analysis to: 'outdir', mode: 'copy', overwrite: true
+    getStudyAndAnalysisId(
+      SongPayloadUploadPr.out[0]
+    )
+
+  emit:
+    study = getStudyAndAnalysisId.out.study
+    analysis_id = getStudyAndAnalysisId.out.analysis_id
+}
+
+workflow {
+  SongPayloadUpload(
+    params.song_url,
+    file(params.song_payload),
+    file(params.token_file)
+  )
+
+  SongPayloadUpload.out.study.view()
+  SongPayloadUpload.out.analysis_id.view()
 }
