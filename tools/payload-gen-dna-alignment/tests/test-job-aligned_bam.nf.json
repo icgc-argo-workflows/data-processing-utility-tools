@@ -5,6 +5,6 @@
     "data/rg_ubam.song-analysis.03.json"
   ],
   "file_to_upload": "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
-  "wf_short_name": "rdpc-dna-alignment",
-  "wf_version": "0.2.9.2"
+  "wf_short_name": "dna-seq-alignment",
+  "wf_version": "0.2.3.0"
 }

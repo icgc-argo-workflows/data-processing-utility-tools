@@ -30,8 +30,7 @@ import subprocess
 
 def get_wf_fullname(wf_short_name):
     wf_fullname = {
-        "user-preprocess": "Client Side preprcess",
-        "rdpc-dna-alignment": "RDPC Side DNA Alignment"
+        "dna-seq-alignment": "dna-seq-alignment"
     }
     return wf_fullname.get(wf_short_name)
 
@@ -141,7 +140,7 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--file_to_upload", dest="file_to_upload", type=str, help="File to upload to server")
     parser.add_argument("-a", "--input_payload", dest="input_payload", help="Input payloads for the analysis",
                         type=str, nargs='+')
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['user-preprocess', 'rdpc-dna-alignment'],
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
                         help="workflow short name")
     parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
                         help="workflow version")
