@@ -3,77 +3,19 @@
 import os
 import sys
 import json
-import re
 from argparse import ArgumentParser
 import hashlib
-import copy
 import subprocess
-import uuid
-import datetime
 
 
-def get_app_info(wf_name, data_type):
-    app_info = {
-        "sanger-wxs": {
-            "snv": ["CaVEMan"],
-            "indel": ["Pindel"]
-        },
-        "sanger-wgs": {
-            "snv": ["CaVEMan"],
-            "indel": ["Pindel"],
-            "cnv": ["ASCAT"],
-            "sv": ["BRASS"]
-        },
-        "broad-mutect2": {
-            "snv-indel": ["Mutect2"]
-        }
-    }
-
-    if app_info.get(wf_name) and app_info.get(wf_name).get(data_type):
-        return app_info.get(wf_name).get(data_type)
-    else:
-        sys.exit("Unknown workflow or data type")
 
 
-def get_analysis_type(data_type):
-    analysis_type = {
-        "snv": "Simple somatic mutation calling",
-        "indel": "Simple somatic mutation calling",
-        "snv-indel": "Simple somatic mutation calling",
-        "cnv": "Copy number somatic mutation calling",
-        "sv": "Structural somatic mutation calling"
-    }
-
-    return analysis_type.get(data_type)
-
-def get_data_type(file_to_upload):
-    filename = os.path.basename(file_to_upload)
-    if re.match(r".*\.copynumber\.caveman\.vcf\.gz$", filename):
-        data_type = 'cnv'
-    elif re.match(r".*\.annot\.vcf\.gz$", filename):
-        data_type = 'sv'
-    elif re.match(r".*\.flagged\.vcf\.gz$", filename):
-        data_type = 'indel'
-    elif re.match(r".*\.flagged\.muts\.vcf\.gz$", filename):
-        data_type = 'snv'
-    elif re.match(r"broad-mutect2\.snv-indel\.vcf\.gz$", filename):
-        data_type = 'snv-indel'
-    else:
-        sys.exit("Unknown data_type!")
-
-    return data_type
-
-
-def get_wf_fullname(wf_shortname):
+def get_wf_fullname(wf_short_name):
     wf_fullname = {
-        "dna-seq": "dna-seq-alignment",
-        "sanger-wxs": "sanger-wxs-variant-calling"
+        "user-preprocess": "Client Side preprcess",
+        "rdpc-dna-alignment": "RDPC Side DNA Alignment"
     }
-    return wf_fullname.get(wf_shortname)
-
-def get_uuid5(bid, fid):
-    uuid5 = str(uuid.uuid5(uuid.UUID("6ba7b810-9dad-11d1-80b4-00c04fd430c8"), "%s/%s" % (bid, fid)))
-    return uuid5
+    return wf_fullname.get(wf_short_name)
 
 
 def calculate_size(file_path):
@@ -99,7 +41,6 @@ def get_files_info(file_to_upload, filename=None):
     payload_file['fileMd5sum'] = calculate_md5(file_to_upload)
     payload_file['fileAccess'] = "controlled"
     payload_file['info'] = {"data_type": "Aligned Reads" if payload_file['fileType'] in ['bam', 'cram'] else "Aligned Reads Index"}
-
 
     return payload_file
 
@@ -127,8 +68,9 @@ def run_cmd(cmd):
 
 def main(args):
 
-    with open("template.json", "r") as f:
-        payload = json.load(f)
+
+    payload = {}
+
 
     #get inputs of the payload
     payload['inputs'] = []
@@ -137,6 +79,7 @@ def main(args):
             res_json = json.load(f)
         payload['program_id'] = res_json.get('program_id')
         payload['study'] = res_json.get('program_id')
+        payload['sample'] = res_json.get('sample')
 
         payload['inputs'].append({'read_group_ubam_id': res_json.get('analysisId')})
 
@@ -154,8 +97,9 @@ def main(args):
         sys.exit('\n%s: Missing index file')
 
     #get workflow info of the payload
-    payload['workflow']['fullName'] = get_wf_fullname(args.wf_short_name)
-    payload['workflow']['shortName'] = args.wf_short_name
+    payload['workflow'] = {}
+    payload['workflow']['name'] = get_wf_fullname(args.wf_short_name)
+    payload['workflow']['short_name'] = args.wf_short_name
     payload['workflow']['version'] = args.wf_version
 
     with open("payload.json", 'w') as f:

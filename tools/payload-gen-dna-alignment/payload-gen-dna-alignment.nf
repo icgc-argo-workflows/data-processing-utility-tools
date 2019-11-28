@@ -56,7 +56,7 @@ process payloadGeneration {
     args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""
     args_wf_version = wf_version.length() > 0 ? "-v ${wf_version}" : ""
     """
-    payload-generation.py \
+    payload-gen-dna-alignment.py \
       -f ${file_to_upload} \
       -a ${input_payload} ${args_wf_short_name} ${args_wf_version}
     """

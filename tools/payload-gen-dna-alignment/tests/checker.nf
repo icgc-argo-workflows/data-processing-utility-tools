@@ -23,14 +23,10 @@
 
 nextflow.preview.dsl=2
 
-params.file_to_upload = "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam"
-params.input_payload = [
-  "data/lane_seq_submission.C0HVY_2.lane.bam.json",
-  "data/lane_seq_submission.D0RE2_1.lane.bam.json",
-  "data/lane_seq_submission.D0RH0_2.lane.bam.json"
-]
-params.wf_short_name = "dna-seq-alignment"
-params.wf_version = "0.2.9.2"
+params.file_to_upload = ""
+params.input_payload = ""
+params.wf_short_name = ""
+params.wf_version = ""
 
 include "../payload-gen-dna-alignment" params(params)
 
