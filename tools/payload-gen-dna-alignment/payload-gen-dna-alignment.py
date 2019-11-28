@@ -54,7 +54,7 @@ def get_files_info(file_to_upload, filename=None):
         run_cmd(cmd)
         file_to_upload = os.path.realpath(filename)
     payload_file['fileName'] = os.path.basename(file_to_upload)
-    payload_file['fileType'] = file_to_upload.strip(".gz").split(".")[-1]
+    payload_file['fileType'] = file_to_upload.strip(".gz").split(".")[-1].upper()
     payload_file['fileSize'] = calculate_size(file_to_upload)
     payload_file['fileMd5sum'] = calculate_md5(file_to_upload)
     payload_file['fileAccess'] = "controlled"
