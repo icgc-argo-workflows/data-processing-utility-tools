@@ -131,7 +131,7 @@ if __name__ == "__main__":
     parser.add_argument("-a", "--sequencing_experiment_analysis", dest="sequencing_experiment_analysis",
                         help="SONG sequencing_experiment_analysis")
     parser.add_argument("-f", "--file_to_upload", dest="file_to_upload", type=str, help="File to upload to server")
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['sanger-wxs', 'sanger-wgs', 'broad-mutect2'],
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['user-preprocess', 'rdpc-dna-alignment'],
                         help="workflow short name")
     parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
                         help="workflow version")
