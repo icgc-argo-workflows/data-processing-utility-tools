@@ -1,13 +1,31 @@
 #!/usr/bin/env python3
 
+"""
+ Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Affero General Public License as published
+ by the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Affero General Public License for more details.
+
+ You should have received a copy of the GNU Affero General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>.
+
+ Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
+         Linda Xiang <linda.xiang@oicr.on.ca>
+ """
+
 import os
 import sys
 import json
 from argparse import ArgumentParser
 import hashlib
 import subprocess
-
-
 
 
 def get_wf_fullname(wf_short_name):
@@ -65,12 +83,23 @@ def run_cmd(cmd):
 
     return
 
+def get_sample_info(sample_list):
+    for sample in sample_list:
+        for item in ['sampleId', 'specimenId', 'donorId', 'studyId']:
+            sample.pop(item, None)
+            sample['specimen'].pop(item, None)
+            sample['donor'].pop(item, None)
+
+    return sample_list
+
 
 def main(args):
 
 
     payload = {}
-
+    payload['analysisType'] = {
+        "name": "dna_alignment"
+    }
 
     #get inputs of the payload
     payload['inputs'] = []
@@ -79,7 +108,7 @@ def main(args):
             res_json = json.load(f)
         payload['program_id'] = res_json.get('program_id')
         payload['study'] = res_json.get('program_id')
-        payload['sample'] = res_json.get('sample')
+        payload['sample'] = get_sample_info(res_json.get('sample'))
 
         payload['inputs'].append({'read_group_ubam_id': res_json.get('analysisId')})
 
@@ -102,6 +131,8 @@ def main(args):
     payload['workflow']['short_name'] = args.wf_short_name
     payload['workflow']['version'] = args.wf_version
 
+    payload['experiment'] = {}
+
     with open("payload.json", 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
@@ -110,7 +141,7 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--file_to_upload", dest="file_to_upload", type=str, help="File to upload to server")
     parser.add_argument("-a", "--input_payload", dest="input_payload", help="Input payloads for the analysis",
                         type=str, nargs='+')
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['sanger-wxs', 'sanger-wgs', 'broad-mutect2'],
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, choices=['user-preprocess', 'rdpc-dna-alignment'],
                         help="workflow short name")
     parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
                         help="workflow version")
