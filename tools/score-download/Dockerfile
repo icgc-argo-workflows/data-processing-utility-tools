@@ -1,4 +1,4 @@
-FROM overture/score:1.6.2
+FROM overture/score:2.0.1
 
 RUN apt-get update && \
     apt-get install -y software-properties-common && \
