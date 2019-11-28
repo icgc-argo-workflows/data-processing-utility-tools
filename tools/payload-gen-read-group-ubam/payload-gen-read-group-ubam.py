@@ -87,9 +87,9 @@ def get_files_info(file_to_upload, filename=None):
 def get_sample_info(sample_list):
     for sample in sample_list:
         for item in ['sampleId', 'specimenId', 'donorId', 'studyId']:
-            sample.pop(item)
-            sample['specimen'].pop(item)
-            sample['donor'].pop(item)
+            sample.pop(item, None)
+            sample['specimen'].pop(item, None)
+            sample['donor'].pop(item, None)
 
     return sample_list
 
