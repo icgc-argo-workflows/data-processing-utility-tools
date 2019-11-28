@@ -6,68 +6,15 @@ import json
 import re
 from argparse import ArgumentParser
 import hashlib
-import copy
 import subprocess
-import uuid
-import datetime
 
 
-def get_app_info(wf_name, data_type):
-    app_info = {
-        "sanger-wxs": {
-            "snv": ["CaVEMan"],
-            "indel": ["Pindel"]
-        },
-        "sanger-wgs": {
-            "snv": ["CaVEMan"],
-            "indel": ["Pindel"],
-            "cnv": ["ASCAT"],
-            "sv": ["BRASS"]
-        },
-        "broad-mutect2": {
-            "snv-indel": ["Mutect2"]
-        }
+def get_wf_fullname(wf_short_name):
+    wf_fullname = {
+        "user-preprocess": "Client Side preprcess",
+        "rdpc-dna-alignment": "RDPC Side DNA Alignment"
     }
-
-    if app_info.get(wf_name) and app_info.get(wf_name).get(data_type):
-        return app_info.get(wf_name).get(data_type)
-    else:
-        sys.exit("Unknown workflow or data type")
-
-
-def get_analysis_type(data_type):
-    analysis_type = {
-        "snv": "Simple somatic mutation calling",
-        "indel": "Simple somatic mutation calling",
-        "snv-indel": "Simple somatic mutation calling",
-        "cnv": "Copy number somatic mutation calling",
-        "sv": "Structural somatic mutation calling"
-    }
-
-    return analysis_type.get(data_type)
-
-def get_data_type(file_to_upload):
-    filename = os.path.basename(file_to_upload)
-    if re.match(r".*\.copynumber\.caveman\.vcf\.gz$", filename):
-        data_type = 'cnv'
-    elif re.match(r".*\.annot\.vcf\.gz$", filename):
-        data_type = 'sv'
-    elif re.match(r".*\.flagged\.vcf\.gz$", filename):
-        data_type = 'indel'
-    elif re.match(r".*\.flagged\.muts\.vcf\.gz$", filename):
-        data_type = 'snv'
-    elif re.match(r"broad-mutect2\.snv-indel\.vcf\.gz$", filename):
-        data_type = 'snv-indel'
-    else:
-        sys.exit("Unknown data_type!")
-
-    return data_type
-
-
-def get_uuid5(bid, fid):
-    uuid5 = str(uuid.uuid5(uuid.UUID("6ba7b810-9dad-11d1-80b4-00c04fd430c8"), "%s/%s" % (bid, fid)))
-    return uuid5
-
+    return wf_fullname.get(wf_short_name)
 
 def calculate_size(file_path):
     return os.stat(file_path).st_size
@@ -111,7 +58,7 @@ def get_files_info(file_to_upload, filename=None):
     payload_file['fileMd5sum'] = calculate_md5(file_to_upload)
     payload_file['fileAccess'] = "controlled"
     payload_file['fileType'] = "BAM"
-    payload_file['info']['dataType'] = "Read Group Unaligned BAM"
+    payload_file['info']['dataType'] = "Read Group Unmapped BAM"
 
     return payload_file
 
@@ -123,8 +70,7 @@ def main(args):
 
     read_group = metadata.get("read_group")
 
-    with open("payload_template.json", "r") as f:
-        payload = json.load(f)
+    payload = {}
 
     payload['program_id'] = metadata.get('program_id')
     payload['study'] = metadata.get('program_id')
@@ -132,7 +78,7 @@ def main(args):
     payload['sample'] = metadata.get('sample')
 
     payload['inputs'] = []
-    payload['inputs'].append({"sequencing_experiment_analysis_id": metadata.get('analysisId')})
+    payload['inputs'].append({"sequencing_experiment_id": metadata.get('analysisId')})
 
     #get readgroup info
     for rg in read_group:
@@ -146,7 +92,10 @@ def main(args):
     payload['file'].append(get_files_info(args.file_to_upload))
 
     #get workflow info
-
+    payload['workflow'] = {}
+    payload['workflow']['name'] = get_wf_fullname(args.wf_short_name)
+    payload['workflow']['short_name'] = args.wf_short_name
+    payload['workflow']['version'] = args.wf_version
 
     with open("payload.json", 'w') as f:
         f.write(json.dumps(payload, indent=2))

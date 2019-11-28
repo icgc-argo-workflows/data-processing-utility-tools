@@ -23,12 +23,12 @@
 
 nextflow.preview.dsl=2
 
-params.sequencing_experiment_analysis = "data/sequencing_experiment.01.json"
-params.file_to_upload = "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam"
+params.sequencing_experiment_analysis = ""
+params.file_to_upload = ""
 params.wf_short_name = ""
 params.wf_version = ""
 
-include "../payload-gen-for-read-group-lane-bam" params(params)
+include "../payload-gen-read-group-ubam" params(params)
 
 workflow {
   main:

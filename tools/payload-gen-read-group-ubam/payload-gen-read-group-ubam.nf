@@ -40,7 +40,7 @@ def getSecondaryFile(main_file){  //this is kind of like CWL's secondary files
 }
 
 process payloadGeneration {
-  container "quay.io/icgc-argo/payload-gen-for-read-group-lane-bam:payload-gen-for-read-group-lane-bam.0.1.0.1"
+  container "quay.io/icgc-argo/payload-gen-read-group-ubam:payload-gen-read-group-ubam.0.1.0.0"
 
   input:
     path sequencing_experiment_analysis
@@ -56,7 +56,7 @@ process payloadGeneration {
     args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""
     args_wf_version = wf_version.length() > 0 ? "-v ${wf_version}" : ""
     """
-    payload-generation.py \
+    payload-gen-read-group-ubam.py \
       -a ${sequencing_experiment_analysis} \
       -f ${file_to_upload} \
       ${args_wf_short_name} ${args_wf_version}
