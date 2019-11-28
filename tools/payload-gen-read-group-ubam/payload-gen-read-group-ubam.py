@@ -79,7 +79,8 @@ def get_files_info(file_to_upload, filename=None):
     payload_file['fileMd5sum'] = calculate_md5(file_to_upload)
     payload_file['fileAccess'] = "controlled"
     payload_file['fileType'] = "BAM"
-    payload_file['info']['dataType'] = "Read Group Unmapped BAM"
+    payload_file['info'] = {}
+    payload_file['info']['data_type'] = "Read Group Unmapped BAM"
 
     return payload_file
 
