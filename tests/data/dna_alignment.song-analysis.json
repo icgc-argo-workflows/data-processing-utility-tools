@@ -1,0 +1,79 @@
+{
+  "analysisId": "a4694aee-cc75-4ef1-a94a-eecc75bef1bc",
+  "study": "TEST-PRO",
+  "analysisState": "UNPUBLISHED",
+  "sample": [
+    {
+      "info": {},
+      "sampleId": "2648e53f-cb71-5eaf-b7ec-6b4766d50e2a",
+      "specimenId": "2648e53f-cb71-5eaf-b7ec-6b4766d50e2a",
+      "sampleSubmitterId": "HCC1143_FASTQ_INPUT",
+      "sampleType": "DNA",
+      "specimen": {
+        "info": {},
+        "specimenId": "2648e53f-cb71-5eaf-b7ec-6b4766d50e2a",
+        "donorId": "96c05977-b40e-5c00-8bc6-3aaa8fbdda35",
+        "specimenSubmitterId": "HCC1143_FASTQ_INPUT",
+        "specimenClass": "Tumour",
+        "specimenType": "Primary tumour - solid tissue"
+      },
+      "donor": {
+        "donorId": "96c05977-b40e-5c00-8bc6-3aaa8fbdda35",
+        "donorSubmitterId": "HCC1143",
+        "studyId": "TEST-PRO",
+        "donorGender": "female",
+        "info": {}
+      }
+    }
+  ],
+  "file": [
+    {
+      "info": {
+        "data_type": "Aligned Reads"
+      },
+      "objectId": "971f7c2a-03ad-51e8-968c-81e9c0cad859",
+      "studyId": "TEST-PRO",
+      "analysisId": "a4694aee-cc75-4ef1-a94a-eecc75bef1bc",
+      "fileName": "HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
+      "fileSize": 13197,
+      "fileType": "BAM",
+      "fileMd5sum": "f3a4d39960176c99bd459e7fd755edd2",
+      "fileAccess": "controlled"
+    },
+    {
+      "info": {
+        "data_type": "Aligned Reads Index"
+      },
+      "objectId": "089c78c2-9a1c-5cc9-bc30-d68ae6c8e19d",
+      "studyId": "TEST-PRO",
+      "analysisId": "a4694aee-cc75-4ef1-a94a-eecc75bef1bc",
+      "fileName": "HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam.bai",
+      "fileSize": 352,
+      "fileType": "BAI",
+      "fileMd5sum": "ba7b01a93c072742b99d74e4823e875c",
+      "fileAccess": "controlled"
+    }
+  ],
+  "analysisType": {
+    "name": "dna_alignment",
+    "version": 3
+  },
+  "inputs": [
+    {
+      "read_group_ubam_id": "14159e56-0159-475b-959e-560159c75b85"
+    },
+    {
+      "read_group_ubam_id": "5e3e5380-4c90-4901-be53-804c90f9018b"
+    },
+    {
+      "read_group_ubam_id": "83e352d7-afec-4bcc-a352-d7afecebccce"
+    }
+  ],
+  "workflow": {
+    "name": "dna-seq-alignment",
+    "version": "0.2.3.0",
+    "short_name": "dna-seq-alignment"
+  },
+  "experiment": {},
+  "program_id": "TEST-PRO"
+}
