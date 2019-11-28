@@ -1,8 +1,8 @@
 {
   "input_payload": [
-    "data/lane_seq_submission.C0HVY_2.lane.bam.json",
-    "data/lane_seq_submission.D0RE2_1.lane.bam.json",
-    "data/lane_seq_submission.D0RH0_2.lane.bam.json"
+    "data/rg_ubam.song-analysis.01.json",
+    "data/rg_ubam.song-analysis.02.json",
+    "data/rg_ubam.song-analysis.03.json"
   ],
   "file_to_upload": "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
   "wf_short_name": "rdpc-dna-alignment",
