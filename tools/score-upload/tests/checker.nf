@@ -41,4 +41,5 @@ workflow {
     params.song_url,
     params.score_url
   )
+  ScoreUpload.out[0].view()
 }

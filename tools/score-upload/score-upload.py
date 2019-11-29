@@ -49,7 +49,10 @@ def main(args):
   ret = run_command(cmd)
 
   if ret[0].returncode != 0:
+    print('')
     sys.exit('Upload failed, error msg: %s' % ret[2])
+  else:
+    print('OK')
 
 
 if __name__ == "__main__":
