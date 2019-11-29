@@ -23,15 +23,17 @@
 
 nextflow.preview.dsl=2
 
-params.song_analysis = "song-analysis-read-group-ubam.json"
+params.song_analysis = ""
+params.files = ""
 
-include "../score-manifest-gen"
+include "../score-manifest-gen" params(params)
 
 
 workflow {
   main:
     ScoreManifestGen(
-      file(params.song_analysis)
+      file(params.song_analysis),
+      Channel.fromPath(params.files).collect()
     )
 
   publish:

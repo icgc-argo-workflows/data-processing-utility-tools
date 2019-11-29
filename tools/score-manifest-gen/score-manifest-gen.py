@@ -36,11 +36,12 @@ def main(args):
   with open(manifest_file, "w") as m:
     m.write("%s\t\t\n" % song_meta["analysisId"])
     for f in song_meta["file"]:
-      m.write("%s\t%s\t%s\n" % (f["objectId"], f["fileName"], f["fileMd5sum"]))
+      m.write("%s\t%s\t%s\n" % (f["objectId"], os.path.join(os.getcwd(), f["fileName"]), f["fileMd5sum"]))
 
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-s", "--song-analysis-json", dest="song_analysis", required=True)
+    parser.add_argument("-f", "--files", dest="files", required=True, nargs="+")
     args = parser.parse_args()
 
     main(args)
