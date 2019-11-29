@@ -27,6 +27,7 @@ params.analysis_id = ""
 params.study = ""
 params.song_url = ""
 params.token_file = ""
+params.score_upload_status = ""
 
 
 process SongAnalysisPublish {
@@ -35,6 +36,7 @@ process SongAnalysisPublish {
   input:
     val analysis_id
     val study
+    val score_upload_status
     val song_url
     path token_file
 
@@ -51,6 +53,7 @@ workflow {
   SongAnalysisPublish(
     params.analysis_id,
     params.study,
+    params.score_upload_status,
     params.song_url,
     file(params.token_file)
   )

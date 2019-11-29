@@ -27,6 +27,7 @@ params.analysis_id = ""
 params.study = ""
 params.song_url = "https://song.qa.argo.cancercollaboratory.org"
 params.token_file = "/Users/junjun/access_token"
+params.score_upload_status = "OK"
 
 include "../song-analysis-publish"
 
@@ -34,6 +35,7 @@ workflow {
   SongAnalysisPublish(
     params.analysis_id,
     params.study,
+    params.score_upload_status,
     params.song_url,
     file(params.token_file)
   )
