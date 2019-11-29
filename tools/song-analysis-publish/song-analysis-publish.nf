@@ -38,6 +38,9 @@ process SongAnalysisPublish {
     val song_url
     path token_file
 
+  output:
+    stdout()
+
   script:
     """
     song-analysis-publish.py -a ${analysis_id} -p ${study} -s ${song_url} -t ${token_file}
@@ -51,4 +54,5 @@ workflow {
     params.song_url,
     file(params.token_file)
   )
+  SongAnalysisPublish.out[0].view()
 }

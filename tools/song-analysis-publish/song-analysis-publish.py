@@ -41,6 +41,7 @@ def main(args):
     res = requests.put("%s/studies/%s/analysis/publish/%s" % (args.song_url, args.study, args.analysis_id),
                         headers=headers)
     res.raise_for_status()
+    print(res.status_code)
   except requests.exceptions.HTTPError as err:
     sys.exit("SONG analysis publish failed, HTTPError: %s" % err)
   except requests.exceptions.RequestException as err:

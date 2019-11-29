@@ -37,4 +37,5 @@ workflow {
     params.song_url,
     file(params.token_file)
   )
+  SongAnalysisPublish.out[0].view()
 }
