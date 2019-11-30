@@ -32,12 +32,12 @@ params.score_upload_status = "OK"
 include "../song-analysis-publish"
 
 workflow {
-  SongAnalysisPublish(
+  songAnalysisPublish(
     params.analysis_id,
     params.study,
     params.score_upload_status,
     params.song_url,
     file(params.token_file)
   )
-  SongAnalysisPublish.out[0].view()
+  songAnalysisPublish.out[0].view()
 }
