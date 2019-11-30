@@ -31,11 +31,11 @@ include "../payload-gen-seq-experiment" params(params)
 
 workflow {
   main:
-    PayloadGenSeqExperiment(
+    payloadGenSeqExperiment(
       file(params.user_submit_metadata),
       params.wf_short_name,
       params.wf_version
     )
   publish:
-    PayloadGenSeqExperiment.out.payload to: 'outdir', mode: 'copy', overwrite: true
+    payloadGenSeqExperiment.out.payload to: 'outdir', mode: 'copy', overwrite: true
 }

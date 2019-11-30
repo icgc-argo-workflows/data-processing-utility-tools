@@ -16,8 +16,9 @@
  You should have received a copy of the GNU Affero General Public License
  along with this program. If not, see <https://www.gnu.org/licenses/>.
 
- Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
-         Linda Xiang <linda.xiang@oicr.on.ca>
+ Authors:
+   Linda Xiang <linda.xiang@oicr.on.ca>
+   Junjun Zhang <junjun.zhang@oicr.on.ca>
  """
 
 
@@ -43,7 +44,7 @@ def get_files_info(input_file):
     payload_file['fileAccess'] = "controlled"
     payload_file['info'] = {}
     payload_file['info']['submitter_read_group_id'] = input_file.get('submitter_read_group_id')
-    payload_file['info']['data_type'] = input_file.get('type')
+    payload_file['info']['data_type'] = 'Submitted Reads'
     return payload_file
 
 def main(args):
@@ -68,8 +69,19 @@ def main(args):
     sample['sampleType'] = "DNA"
     sample['specimen'] = {}
     sample['specimen']['specimenSubmitterId'] = metadata.get('submitter_specimen_id', None)
-    sample['specimen']['specimenClass'] = "Tumour"
-    sample['specimen']['specimenType'] = metadata.get('tumour_normal_designation')
+
+    # SONG specimenType needs to be synchronized with latest ARGO clinical dictionary
+    specimen_type = metadata.get('tumour_normal_designation')
+    sample['specimen']['specimenType'] = specimen_type
+    if 'tumour' in specimen_type.lower():
+        sample['specimen']['specimenClass'] = "Tumour"
+    elif 'normal' in specimen_type.lower() and 'adjacent' in specimen_type.lower():
+        sample['specimen']['specimenClass'] = "Adjacent normal"
+    elif 'normal' in specimen_type.lower():
+        sample['specimen']['specimenClass'] = "Normal"
+    else:
+        sys.exit("Unknown specimen type: %s" % specimen_type)
+
     sample['donor'] = {}
     sample['donor']['donorSubmitterId'] = metadata.get('submitter_donor_id')
     sample['donor']['donorGender'] = metadata.get('gender', None)
