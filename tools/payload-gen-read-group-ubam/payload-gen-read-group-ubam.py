@@ -116,7 +116,7 @@ def main(args):
     for rg in read_group:
         rg_id = rg.get("submitter_read_group_id")
         rg_fname = "".join([c if re.match(r"[a-zA-Z0-9\-_]", c) else "_" for c in rg_id])
-        if not rg_fname in args.file_to_upload: continue
+        if not args.file_to_upload.startswith(rg_fname): continue
         payload.update(rg)
 
     #get file info

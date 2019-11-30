@@ -32,13 +32,12 @@ include "../payload-gen-read-group-ubam" params(params)
 
 workflow {
   main:
-    PayloadGenReadGroupUbam(
+    payloadGenReadGroupUbam(
       file(params.sequencing_experiment_analysis),
       file(params.file_to_upload),
-      file(getSecondaryFile(params.file_to_upload)),
       params.wf_short_name,
       params.wf_version
     )
   publish:
-    PayloadGenReadGroupUbam.out.payload to: 'outdir', mode: 'copy', overwrite: true
+    payloadGenReadGroupUbam.out.payload to: 'outdir', mode: 'copy', overwrite: true
 }
