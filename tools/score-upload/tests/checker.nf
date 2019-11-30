@@ -34,12 +34,12 @@ params.score_url = "https://score.qa.argo.cancercollaboratory.org"
 include "../score-upload" params(params)
 
 workflow {
-  ScoreUpload(
+  scoreUpload(
     file(params.manifest_file),
     Channel.fromPath(params.upload_files).collect(),
     file(params.token_file),
     params.song_url,
     params.score_url
   )
-  ScoreUpload.out[0].view()
+  scoreUpload.out[0].view()
 }
