@@ -32,12 +32,12 @@ include "../score-download" params(params)
 
 workflow {
   main:
-    ScoreDownload(
+    scoreDownload(
       file(params.manifest_file),
       file(params.token_file),
       params.song_url,
       params.score_url
     )
   publish:
-    ScoreDownload.out.downloaded_files to: 'outdir', mode: 'copy', overwrite: true
+    scoreDownload.out.downloaded_files to: 'outdir', mode: 'copy', overwrite: true
 }
