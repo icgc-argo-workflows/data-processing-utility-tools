@@ -31,11 +31,11 @@ include "../score-manifest-gen" params(params)
 
 workflow {
   main:
-    ScoreManifestGen(
+    scoreManifestGen(
       file(params.song_analysis),
       Channel.fromPath(params.files).collect()
     )
 
   publish:
-    ScoreManifestGen.out.manifest_file to: 'outdir', mode: 'copy', overwrite: true
+    scoreManifestGen.out.manifest_file to: 'outdir', mode: 'copy', overwrite: true
 }
