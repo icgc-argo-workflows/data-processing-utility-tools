@@ -18,31 +18,28 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Authors:
+ *   Linda Xiang <linda.xiang@oicr.on.ca>
+ *   Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.file_to_upload = ""
-params.input_payload = ""
+params.files_to_upload = ""
+params.input_payloads = ""
 params.wf_short_name = ""
 params.wf_version = ""
 
 include "../payload-gen-dna-alignment" params(params)
 
-Channel
-  .fromPath(params.input_payload, checkIfExists: true)
-  .set { input_payload_ch }
-
 workflow {
   main:
-    PayloadGenDnaAlignment(
-      file(params.file_to_upload),
-      file(getSecondaryFile(params.file_to_upload)),
-      input_payload_ch.collect(),
+    payloadGenDnaAlignment(
+      Channel.fromPath(params.files_to_upload).collect(),
+      Channel.fromPath(params.input_payloads).collect(),
       params.wf_short_name,
       params.wf_version
     )
   publish:
-    PayloadGenDnaAlignment.out.payload to: 'outdir', mode: 'copy', overwrite: true
+    payloadGenDnaAlignment.out.payload to: 'outdir', mode: 'copy', overwrite: true
 }

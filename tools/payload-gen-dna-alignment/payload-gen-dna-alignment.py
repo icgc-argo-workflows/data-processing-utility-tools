@@ -46,18 +46,14 @@ def calculate_md5(file_path):
     return md5.hexdigest()
 
 
-def get_files_info(file_to_upload, filename=None):
+def get_files_info(file_to_upload):
     payload_file = {}
-    if filename:
-        cmd = 'cp %s %s' % (file_to_upload, filename)
-        run_cmd(cmd)
-        file_to_upload = os.path.realpath(filename)
     payload_file['fileName'] = os.path.basename(file_to_upload)
     payload_file['fileType'] = file_to_upload.strip(".gz").split(".")[-1].upper()
     payload_file['fileSize'] = calculate_size(file_to_upload)
     payload_file['fileMd5sum'] = calculate_md5(file_to_upload)
     payload_file['fileAccess'] = "controlled"
-    payload_file['info'] = {"data_type": "Aligned Reads" if payload_file['fileType'] in ['bam', 'cram'] else "Aligned Reads Index"}
+    payload_file['info'] = {"data_type": "Aligned Reads" if payload_file['fileType'] in ['BAM', 'CRAM'] else "Aligned Reads Index"}
 
     return payload_file
 
@@ -102,7 +98,7 @@ def main(args):
 
     #get inputs of the payload
     payload['inputs'] = []
-    for res_file in args.input_payload:
+    for res_file in args.input_payloads:
         with open(res_file, 'r') as f:
             res_json = json.load(f)
         payload['program_id'] = res_json.get('program_id')
@@ -114,15 +110,8 @@ def main(args):
 
     #get file of the payload
     payload['file'] = []
-    payload['file'].append(get_files_info(args.file_to_upload))
-
-    #get index files of the payload
-    if os.path.exists(args.file_to_upload + ".bai"):
-        payload['file'].append(get_files_info(args.file_to_upload + ".bai"))
-    elif os.path.exists(args.file_to_upload + ".crai"):
-        payload['file'].append(get_files_info(args.file_to_upload + ".crai"))
-    else:
-        sys.exit('\n%s: Missing index file')
+    for file_to_upload in args.files_to_upload:
+      payload['file'].append(get_files_info(file_to_upload))
 
     #get workflow info of the payload
     payload['workflow'] = {}
@@ -137,8 +126,8 @@ def main(args):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("-f", "--file_to_upload", dest="file_to_upload", type=str, help="File to upload to server")
-    parser.add_argument("-a", "--input_payload", dest="input_payload", help="Input payloads for the analysis",
+    parser.add_argument("-f", "--files_to_upload", dest="files_to_upload", type=str, nargs="+", help="File to upload to server")
+    parser.add_argument("-a", "--input_payloads", dest="input_payloads", help="Input payloads for the analysis",
                         type=str, nargs='+')
     parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
                         help="workflow short name")
