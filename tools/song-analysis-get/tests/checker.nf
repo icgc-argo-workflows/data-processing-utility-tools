@@ -32,12 +32,12 @@ include "../song-analysis-get" params(params)
 
 workflow {
   main:
-    SongAnalysisGet(
+    songAnalysisGet(
       params.analysis_id,
       params.study,
       params.song_url,
       file(params.token_file)
     )
   publish:
-    SongAnalysisGet.out.song_analysis to: 'outdir', mode: 'copy', overwrite: true
+    songAnalysisGet.out.song_analysis to: 'outdir', mode: 'copy', overwrite: true
 }
