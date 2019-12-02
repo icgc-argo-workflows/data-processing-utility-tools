@@ -1,0 +1,4 @@
+{
+  "song_analysis": "input/song-analysis-read-group-ubam.json",
+  "files": ["input/C0HVY_2.lane.bam"]
+}
