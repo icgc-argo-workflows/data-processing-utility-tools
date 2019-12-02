@@ -13,4 +13,6 @@ RUN chmod -R 777 /score-client
 
 ENV PATH="/tools:/score-client/bin:${PATH}"
 
-COPY *.py /tools/
+WORKDIR /tools
+
+COPY . .
