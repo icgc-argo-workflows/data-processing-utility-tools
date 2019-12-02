@@ -1,0 +1,13 @@
+{
+  "input_payloads": [
+    "data/rg_ubam.song-analysis.01.json",
+    "data/rg_ubam.song-analysis.02.json",
+    "data/rg_ubam.song-analysis.03.json"
+  ],
+  "files_to_upload": [
+    "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
+    "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam.bai"
+  ],
+  "wf_short_name": "dna-seq-alignment",
+  "wf_version": "0.2.3.0"
+}
