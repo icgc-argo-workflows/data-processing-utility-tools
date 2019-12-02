@@ -1,0 +1,6 @@
+{
+  "sequencing_experiment_analysis": "data/seq_exp-fq.song-analysis.json",
+  "file_to_upload": "data/D0RE2_1.lane.bam",
+  "wf_short_name": "dna-seq-alignment",
+  "wf_version": "0.2.3.0"
+}
