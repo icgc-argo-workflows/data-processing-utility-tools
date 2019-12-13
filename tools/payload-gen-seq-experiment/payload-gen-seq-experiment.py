@@ -42,9 +42,7 @@ def get_files_info(input_file):
     payload_file['fileMd5sum'] = input_file.get('checksum')
     payload_file['fileType'] = input_file.get('format')
     payload_file['fileAccess'] = "controlled"
-    payload_file['info'] = {}
-    payload_file['info']['submitter_read_group_id'] = input_file.get('submitter_read_group_id')
-    payload_file['info']['data_type'] = 'Submitted Reads'
+    # payload_file['dataType'] = 'Sequencing Reads'
     return payload_file
 
 def main(args):
@@ -57,18 +55,22 @@ def main(args):
         "name": "sequencing_experiment"
     }
 
-    payload['program_id'] = metadata.get('program_id')
     payload['study'] = metadata.get('program_id')
-    for item in ['submitter_sequencing_experiment_id', 'sequencing_center', 'platform', 'platform_model', 'library_strategy', 'sequencing_date', 'read_group_count']:
+
+    for item in ['submitter_sequencing_experiment_id', 'read_group_count']:
         payload[item] = metadata.get(item)
+
+    payload['experiment'] = {}
+    for item in ['sequencing_center', 'platform', 'platform_model', 'library_strategy', 'sequencing_date']:
+        payload['experiment'][item] = metadata.get(item)
 
     # get sample of the payload
     payload['sample'] = []
     sample = {}
     sample['sampleSubmitterId'] = metadata.get('submitter_sample_id')
-    sample['sampleType'] = "DNA"
+    sample['sampleType'] = metadata.get('sample_type')
     sample['specimen'] = {}
-    sample['specimen']['specimenSubmitterId'] = metadata.get('submitter_specimen_id', None)
+    sample['specimen']['specimenSubmitterId'] = metadata.get('submitter_specimen_id')
 
     # SONG specimenType needs to be synchronized with latest ARGO clinical dictionary
     specimen_type = metadata.get('tumour_normal_designation')
@@ -84,7 +86,7 @@ def main(args):
 
     sample['donor'] = {}
     sample['donor']['donorSubmitterId'] = metadata.get('submitter_donor_id')
-    sample['donor']['donorGender'] = metadata.get('gender', None)
+    sample['donor']['donorGender'] = metadata.get('gender')
     payload['sample'].append(sample)
 
     # get workflow of the payload
@@ -94,40 +96,13 @@ def main(args):
     payload['workflow']['version'] = args.wf_version
 
     # get file and read_group of payload
-    payload['read_group'] = []
+    payload['read_groups'] = metadata.get("read_groups")
+
     payload['file'] = []
-    if metadata.get("input_seq_format") == 'FASTQ':
-        read_group = metadata.get("read_groups")
+    # get file of the payload
+    for input_file in metadata.get("files"):
+        payload['file'].append(get_files_info(input_file))
 
-        #get read_group of the payload
-        for rg in read_group:
-            rg_item = {}
-            for item in ['submitter_read_group_id', 'platform_unit', 'library_name', 'is_paired_end', 'read_length_r1', 'read_length_r2', 'insert_size', 'sample_barcode']:
-                rg_item[item] = rg.get(item, None)
-            payload['read_group'].append(rg_item)
-
-            # get file of the payload
-            for input_file in rg.get('files'):
-                payload['file'].append(get_files_info(input_file))
-
-    elif metadata.get("input_seq_format") == 'BAM':
-        files = metadata.get("files")
-
-        # get file of the payload
-        for input_file in files:
-            payload['file'].append(get_files_info(input_file))
-            # get read_group of the payload
-            for rg in input_file.get('read_groups'):
-                rg_item = {}
-                for item in ['submitter_read_group_id', 'platform_unit', 'library_name', 'is_paired_end', 'read_length_r1',
-                             'read_length_r2', 'insert_size', 'sample_barcode']:
-                    rg_item[item] = rg.get(item, None)
-                payload['read_group'].append(rg_item)
-
-    else:
-        sys.exit('\n%s: Input files format are not FASTQ or BAM')
-
-    payload['experiment'] = {}
 
     with open("payload.json", 'w') as f:
         f.write(json.dumps(payload, indent=2))
