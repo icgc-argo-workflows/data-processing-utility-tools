@@ -28,7 +28,7 @@ params.wf_short_name = ""
 params.wf_version = ""
 
 process payloadGenSeqExperiment {
-  container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.0.1.0.0"
+  container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.0.1.0.1"
 
   input:
     path user_submit_metadata

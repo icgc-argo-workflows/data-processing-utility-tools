@@ -28,11 +28,7 @@ from argparse import ArgumentParser
 
 
 def get_wf_fullname(wf_short_name):
-    wf_fullname = {
-        "dna-seq-alignment": "dna-seq-alignment"
-    }
-    return wf_fullname.get(wf_short_name)
-
+    return wf_short_name
 
 
 def get_files_info(input_file):
