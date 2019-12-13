@@ -26,15 +26,6 @@ import sys
 import json
 from argparse import ArgumentParser
 
-
-def get_wf_fullname(wf_short_name):
-    wf_fullname = {
-        "dna-seq-alignment": "dna-seq-alignment"
-    }
-    return wf_fullname.get(wf_short_name)
-
-
-
 def get_files_info(input_file):
     payload_file = {}
     payload_file['fileName'] = input_file.get('name')
@@ -91,8 +82,8 @@ def main(args):
 
     # get workflow of the payload
     payload['workflow'] = {}
-    payload['workflow']['name'] = get_wf_fullname(args.wf_short_name)
-    payload['workflow']['short_name'] = args.wf_short_name
+    payload['workflow']['name'] = args.wf_name
+    payload['workflow']['short_name'] = args.wf_short_name if args.wf_short_name is not None else args.wf_name
     payload['workflow']['version'] = args.wf_version
 
     # get file and read_group of payload
@@ -111,10 +102,9 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-m", "--user_submit_metadata", dest="user_submit_metadata",
                         help="json file containing experiment, read_group and file information submitted from user")
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
-                        help="workflow short name")
-    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
-                        help="workflow version")
+    parser.add_argument("-w", "--wf_name", dest="wf_name", type=str, help="workflow full name", required=True)
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str, help="workflow short name")
+    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str, help="workflow version")
     args = parser.parse_args()
 
     main(args)
