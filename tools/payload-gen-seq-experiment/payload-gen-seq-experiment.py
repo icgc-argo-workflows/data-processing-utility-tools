@@ -30,7 +30,7 @@ def get_files_info(input_file):
     payload_file = {}
     payload_file['fileName'] = input_file.get('name')
     payload_file['fileSize'] = input_file.get('size')
-    payload_file['fileMd5sum'] = input_file.get('checksum')
+    payload_file['fileMd5sum'] = input_file.get('md5sum')
     payload_file['fileType'] = input_file.get('format')
     payload_file['fileAccess'] = "controlled"
     # payload_file['dataType'] = 'Sequencing Reads'
@@ -47,12 +47,10 @@ def main(args):
     }
 
     payload['study'] = metadata.get('program_id')
-
-    for item in ['submitter_sequencing_experiment_id', 'read_group_count']:
-        payload[item] = metadata.get(item)
+    payload['read_group_count'] = metadata.get('read_group_count')
 
     payload['experiment'] = {}
-    for item in ['sequencing_center', 'platform', 'platform_model', 'library_strategy', 'sequencing_date']:
+    for item in ['submitter_sequencing_experiment_id', 'sequencing_center', 'platform', 'platform_model', 'library_strategy', 'sequencing_date']:
         payload['experiment'][item] = metadata.get(item)
 
     # get sample of the payload
