@@ -24,14 +24,16 @@
 nextflow.preview.dsl=2
 
 params.user_submit_metadata = ""
+params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
 
 process payloadGenSeqExperiment {
-  container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.0.1.0.0"
+  container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.0.1.1.0"
 
   input:
     path user_submit_metadata
+    val wf_name
     val wf_short_name
     val wf_version
 
@@ -40,10 +42,11 @@ process payloadGenSeqExperiment {
 
   script:
     args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""
-    args_wf_version = wf_version.length() > 0 ? "-v ${wf_version}" : ""
     """
     payload-gen-seq-experiment.py \
          -m ${user_submit_metadata} \
-         ${args_wf_short_name} ${args_wf_version}
+         -w ${wf_name} \
+         -r ${workflow.runName} \
+         -v ${wf_version} ${args_wf_short_name}
     """
 }

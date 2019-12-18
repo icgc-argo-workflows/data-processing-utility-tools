@@ -24,6 +24,7 @@
 nextflow.preview.dsl=2
 
 params.user_submit_metadata = ""
+params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
 
@@ -33,6 +34,7 @@ workflow {
   main:
     payloadGenSeqExperiment(
       file(params.user_submit_metadata),
+      params.wf_name,
       params.wf_short_name,
       params.wf_version
     )
