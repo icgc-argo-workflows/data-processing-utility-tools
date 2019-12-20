@@ -50,7 +50,7 @@ def get_file_info(ubam):
         'fileAccess': 'controlled',
         'fileType': 'BAM',
         'info': {
-            'data_type': 'Read Group Unmapped BAM'   # dataType may later be supported natively in SONG
+            'dataType': 'Read Group Unmapped BAM'   # dataType may later be supported natively in SONG
         }
     }
 
