@@ -65,25 +65,44 @@ def get_sample_info(sample_list):
     return sample_list
 
 
+def get_readgroup_info(ubam, metadata):
+    for rg in metadata.get("read_groups"):
+        rg_id = rg.get("submitter_read_group_id")
+        ubam_name = readgroup_id_to_fname(rg_id)
+        if os.path.basename(ubam) == ubam_name:
+            return {
+                'submitter_read_group_id': rg.pop('submitter_read_group_id'),
+                'read_group': rg
+            }
+
+    # at this point, not able to find the matching readgroup for the ubam
+    sys.exit("Error found: supplied unmapped BAM %s does not match any read group in "
+                "supplied sequencing experiment metadata.\n" % ubam)
+
+
 def readgroup_id_to_fname(rg_id):
     friendly_fname = "".join([ c if re.match(r"[a-zA-Z0-9\.\-_]", c) else "_" for c in rg_id ])
     md5sum = hashlib.md5(rg_id.encode('utf-8')).hexdigest()
-    return "%s.%s" % (friendly_fname, md5sum)
+    return "%s.%s.lane.bam" % (friendly_fname, md5sum)
 
 
 def main(args):
     with open(args.sequencing_experiment_analysis, 'r') as f:
         metadata = json.load(f)
 
+    readgroup_info = get_readgroup_info(args.ubam, metadata)
+
     payload = {
         'analysisType': {
             'name': 'read_group_ubam'
         },
         'study': metadata.get('study'),
+        'submitter_read_group_id': readgroup_info['submitter_read_group_id'],
+        'read_group': readgroup_info['read_group'],
         'sample': get_sample_info(metadata.get('sample')),
         'file': [ get_file_info(args.ubam) ],
-        'read_group': {},
         'experiment': {
+            'sequencing_experiment_id': metadata.get('analysisId'),
             'submitter_sequencing_experiment_id': metadata.get('submitter_sequencing_experiment_id')
         },
         'workflow': {
@@ -101,15 +120,6 @@ def main(args):
     }
 
     payload['experiment'].update(metadata.get('experiment', {}))
-
-    #get readgroup info
-    for rg in metadata.get("read_groups"):
-        rg_id = rg.get("submitter_read_group_id")
-        ubam_name = readgroup_id_to_fname(rg_id)
-        if args.ubam.startswith(ubam_name):
-            payload['submitter_read_group_id'] = rg.pop('submitter_read_group_id')
-            payload['read_group'].update(rg)
-            break
 
     with open("payload.json", 'w') as f:
         f.write(json.dumps(payload, indent=2))
