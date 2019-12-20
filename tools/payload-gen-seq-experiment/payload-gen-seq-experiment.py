@@ -104,13 +104,13 @@ def main(args):
             'sequencing_date': metadata.get('sequencing_date')
         },
         'read_group_count': metadata.get('read_group_count'),
+        'read_groups': [],
         'workflow': {
             'name': args.wf_name,
             'short_name': args.wf_short_name if args.wf_short_name is not None else args.wf_name,
             'version': args.wf_version,
             'run_id': args.wf_run
         },
-        'read_groups': [],
         'sample': [],
         'file': []
     }
@@ -142,7 +142,9 @@ def main(args):
                 'fileMd5sum': input_file.get('md5sum'),
                 'fileType': input_file.get('format'),
                 'fileAccess': 'controlled',
-                # 'dataType': 'Sequencing Reads'  # SONG does not accept this yet
+                'info': {
+                    'dataType': 'Submitted Reads'  # dataType may later be supported natively in SONG
+                }
             }
         )
 
