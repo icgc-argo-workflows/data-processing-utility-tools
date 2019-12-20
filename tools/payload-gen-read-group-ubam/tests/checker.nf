@@ -24,20 +24,24 @@
 nextflow.preview.dsl=2
 
 params.sequencing_experiment_analysis = ""
-params.file_to_upload = ""
+params.ubam = ""
+params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
 
 include "../payload-gen-read-group-ubam" params(params)
 
+
 workflow {
   main:
     payloadGenReadGroupUbam(
       file(params.sequencing_experiment_analysis),
-      file(params.file_to_upload),
+      file(params.ubam),
+      params.wf_name,
       params.wf_short_name,
       params.wf_version
     )
+
   publish:
-    payloadGenReadGroupUbam.out.payload to: 'outdir', mode: 'copy', overwrite: true
+    payloadGenReadGroupUbam.out.payload to: 'outdir', overwrite: true
 }
