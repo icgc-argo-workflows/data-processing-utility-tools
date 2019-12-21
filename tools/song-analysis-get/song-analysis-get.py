@@ -50,8 +50,12 @@ def main(args):
   if res.status_code != 200:
     sys.exit("SONG analysis get failed HTTP status code not 200: %s" % res)
   else:
-    with open("%s.song-analysis.json" % args.analysis_id, 'w') as s:
-      s.write(json.dumps(res.json(), indent=2))
+    analysis_json_str = json.dumps(res.json(), indent=2)
+    analysis_dict = json.loads(analysis_json_str)
+    analysis_type = analysis_dict.get('analysisType', {}).get('name')
+    analysis_version = analysis_dict.get('analysisType', {}).get('version')
+    with open("%s.%s.%s.analysis.json" % (args.analysis_id, analysis_type, analysis_version), 'w') as s:
+      s.write(analysis_json_str)
 
 
 if __name__ == "__main__":

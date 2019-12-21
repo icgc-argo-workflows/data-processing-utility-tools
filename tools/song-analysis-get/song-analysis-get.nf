@@ -30,7 +30,7 @@ params.token_file = "NO_FILE"
 
 
 process songAnalysisGet {
-  container "quay.io/icgc-argo/song-analysis-get:song-analysis-get.0.1.0.0"
+  container "quay.io/icgc-argo/song-analysis-get:song-analysis-get.0.1.1.0"
 
   input:
     val analysis_id
@@ -39,7 +39,7 @@ process songAnalysisGet {
     path token_file
 
   output:
-    path "*.song-analysis.json", emit: song_analysis
+    path "*.analysis.json", emit: song_analysis
 
   script:
     token_args = token_file.name != "NO_FILE" ? "-t ${token_file}" : ""
