@@ -42,7 +42,7 @@ process payloadGenReadGroupUbam {
     val wf_version
 
   output:
-    path "*.json", emit: payload
+    path "*.read_group_ubam.payload.json", emit: payload
 
   script:
     args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""

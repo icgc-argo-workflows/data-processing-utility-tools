@@ -24,6 +24,7 @@
 import os
 import sys
 import json
+import uuid
 import re
 from argparse import ArgumentParser
 import hashlib
@@ -121,7 +122,7 @@ def main(args):
 
     payload['experiment'].update(metadata.get('experiment', {}))
 
-    with open("payload.json", 'w') as f:
+    with open("%s.read_group_ubam.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
 
