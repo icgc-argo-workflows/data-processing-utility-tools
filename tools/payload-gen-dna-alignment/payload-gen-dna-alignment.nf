@@ -49,7 +49,7 @@ process payloadGenDnaAlignment {
 
   script:
     args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""
-    args_read_group_ubam_analysis = read_group_ubam_analysis.getName() != 'NO_FILE' ? "-u ${read_group_ubam_analysis}" : ""
+    args_read_group_ubam_analysis = read_group_ubam_analysis.size() > 0 ? "-u ${read_group_ubam_analysis}" : ""
     """
     payload-gen-dna-alignment.py \
       -f ${files_to_upload} \
