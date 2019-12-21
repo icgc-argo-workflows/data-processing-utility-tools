@@ -23,6 +23,7 @@
 
 
 import sys
+import uuid
 import json
 from argparse import ArgumentParser
 
@@ -153,7 +154,7 @@ def main(args):
         rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
         payload['read_groups'].append(rg)
 
-    with open("payload.json", 'w') as f:
+    with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
 

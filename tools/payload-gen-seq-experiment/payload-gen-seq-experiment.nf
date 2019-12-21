@@ -38,7 +38,7 @@ process payloadGenSeqExperiment {
     val wf_version
 
   output:
-    path "payload.json", emit: payload
+    path "*.sequencing_experiment.payload.json", emit: payload
 
   script:
     args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""
