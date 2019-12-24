@@ -27,6 +27,8 @@ from argparse import ArgumentParser
 import hashlib
 import uuid
 import subprocess
+import copy
+from datetime import date
 
 
 def calculate_size(file_path):
@@ -39,6 +41,46 @@ def calculate_md5(file_path):
         for chunk in iter(lambda: f.read(1024 * 1024), b''):
             md5.update(chunk)
     return md5.hexdigest()
+
+
+def rename_file(f, payload, sample_info):
+    sample_id = sample_info[0]['sampleId']
+
+    number_of_ubam_input = 0
+    for a in payload['workflow']['inputs']:
+        if a.get('analysis_type') == 'read_group_ubam':
+            number_of_ubam_input += 1
+    library_strategy = payload['experiment']['library_strategy'].lower()
+
+    if f.endswith('.bam'):
+        file_ext = 'bam'
+    elif f.endswith('.bam.bai'):
+        file_ext = 'bam.bai'
+    elif f.endswith('.cram'):
+        file_ext = 'cram'
+    elif f.endswith('.cram.crai'):
+        file_ext = 'cram.crai'
+    else:
+        sys.exit('Error: unknown aligned seq extention: %s' % f)
+
+    new_name = "%s.%s.%s.%s.grch38.%s" % (
+        sample_id,
+        number_of_ubam_input,
+        date.today().strftime("%Y%m%d"),
+        library_strategy,
+        file_ext
+    )
+
+    new_dir = 'out'
+    try:
+        os.mkdir(new_dir)
+    except FileExistsError:
+        pass
+
+    dst = os.path.join(os.getcwd(), new_dir, new_name)
+    os.symlink(os.path.abspath(f), dst)
+
+    return dst
 
 
 def get_files_info(file_to_upload):
@@ -56,7 +98,8 @@ def get_files_info(file_to_upload):
 
 
 def get_sample_info(sample_list):
-    for sample in sample_list:
+    samples = copy.deepcopy(sample_list)
+    for sample in samples:
         for item in ['info', 'sampleId', 'specimenId', 'donorId', 'studyId']:
             sample.pop(item, None)
             sample['specimen'].pop(item, None)
@@ -110,7 +153,8 @@ def main(args):
 
     # get file of the payload
     for f in args.files_to_upload:
-      payload['file'].append(get_files_info(f))
+      renamed_file = rename_file(f, payload, seq_experiment_analysis_dict['sample'])
+      payload['file'].append(get_files_info(renamed_file))
 
     with open("%s.dna_alignment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))

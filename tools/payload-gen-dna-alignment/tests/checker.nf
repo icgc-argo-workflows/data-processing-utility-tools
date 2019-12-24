@@ -45,5 +45,6 @@ workflow {
       params.wf_version
     )
   publish:
-    payloadGenDnaAlignment.out.payload to: 'outdir', mode: 'copy', overwrite: true
+    payloadGenDnaAlignment.out.payload to: 'outdir', overwrite: true
+    payloadGenDnaAlignment.out.alignment_files to: 'outdir', overwrite: true
 }
