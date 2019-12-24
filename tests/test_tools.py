@@ -74,7 +74,7 @@ def test_app(app, rootDir):
 
     app_outdir = 'outdir'
     if os.path.exists(app_outdir):  # remove if exist
-        shutil.rmtree(app_outdir)
+        subprocess.run(['rm', '-fr', app_outdir])
 
     os.makedirs(app_outdir)
 
