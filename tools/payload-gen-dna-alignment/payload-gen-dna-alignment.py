@@ -105,7 +105,7 @@ def get_sample_info(sample_list):
             sample['specimen'].pop(item, None)
             sample['donor'].pop(item, None)
 
-    return sample_list
+    return samples
 
 
 def main(args):
