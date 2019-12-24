@@ -74,7 +74,7 @@ def test_app(app, rootDir):
 
     app_outdir = 'outdir'
     if os.path.exists(app_outdir):  # remove if exist
-        subprocess.run(['rm', '-fr', app_outdir])
+        subprocess.run(['sudo', 'rm', '-fr', app_outdir])
 
     os.makedirs(app_outdir)
 
@@ -102,5 +102,5 @@ def test_app(app, rootDir):
         assert False, 'Failed with return code: %s; CMD: %s' % (p.returncode, cmd)
     else:
         if os.path.exists(app_outdir):  # clean up
-            subprocess.run(['rm', '-fr', app_outdir])
+            subprocess.run(['sudo', 'rm', '-fr', app_outdir])
         assert True
