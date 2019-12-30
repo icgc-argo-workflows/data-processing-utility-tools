@@ -36,7 +36,8 @@ workflow {
       file(params.user_submit_metadata),
       params.wf_name,
       params.wf_short_name,
-      params.wf_version
+      params.wf_version,
+      'ok'
     )
   publish:
     payloadGenSeqExperiment.out.payload to: 'outdir', mode: 'copy', overwrite: true
