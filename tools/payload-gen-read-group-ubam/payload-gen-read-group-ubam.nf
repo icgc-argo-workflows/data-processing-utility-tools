@@ -25,30 +25,48 @@
 nextflow.preview.dsl=2
 
 params.sequencing_experiment_analysis = ""
-params.file_to_upload = ""
+params.ubam = ""
+params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
 
 
 process payloadGenReadGroupUbam {
-  container "quay.io/icgc-argo/payload-gen-read-group-ubam:payload-gen-read-group-ubam.0.1.0.0"
+  container "quay.io/icgc-argo/payload-gen-read-group-ubam:payload-gen-read-group-ubam.0.1.1.0"
 
   input:
     path sequencing_experiment_analysis
-    path file_to_upload
+    path ubam
+    val wf_name
     val wf_short_name
     val wf_version
 
   output:
-    path "*.json", emit: payload
+    path "*.read_group_ubam.payload.json", emit: payload
 
   script:
     args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""
-    args_wf_version = wf_version.length() > 0 ? "-v ${wf_version}" : ""
     """
     payload-gen-read-group-ubam.py \
       -a ${sequencing_experiment_analysis} \
-      -f ${file_to_upload} \
-      ${args_wf_short_name} ${args_wf_version}
+      -f ${ubam} \
+      -w ${wf_name} \
+      -r ${workflow.runName} \
+      -v ${wf_version} ${args_wf_short_name}
     """
+}
+
+
+workflow {
+  main:
+    payloadGenReadGroupUbam(
+      file(params.sequencing_experiment_analysis),
+      file(params.ubam),
+      params.wf_name,
+      params.wf_short_name,
+      params.wf_version
+    )
+
+  publish:
+    payloadGenReadGroupUbam.out.payload to: 'outdir', overwrite: true
 }
