@@ -25,18 +25,15 @@ import sys
 import json
 from argparse import ArgumentParser
 import hashlib
+import uuid
 import subprocess
-
-
-def get_wf_fullname(wf_short_name):
-    wf_fullname = {
-        "dna-seq-alignment": "dna-seq-alignment"
-    }
-    return wf_fullname.get(wf_short_name)
+import copy
+from datetime import date
 
 
 def calculate_size(file_path):
     return os.stat(file_path).st_size
+
 
 def calculate_md5(file_path):
     md5 = hashlib.md5()
@@ -46,93 +43,135 @@ def calculate_md5(file_path):
     return md5.hexdigest()
 
 
-def get_files_info(file_to_upload):
-    payload_file = {}
-    payload_file['fileName'] = os.path.basename(file_to_upload)
-    payload_file['fileType'] = file_to_upload.strip(".gz").split(".")[-1].upper()
-    payload_file['fileSize'] = calculate_size(file_to_upload)
-    payload_file['fileMd5sum'] = calculate_md5(file_to_upload)
-    payload_file['fileAccess'] = "controlled"
-    payload_file['info'] = {"data_type": "Aligned Reads" if payload_file['fileType'] in ['BAM', 'CRAM'] else "Aligned Reads Index"}
+def rename_file(f, payload, sample_info):
+    sample_id = sample_info[0]['sampleId']
 
-    return payload_file
+    number_of_ubam_input = 0
+    for a in payload['workflow']['inputs']:
+        if a.get('analysis_type') == 'read_group_ubam':
+            number_of_ubam_input += 1
+    library_strategy = payload['experiment']['library_strategy'].lower()
 
-def run_cmd(cmd):
-    p, success = None, True
+    if f.endswith('.bam'):
+        file_ext = 'bam'
+    elif f.endswith('.bam.bai'):
+        file_ext = 'bam.bai'
+    elif f.endswith('.cram'):
+        file_ext = 'cram'
+    elif f.endswith('.cram.crai'):
+        file_ext = 'cram.crai'
+    else:
+        sys.exit('Error: unknown aligned seq extention: %s' % f)
+
+    new_name = "%s.%s.%s.%s.grch38.%s" % (
+        sample_id,
+        number_of_ubam_input,
+        date.today().strftime("%Y%m%d"),
+        library_strategy,
+        file_ext
+    )
+
+    new_dir = 'out'
     try:
-        p = subprocess.run([cmd],
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             shell=True)
-    except Exception as e:
-        print('Execution failed: %s' % e)
-        success = False
+        os.mkdir(new_dir)
+    except FileExistsError:
+        pass
 
-    if p and p.returncode != 0:
-        print('\nError occurred, return code: %s. Details: %s' %
-              (p.returncode, p.stderr.decode("utf-8")), file=sys.stderr)
-        success = False
+    dst = os.path.join(os.getcwd(), new_dir, new_name)
+    os.symlink(os.path.abspath(f), dst)
 
-    if not success:
-        sys.exit(p.returncode if p.returncode else 1)
+    return dst
 
-    return
+
+def get_files_info(file_to_upload):
+    return {
+        'fileName': os.path.basename(file_to_upload),
+        'fileType': file_to_upload.split(".")[-1].upper(),
+        'fileSize': calculate_size(file_to_upload),
+        'fileMd5sum': calculate_md5(file_to_upload),
+        'fileAccess': 'controlled',
+        'info': {
+            'dataType': 'Aligned Reads' if file_to_upload.split(".")[-1] in ('bam', 'cram') \
+                                        else 'Aligned Reads Index'
+        }
+    }
+
 
 def get_sample_info(sample_list):
-    for sample in sample_list:
-        for item in ['sampleId', 'specimenId', 'donorId', 'studyId']:
+    samples = copy.deepcopy(sample_list)
+    for sample in samples:
+        for item in ['info', 'sampleId', 'specimenId', 'donorId', 'studyId']:
             sample.pop(item, None)
             sample['specimen'].pop(item, None)
             sample['donor'].pop(item, None)
 
-    return sample_list
+    return samples
 
 
 def main(args):
+    with open(args.seq_experiment_analysis, 'r') as f:
+        seq_experiment_analysis_dict = json.load(f)
 
-
-    payload = {}
-    payload['analysisType'] = {
-        "name": "dna_alignment"
+    payload = {
+        'analysisType': {
+            'name': 'sequencing_alignment'
+        },
+        'study': seq_experiment_analysis_dict.get('study'),
+        'workflow': {
+            'name': args.wf_name,
+            'short_name': args.wf_short_name if args.wf_short_name else None,
+            'version': args.wf_version,
+            'run_id': args.wf_run,
+            'inputs': [
+                {
+                    'analysis_type': 'sequencing_experiment',
+                    'id': seq_experiment_analysis_dict.get('analysisId')
+                }
+            ]
+        },
+        'file': [],
+        'sample': get_sample_info(seq_experiment_analysis_dict.get('sample')),
+        'experiment': {
+            'sequencing_experiment_id': seq_experiment_analysis_dict.get('analysisId'),
+            'submitter_sequencing_experiment_id': seq_experiment_analysis_dict.get('submitter_sequencing_experiment_id')
+        }
     }
 
-    #get inputs of the payload
-    payload['inputs'] = []
-    for res_file in args.input_payloads:
-        with open(res_file, 'r') as f:
-            res_json = json.load(f)
-        payload['program_id'] = res_json.get('program_id')
-        payload['study'] = res_json.get('program_id')
-        payload['sample'] = get_sample_info(res_json.get('sample'))
+    payload['experiment'].update(seq_experiment_analysis_dict.get('experiment', {}))
 
-        payload['inputs'].append({'read_group_ubam_id': res_json.get('analysisId')})
+    # get inputs from read_group_ubam_analysis
+    for ubam_analysis in args.read_group_ubam_analysis:
+        with open(ubam_analysis, 'r') as f:
+            ubam_analysis_dict = json.load(f)
 
+        payload['workflow']['inputs'].append(
+            {
+                'analysis_type': 'read_group_ubam',
+                'id': ubam_analysis_dict.get('analysisId')
+            }
+        )
 
-    #get file of the payload
-    payload['file'] = []
-    for file_to_upload in args.files_to_upload:
-      payload['file'].append(get_files_info(file_to_upload))
+    # get file of the payload
+    for f in args.files_to_upload:
+      renamed_file = rename_file(f, payload, seq_experiment_analysis_dict['sample'])
+      payload['file'].append(get_files_info(renamed_file))
 
-    #get workflow info of the payload
-    payload['workflow'] = {}
-    payload['workflow']['name'] = get_wf_fullname(args.wf_short_name)
-    payload['workflow']['short_name'] = args.wf_short_name
-    payload['workflow']['version'] = args.wf_version
-
-    payload['experiment'] = {}
-
-    with open("payload.json", 'w') as f:
+    with open("%s.dna_alignment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("-f", "--files_to_upload", dest="files_to_upload", type=str, nargs="+", help="File to upload to server")
-    parser.add_argument("-a", "--input_payloads", dest="input_payloads", help="Input payloads for the analysis",
-                        type=str, nargs='+')
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
-                        help="workflow short name")
-    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
-                        help="workflow version")
+    parser.add_argument("-f", "--files_to_upload", dest="files_to_upload", type=str, required=True,
+                        nargs="+", help="Aligned reads files to upload")
+    parser.add_argument("-a", "--seq_experiment_analysis", dest="seq_experiment_analysis", required=True,
+                        help="Input analysis for sequencing experiment", type=str)
+    parser.add_argument("-u", "--read_group_ubam_analysis", dest="read_group_ubam_analysis", default=[],
+                        help="Input payloads for the analysis", type=str, nargs='+')
+    parser.add_argument("-w", "--wf_name", dest="wf_name", required=True, help="Workflow name")
+    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", help="Workflow short name")
+    parser.add_argument("-v", "--wf_version", dest="wf_version", required=True, help="Workflow version")
+    parser.add_argument("-r", "--wf_run", dest="wf_run", required=True, help="workflow run ID")
     args = parser.parse_args()
 
     main(args)

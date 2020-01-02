@@ -26,7 +26,9 @@
 nextflow.preview.dsl=2
 
 params.files_to_upload = ""
-params.input_payloads = ""
+params.seq_experiment_analysis = ""
+params.read_group_ubam_analysis = "NO_FILE"
+params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
 
@@ -36,10 +38,13 @@ workflow {
   main:
     payloadGenDnaAlignment(
       Channel.fromPath(params.files_to_upload).collect(),
-      Channel.fromPath(params.input_payloads).collect(),
+      file(params.seq_experiment_analysis),
+      Channel.fromPath(params.read_group_ubam_analysis).collect(),
+      params.wf_name,
       params.wf_short_name,
       params.wf_version
     )
   publish:
-    payloadGenDnaAlignment.out.payload to: 'outdir', mode: 'copy', overwrite: true
+    payloadGenDnaAlignment.out.payload to: 'outdir', overwrite: true
+    payloadGenDnaAlignment.out.alignment_files to: 'outdir', overwrite: true
 }
