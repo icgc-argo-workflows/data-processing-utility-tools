@@ -23,119 +23,149 @@
 
 
 import sys
+import uuid
 import json
 from argparse import ArgumentParser
 
 
-def get_wf_fullname(wf_short_name):
-    return wf_short_name
+def get_specimen_type_class(metadata):
+    # SONG specimenType and specimenClass need to be synchronized with latest ARGO clinical dictionary,
+    # before that, we will use this function to perform approximate translation as a temporary WORKAROUND
+    tumour_normal_designation = metadata.get('tumour_normal_designation')
+    specimen_tissue_source = metadata.get('specimen_tissue_source')
 
+    if 'tumour' in tumour_normal_designation.lower():
+        specimen_class = "Tumour"
+        if 'recurrent tumour' in tumour_normal_designation.lower():
+            if 'solid tissue' in specimen_tissue_source.lower():
+                specimen_type = 'Recurrent tumour - solid tissue'
+            elif 'other' in specimen_tissue_source.lower():
+                specimen_type = 'Recurrent tumour - other'
+            else:
+                specimen_type = tumour_normal_designation
+        elif 'metastatic tumour' in tumour_normal_designation.lower():
+            if 'lymph node' in specimen_tissue_source.lower():
+                specimen_type = 'Metastatic tumour - lymph node'
+            elif 'other' in specimen_tissue_source.lower():
+                specimen_type = 'Metastatic tumour - other'
+            else:
+                specimen_type = tumour_normal_designation
+        else:
+            if 'solid tissue' in specimen_tissue_source.lower():
+                specimen_type = 'Primary tumour - solid tissue'
+            elif 'lymph node' in specimen_tissue_source.lower():
+                specimen_type = 'Primary tumour - lymph node'
+            elif 'other' in specimen_tissue_source.lower():
+                specimen_type = 'Primary tumour - other'
+            else:
+                specimen_type = tumour_normal_designation
+    elif 'normal' in tumour_normal_designation.lower() and 'adjacent' in tumour_normal_designation.lower():
+        specimen_class = "Adjacent normal"
+        specimen_type = tumour_normal_designation
+    elif 'normal' in tumour_normal_designation.lower():
+        specimen_class = "Normal"
+        if 'solid tissue' in specimen_tissue_source.lower():
+            specimen_type = 'Normal - solid tissue'
+        elif 'blood derived' in specimen_tissue_source.lower():
+            specimen_type = 'Normal - blood derived'
+        elif 'bone marrow' in specimen_tissue_source.lower():
+            specimen_type = 'Normal - bone marrow'
+        elif 'buccal cell' in specimen_tissue_source.lower():
+            specimen_type = 'Normal - buccal cell'
+        elif 'lymph node' in specimen_tissue_source.lower():
+            specimen_type = 'Normal - lymph node'
+        elif 'other' in specimen_tissue_source.lower():
+            specimen_type = 'Normal - other'
+        else:
+            specimen_type = tumour_normal_designation
+    else:
+        sys.exit("Unknown tumour_normal_designation: %s" % tumour_normal_designation)
 
-def get_files_info(input_file):
-    payload_file = {}
-    payload_file['fileName'] = input_file.get('name')
-    payload_file['fileSize'] = input_file.get('size')
-    payload_file['fileMd5sum'] = input_file.get('checksum')
-    payload_file['fileType'] = input_file.get('format')
-    payload_file['fileAccess'] = "controlled"
-    payload_file['info'] = {}
-    payload_file['info']['submitter_read_group_id'] = input_file.get('submitter_read_group_id')
-    payload_file['info']['data_type'] = 'Submitted Reads'
-    return payload_file
+    return {
+        'specimenType': specimen_type,
+        'specimenClass': specimen_class
+    }
+
 
 def main(args):
-
     with open(args.user_submit_metadata, 'r') as f:
         metadata = json.load(f)
 
-    payload = {}
-    payload['analysisType'] = {
-        "name": "sequencing_experiment"
+    payload = {
+        'analysisType': {
+            'name': 'sequencing_experiment'
+        },
+        'study': metadata.get('program_id'),
+        'submitter_sequencing_experiment_id': metadata.get('submitter_sequencing_experiment_id'),
+        'experiment': {
+            'sequencing_center': metadata.get('sequencing_center'),
+            'platform': metadata.get('platform'),
+            'platform_model': metadata.get('platform_model'),
+            'library_strategy': metadata.get('library_strategy'),
+            'sequencing_date': metadata.get('sequencing_date')
+        },
+        'read_group_count': metadata.get('read_group_count'),
+        'read_groups': [],
+        'workflow': {
+            'name': args.wf_name,
+            'short_name': args.wf_short_name if args.wf_short_name is not None else args.wf_name,
+            'version': args.wf_version,
+            'run_id': args.wf_run
+        },
+        'sample': [],
+        'file': []
     }
 
-    payload['program_id'] = metadata.get('program_id')
-    payload['study'] = metadata.get('program_id')
-    for item in ['submitter_sequencing_experiment_id', 'sequencing_center', 'platform', 'platform_model', 'library_strategy', 'sequencing_date', 'read_group_count']:
-        payload[item] = metadata.get(item)
-
     # get sample of the payload
-    payload['sample'] = []
-    sample = {}
-    sample['sampleSubmitterId'] = metadata.get('submitter_sample_id')
-    sample['sampleType'] = "DNA"
-    sample['specimen'] = {}
-    sample['specimen']['specimenSubmitterId'] = metadata.get('submitter_specimen_id', None)
+    sample = {
+        'sampleSubmitterId': metadata.get('submitter_sample_id'),
+        # 'submitter_matched_normal_sample_id': metadata.get('submitter_matched_normal_sample_id'),  # SONG does not support this yet
+        'sampleType': metadata.get('sample_type'),
+        'specimen': {
+            'specimenSubmitterId': metadata.get('submitter_specimen_id')
+        },
+        'donor': {
+            'donorSubmitterId': metadata.get('submitter_donor_id'),
+            'donorGender': metadata.get('gender')
+        }
+    }
 
-    # SONG specimenType needs to be synchronized with latest ARGO clinical dictionary
-    specimen_type = metadata.get('tumour_normal_designation')
-    sample['specimen']['specimenType'] = specimen_type
-    if 'tumour' in specimen_type.lower():
-        sample['specimen']['specimenClass'] = "Tumour"
-    elif 'normal' in specimen_type.lower() and 'adjacent' in specimen_type.lower():
-        sample['specimen']['specimenClass'] = "Adjacent normal"
-    elif 'normal' in specimen_type.lower():
-        sample['specimen']['specimenClass'] = "Normal"
-    else:
-        sys.exit("Unknown specimen type: %s" % specimen_type)
+    sample['specimen'].update(get_specimen_type_class(metadata))
 
-    sample['donor'] = {}
-    sample['donor']['donorSubmitterId'] = metadata.get('submitter_donor_id')
-    sample['donor']['donorGender'] = metadata.get('gender', None)
     payload['sample'].append(sample)
 
-    # get workflow of the payload
-    payload['workflow'] = {}
-    payload['workflow']['name'] = get_wf_fullname(args.wf_short_name)
-    payload['workflow']['short_name'] = args.wf_short_name
-    payload['workflow']['version'] = args.wf_version
+    # get file of the payload
+    for input_file in metadata.get("files"):
+        payload['file'].append(
+            {
+                'fileName': input_file.get('name'),
+                'fileSize': input_file.get('size'),
+                'fileMd5sum': input_file.get('md5sum'),
+                'fileType': input_file.get('format'),
+                'fileAccess': 'controlled',
+                'info': {
+                    'dataType': 'Submitted Reads'  # dataType may later be supported natively in SONG
+                }
+            }
+        )
 
-    # get file and read_group of payload
-    payload['read_group'] = []
-    payload['file'] = []
-    if metadata.get("input_seq_format") == 'FASTQ':
-        read_group = metadata.get("read_groups")
+    for rg in metadata.get("read_groups"):
+        rg.pop('type')  # remove 'type' field
+        rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
+        payload['read_groups'].append(rg)
 
-        #get read_group of the payload
-        for rg in read_group:
-            rg_item = {}
-            for item in ['submitter_read_group_id', 'platform_unit', 'library_name', 'is_paired_end', 'read_length_r1', 'read_length_r2', 'insert_size', 'sample_barcode']:
-                rg_item[item] = rg.get(item, None)
-            payload['read_group'].append(rg_item)
-
-            # get file of the payload
-            for input_file in rg.get('files'):
-                payload['file'].append(get_files_info(input_file))
-
-    elif metadata.get("input_seq_format") == 'BAM':
-        files = metadata.get("files")
-
-        # get file of the payload
-        for input_file in files:
-            payload['file'].append(get_files_info(input_file))
-            # get read_group of the payload
-            for rg in input_file.get('read_groups'):
-                rg_item = {}
-                for item in ['submitter_read_group_id', 'platform_unit', 'library_name', 'is_paired_end', 'read_length_r1',
-                             'read_length_r2', 'insert_size', 'sample_barcode']:
-                    rg_item[item] = rg.get(item, None)
-                payload['read_group'].append(rg_item)
-
-    else:
-        sys.exit('\n%s: Input files format are not FASTQ or BAM')
-
-    payload['experiment'] = {}
-
-    with open("payload.json", 'w') as f:
+    with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("-m", "--user_submit_metadata", dest="user_submit_metadata",
+    parser.add_argument("-m", "--user-submit-metadata", dest="user_submit_metadata", required=True,
                         help="json file containing experiment, read_group and file information submitted from user")
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", type=str,
-                        help="workflow short name")
-    parser.add_argument("-v", "--wf_version", dest="wf_version", type=str,
-                        help="workflow version")
+    parser.add_argument("-w", "--wf-name", dest="wf_name", type=str, help="workflow full name", required=True)
+    parser.add_argument("-c", "--wf-short-name", dest="wf_short_name", type=str, help="workflow short name")
+    parser.add_argument("-v", "--wf-version", dest="wf_version", type=str, required=True, help="workflow version")
+    parser.add_argument("-r", "--wf-run", dest="wf_run", type=str, required=True, help="workflow run ID")
     args = parser.parse_args()
 
     main(args)
