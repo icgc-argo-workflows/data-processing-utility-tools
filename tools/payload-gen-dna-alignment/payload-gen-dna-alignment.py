@@ -114,7 +114,7 @@ def main(args):
 
     payload = {
         'analysisType': {
-            'name': 'dna_alignment'
+            'name': 'sequencing_alignment'
         },
         'study': seq_experiment_analysis_dict.get('study'),
         'workflow': {
