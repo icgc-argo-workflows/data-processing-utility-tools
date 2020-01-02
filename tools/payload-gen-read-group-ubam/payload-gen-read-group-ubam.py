@@ -108,7 +108,7 @@ def main(args):
         },
         'workflow': {
             'name': args.wf_name,
-            'short_name': args.wf_short_name if args.wf_short_name else args.wf_name,
+            'short_name': args.wf_short_name if args.wf_short_name else None,
             'version': args.wf_version,
             'run_id': args.wf_run,
             'inputs': [
