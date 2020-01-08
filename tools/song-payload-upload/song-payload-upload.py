@@ -56,7 +56,9 @@ def main(args):
   if res.status_code == 200:
     resp = res.json()
     resp.update({'study': study})
-    print(json.dumps(resp, indent=2))
+    analysis_id = resp.get('analysisId')
+    with open("%s.%s.analysis.json" % (analysis_id, study), 'w') as s:
+      s.write(json.dumps(resp, indent=2))
   else:
     sys.exit("SONG payload upload failed HTTP status code not 200: %s" % res)
 
