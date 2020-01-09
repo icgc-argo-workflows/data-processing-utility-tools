@@ -34,7 +34,7 @@ params.wf_version = ""
 
 
 process payloadGenDnaAlignment {
-  container "quay.io/icgc-argo/payload-gen-dna-alignment:payload-gen-dna-alignment.0.1.1.0"
+  container "quay.io/icgc-argo/payload-gen-dna-alignment:payload-gen-dna-alignment.0.1.2.0"
 
   input:
     path files_to_upload
