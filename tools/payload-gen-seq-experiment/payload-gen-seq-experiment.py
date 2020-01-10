@@ -56,7 +56,7 @@ def main(args):
         'sampleType': metadata.get('sample_type'),
         'specimen': {
             'submitterSpecimenId': metadata.get('submitter_specimen_id'),
-            'tumorNormalDesignation': metadata.get('tumour_normal_designation'),
+            'tumourNormalDesignation': metadata.get('tumour_normal_designation'),
             'specimenTissueSource': metadata.get('specimen_tissue_source'),
             'specimenType': metadata.get('specimen_type')
         },
