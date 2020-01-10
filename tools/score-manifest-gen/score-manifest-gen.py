@@ -35,7 +35,7 @@ def main(args):
 
   with open(manifest_file, "w") as m:
     m.write("%s\t\t\n" % song_meta["analysisId"])
-    for f in song_meta["file"]:
+    for f in song_meta["files"]:
       m.write("%s\t%s\t%s\n" % (f["objectId"], os.path.join(os.getcwd(), f["fileName"]), f["fileMd5sum"]))
 
 if __name__ == "__main__":
