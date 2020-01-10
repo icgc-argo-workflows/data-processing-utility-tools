@@ -40,7 +40,7 @@ process getStudyAndAnalysisId {
 }
 
 process songPayloadUploadPr {
-  container "quay.io/icgc-argo/song-payload-upload:song-payload-upload.0.1.1.0"
+  container "quay.io/icgc-argo/song-payload-upload:song-payload-upload.0.1.2.0"
 
   input:
     val song_url
