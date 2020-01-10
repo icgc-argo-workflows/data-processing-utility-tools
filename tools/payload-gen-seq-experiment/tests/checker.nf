@@ -24,9 +24,6 @@
 nextflow.preview.dsl=2
 
 params.user_submit_metadata = ""
-params.wf_name = ""
-params.wf_short_name = ""
-params.wf_version = ""
 
 include "../payload-gen-seq-experiment" params(params)
 
@@ -34,9 +31,6 @@ workflow {
   main:
     payloadGenSeqExperiment(
       file(params.user_submit_metadata),
-      params.wf_name,
-      params.wf_short_name,
-      params.wf_version,
       'ok'
     )
   publish:
