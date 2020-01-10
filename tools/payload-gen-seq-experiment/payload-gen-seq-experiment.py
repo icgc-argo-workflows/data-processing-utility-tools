@@ -22,7 +22,6 @@
  """
 
 
-import sys
 import uuid
 import json
 from argparse import ArgumentParser
@@ -95,10 +94,10 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-m", "--user-submit-metadata", dest="user_submit_metadata", required=True,
                         help="json file containing experiment, read_group and file information submitted from user")
-    # parser.add_argument("-w", "--wf-name", dest="wf_name", type=str, help="workflow full name", required=True)
-    # parser.add_argument("-c", "--wf-short-name", dest="wf_short_name", type=str, help="workflow short name")
-    # parser.add_argument("-v", "--wf-version", dest="wf_version", type=str, required=True, help="workflow version")
-    # parser.add_argument("-r", "--wf-run", dest="wf_run", type=str, required=True, help="workflow run ID")
+    parser.add_argument("-w", "--wf-name", dest="wf_name", type=str, help="workflow full name", required=True)
+    parser.add_argument("-c", "--wf-short-name", dest="wf_short_name", type=str, help="workflow short name")
+    parser.add_argument("-v", "--wf-version", dest="wf_version", type=str, required=True, help="workflow version")
+    parser.add_argument("-r", "--wf-run", dest="wf_run", type=str, required=True, help="workflow run ID")
     args = parser.parse_args()
 
     main(args)
