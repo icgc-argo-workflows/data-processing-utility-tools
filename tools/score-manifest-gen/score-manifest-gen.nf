@@ -27,7 +27,7 @@ params.song_analysis = ""
 params.files = ""
 
 process scoreManifestGen {
-  container "quay.io/icgc-argo/score-manifest-gen:score-manifest-gen.0.1.0.0"
+  container "quay.io/icgc-argo/score-manifest-gen:score-manifest-gen.0.1.1.0"
 
   input:
     path song_analysis
