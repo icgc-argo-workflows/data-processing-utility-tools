@@ -1,4 +1,4 @@
-#!/bin/bash nextflow
+#!/usr/bin/env nextflow
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
@@ -28,10 +28,10 @@ params.study = ""
 params.song_url = ""
 params.token_file = ""
 params.score_upload_status = ""
-
+params.container_version = '0.1.1.0'
 
 process songAnalysisPublish {
-  container "quay.io/icgc-argo/song-analysis-publish:song-analysis-publish.0.1.0.0"
+  container "quay.io/icgc-argo/song-analysis-publish:song-analysis-publish.${params.container_version}"
 
   input:
     val analysis_id
