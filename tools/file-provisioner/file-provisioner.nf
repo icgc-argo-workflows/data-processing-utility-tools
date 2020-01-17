@@ -26,7 +26,6 @@ nextflow.preview.dsl=2
 params.file_path = "/home/ubuntu/A.ARGO/git/data-processing-utility-tools/tools/file-provisioner/tests/work/c1/7ca66bf161590661f7838f64e07e9f/out/f677818e71ecd40145cebca12e17441f.BD233T_CTTGTA_L008_R1_001.fastq.bz2"
 //params.file_path = "score://collab/EGAR00001264286/1a5436f1-0268-5f72-88b5-b49628264ff5"
 params.token_file = "NO_FILE"
-//params.token_file = "/home/ubuntu/access_token"
 params.song_url = ""
 params.score_url = ""
 params.transport_mem = 2
