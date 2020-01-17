@@ -1,4 +1,4 @@
-#!/bin/bash nextflow
+#!/usr/bin/env nextflow
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
@@ -23,16 +23,18 @@
  */
 
 nextflow.preview.dsl=2
+version = "0.1.2.0"
 
 params.sequencing_experiment_analysis = ""
 params.ubam = ""
 params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
+params.container_version = ""
 
 
 process payloadGenReadGroupUbam {
-  container "quay.io/icgc-argo/payload-gen-read-group-ubam:payload-gen-read-group-ubam.0.1.1.0"
+  container "quay.io/icgc-argo/payload-gen-read-group-ubam:payload-gen-read-group-ubam.${params.container_version ?: version}"
 
   input:
     path sequencing_experiment_analysis

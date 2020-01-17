@@ -97,11 +97,11 @@ def main(args):
         'analysisType': {
             'name': 'read_group_ubam'
         },
-        'study': metadata.get('study'),
+        'studyId': metadata.get('studyId'),
         'submitter_read_group_id': readgroup_info['submitter_read_group_id'],
         'read_group': readgroup_info['read_group'],
-        'sample': get_sample_info(metadata.get('sample')),
-        'file': [ get_file_info(args.ubam) ],
+        'samples': get_sample_info(metadata.get('samples')),
+        'files': [ get_file_info(args.ubam) ],
         'experiment': {
             'sequencing_experiment_id': metadata.get('analysisId'),
             'submitter_sequencing_experiment_id': metadata.get('submitter_sequencing_experiment_id')
