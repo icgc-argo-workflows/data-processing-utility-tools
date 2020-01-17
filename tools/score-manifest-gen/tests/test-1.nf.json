@@ -1,4 +1,4 @@
 {
-  "song_analysis": "input/song-analysis-read-group-ubam.json",
-  "files": ["input/C0HVY_2.lane.bam"]
+  "song_analysis": "input/40054341-119d-492e-8543-41119dc92ea1.sequencing_experiment.4.analysis.json",
+  "files": ["input/test_rg_3.bam"]
 }
