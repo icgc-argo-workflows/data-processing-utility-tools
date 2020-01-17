@@ -40,7 +40,6 @@ process scoreDownload {
     path token_file
     val song_url
     val score_url
-    val transport_mem
 
   output:
     path "out/*", emit: downloaded_file
@@ -53,7 +52,7 @@ process scoreDownload {
       -p ${file_path} \
       -t ${token_file} ${args_song_url} ${args_score_url} \
       -n ${task.cpus} \
-      -y ${transport_mem}
+      -y ${params.transport_mem}
     """
 }
 
@@ -85,11 +84,10 @@ workflow FileProvisioner {
     token_file
     song_url
     score_url
-    transport_mem
 
   main:
     if (token_file.name != 'NO_FILE') {
-      scoreDownload(file_path, token_file, song_url, score_url, transport_mem)
+      scoreDownload(file_path, token_file, song_url, score_url)
       provisioned_file = scoreDownload.out.downloaded_file
 
     } else {
@@ -108,8 +106,7 @@ workflow {
       Channel.from(params.file_path),
       file(params.token_file),
       params.song_url,
-      params.score_url,
-      params.transport_mem
+      params.score_url
     )
 
   publish:
