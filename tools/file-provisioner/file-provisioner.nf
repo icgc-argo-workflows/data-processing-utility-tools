@@ -29,18 +29,18 @@ params.token_file = "NO_FILE"
 //params.token_file = "/home/ubuntu/access_token"
 params.song_url = ""
 params.score_url = ""
-
+params.transport_mem = 2
+params.container_version = '0.1.1.0'
 
 process scoreDownload {
-  container "quay.io/icgc-argo/file-provisioner:file-provisioner.0.1.0.1"
-
-  label "fileProvisioner_scoreDownload"
+  container "quay.io/icgc-argo/file-provisioner:file-provisioner.${params.container_version}"
 
   input:
     val file_path
     path token_file
     val song_url
     val score_url
+    val transport_mem
 
   output:
     path "out/*", emit: downloaded_file
@@ -51,15 +51,15 @@ process scoreDownload {
     """
     score-download.py \
       -p ${file_path} \
-      -t ${token_file} ${args_song_url} ${args_score_url}
+      -t ${token_file} ${args_song_url} ${args_score_url} \
+      -n ${task.cpus} \
+      -y ${transport_mem}
     """
 }
 
 
 process localFilePathToFile {
   container "quay.io/icgc-argo/file-provisioner:file-provisioner.0.1.0.1"
-
-  label "fileProvisioner_localFilePathToFile"
 
   input:
     val file_path
@@ -85,10 +85,11 @@ workflow FileProvisioner {
     token_file
     song_url
     score_url
+    transport_mem
 
   main:
     if (token_file.name != 'NO_FILE') {
-      scoreDownload(file_path, token_file, song_url, score_url)
+      scoreDownload(file_path, token_file, song_url, score_url, transport_mem)
       provisioned_file = scoreDownload.out.downloaded_file
 
     } else {
@@ -107,7 +108,8 @@ workflow {
       Channel.from(params.file_path),
       file(params.token_file),
       params.song_url,
-      params.score_url
+      params.score_url,
+      params.transport_mem
     )
 
   publish:

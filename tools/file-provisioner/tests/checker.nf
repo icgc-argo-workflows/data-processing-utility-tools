@@ -27,6 +27,7 @@ params.file_path = ""
 params.token_file = "NO_FILE"
 params.song_url = ""
 params.score_url = ""
+params.transport_mem = 2
 
 include "../file-provisioner" params(params)
 
@@ -36,7 +37,8 @@ workflow {
       Channel.from(params.file_path),
       file(params.token_file),
       params.song_url,
-      params.score_url
+      params.score_url,
+      params.transport_mem
     )
 
   publish:

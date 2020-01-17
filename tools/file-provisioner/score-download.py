@@ -49,6 +49,8 @@ def main(args):
   if args.song_url: os.environ["METADATA_URL"] = args.song_url
   if args.score_url: os.environ["STORAGE_URL"] = args.score_url
   os.environ["ACCESSTOKEN"] = token
+  os.environ["TRANSPORT_PARALLEL"] = args.transport_parallel
+  os.environ["TRANSPORT_MEMORY"] = args.transport_memory
 
   cmd = "score-client --profile %s download --object-id %s --output-dir out" % \
     (repository, object_id)
@@ -64,7 +66,9 @@ if __name__ == "__main__":
   parser.add_argument("-p", "--path", dest="path", required=True)
   parser.add_argument("-s", "--song-url", dest="song_url")
   parser.add_argument("-c", "--score-url", dest="score_url")
-  parser.add_argument("-t", "--token-file", dest="token_file")
+  parser.add_argument("-t", "--token-file", dest="token_file", required=True)
+  parser.add_argument("-n", "--transport-parallel", dest="transport_parallel", required=True)
+  parser.add_argument("-y", "--transport-memory", dest="transport_memory", required=True)
   args = parser.parse_args()
 
   main(args)
