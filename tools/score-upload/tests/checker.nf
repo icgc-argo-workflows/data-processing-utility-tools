@@ -29,7 +29,6 @@ params.upload_files = ""
 params.token_file = "/Users/junjun/access_token"
 params.song_url = "https://song.dev.argo.cancercollaboratory.org"
 params.score_url = "https://score.dev.argo.cancercollaboratory.org"
-params.transport_mem = 2
 
 
 include "../score-upload" params(params)
@@ -40,8 +39,7 @@ workflow {
     Channel.fromPath(params.upload_files).collect(),
     file(params.token_file),
     params.song_url,
-    params.score_url,
-    params.transport_mem
+    params.score_url
   )
   scoreUpload.out[0].view()
 }

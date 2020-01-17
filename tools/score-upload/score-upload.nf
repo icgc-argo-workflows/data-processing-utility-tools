@@ -39,7 +39,6 @@ process scoreUpload {
     path token_file
     val song_url
     val score_url
-    val transport_mem
 
   output:
     stdout()
@@ -52,7 +51,7 @@ process scoreUpload {
       -c ${score_url} \
       -t ${token_file} \
       -n ${task.cpus} \
-      -y ${transport_mem}
+      -y ${params.transport_mem}
     """
 }
 
@@ -62,8 +61,7 @@ workflow {
     Channel.fromPath(params.upload_files).collect(),
     file(params.token_file),
     params.song_url,
-    params.score_url,
-    params.transport_mem
+    params.score_url
   )
   scoreUpload.out[0].view()
 }
