@@ -27,7 +27,7 @@ params.upload_files = ""
 params.manifest_file = ""
 params.song_url = ""
 params.score_url = ""
-params.transport_mem = 2q
+params.transport_mem = 2
 params.container_version = '0.1.1.0'
 
 process scoreUpload {

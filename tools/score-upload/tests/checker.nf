@@ -29,6 +29,7 @@ params.upload_files = ""
 params.token_file = "/Users/junjun/access_token"
 params.song_url = "https://song.dev.argo.cancercollaboratory.org"
 params.score_url = "https://score.dev.argo.cancercollaboratory.org"
+params.transport_mem = 2
 
 
 include "../score-upload" params(params)
