@@ -50,9 +50,7 @@ def get_file_info(ubam):
         'fileMd5sum': calculate_md5(ubam),
         'fileAccess': 'controlled',
         'fileType': 'BAM',
-        'info': {
-            'dataType': 'Read Group Unmapped BAM'   # dataType may later be supported natively in SONG
-        }
+        'dataType': 'Read Group Unmapped BAM'
     }
 
 
