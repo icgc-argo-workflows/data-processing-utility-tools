@@ -1,8 +1,8 @@
 {
   "analysisId": "0ae2c59b-2976-485c-a2c5-9b2976085cbf",
-  "study": "TEST-PRO",
+  "studyId": "TEST-PRO",
   "analysisState": "PUBLISHED",
-  "sample": [
+  "samples": [
     {
       "info": {},
       "sampleId": "2648e53f-cb71-5eaf-b7ec-6b4766d50e2a",
@@ -26,7 +26,7 @@
       }
     }
   ],
-  "file": [
+  "files": [
     {
       "info": {},
       "objectId": "1c91b42a-a55a-5cc0-8d3a-f0da81b47def",
@@ -109,7 +109,8 @@
     "platform_model": "HiSeq 2000",
     "sequencing_date": "2014-12-12",
     "library_strategy": "WGS",
-    "sequencing_center": "EXT"
+    "sequencing_center": "EXT",
+    "submitter_sequencing_experiment_id": "TEST_EXP"
   },
   "read_groups": [
     {
@@ -149,6 +150,5 @@
       "submitter_read_group_id": "D0RH0.2"
     }
   ],
-  "read_group_count": 3,
-  "submitter_sequencing_experiment_id": "TEST_EXP"
+  "read_group_count": 3
 }
