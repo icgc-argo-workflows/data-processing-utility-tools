@@ -1,4 +1,4 @@
-#!/bin/bash nextflow
+#!/usr/bin/env nextflow
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
@@ -27,9 +27,11 @@ params.upload_files = ""
 params.manifest_file = ""
 params.song_url = ""
 params.score_url = ""
+params.transport_mem = 2
+params.container_version = '0.1.1.0'
 
 process scoreUpload {
-  container "quay.io/icgc-argo/score-upload:score-upload.0.1.0.0"
+  container "quay.io/icgc-argo/score-upload:score-upload.${params.container_version}"
 
   input:
     path manifest_file
@@ -43,7 +45,13 @@ process scoreUpload {
 
   script:
     """
-    score-upload.py -m ${manifest_file} -s ${song_url} -c ${score_url} -t ${token_file}
+    score-upload.py \
+      -m ${manifest_file} \
+      -s ${song_url} \
+      -c ${score_url} \
+      -t ${token_file} \
+      -n ${task.cpus} \
+      -y ${params.transport_mem}
     """
 }
 

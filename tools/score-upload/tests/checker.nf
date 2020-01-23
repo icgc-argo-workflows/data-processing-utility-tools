@@ -27,8 +27,8 @@ params.manifest_file = ""
 params.upload_files = ""
 //params.token_file = "/home/ubuntu/.access_token"
 params.token_file = "/Users/junjun/access_token"
-params.song_url = "https://song.qa.argo.cancercollaboratory.org"
-params.score_url = "https://score.qa.argo.cancercollaboratory.org"
+params.song_url = "https://song.dev.argo.cancercollaboratory.org"
+params.score_url = "https://score.dev.argo.cancercollaboratory.org"
 
 
 include "../score-upload" params(params)

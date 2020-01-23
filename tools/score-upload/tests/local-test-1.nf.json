@@ -1,4 +1,5 @@
 {
-  "manifest_file": "input/12c998f4-468f-11e9-aa8b-73c792e0182f.manifest.txt",
-  "upload_files": "input/C0HVY_2.lane.bam"
+  "manifest_file": "input/40054341-119d-492e-8543-41119dc92ea1.manifest.txt",
+  "upload_files": "input/test_rg_3.bam",
+  "token_file": "/Users/lxiang/.access_token_dev"
 }

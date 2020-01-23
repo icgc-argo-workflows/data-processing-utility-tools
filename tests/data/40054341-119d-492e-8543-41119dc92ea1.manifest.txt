@@ -1,0 +1,2 @@
+40054341-119d-492e-8543-41119dc92ea1		
+69c0148d-68a0-5acb-8925-14e7eb4a1725	/Users/lxiang/projects/icgc-argo/data-processing-utility-tools/tests/data/test_rg_3.bam	178f97f7b1ca8bfc28fd5586bdd56799
