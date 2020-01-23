@@ -109,7 +109,8 @@
     "platform_model": "HiSeq 2000",
     "sequencing_date": "2014-12-12",
     "library_strategy": "WGS",
-    "sequencing_center": "EXT"
+    "sequencing_center": "EXT",
+    "submitter_sequencing_experiment_id": "TEST_EXP"
   },
   "read_groups": [
     {
@@ -149,6 +150,5 @@
       "submitter_read_group_id": "D0RH0.2"
     }
   ],
-  "read_group_count": 3,
-  "submitter_sequencing_experiment_id": "TEST_EXP"
+  "read_group_count": 3
 }

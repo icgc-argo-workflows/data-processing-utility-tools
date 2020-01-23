@@ -90,10 +90,7 @@ def get_files_info(file_to_upload):
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
         'fileAccess': 'controlled',
-        'info': {
-            'dataType': 'Aligned Reads' if file_to_upload.split(".")[-1] in ('bam', 'cram') \
-                                        else 'Aligned Reads Index'
-        }
+        'dataType': 'AlignedReads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'AlignedReadsIndex'
     }
 
 
@@ -116,7 +113,7 @@ def main(args):
         'analysisType': {
             'name': 'sequencing_alignment'
         },
-        'study': seq_experiment_analysis_dict.get('study'),
+        'studyId': seq_experiment_analysis_dict.get('studyId'),
         'workflow': {
             'name': args.wf_name,
             'short_name': args.wf_short_name if args.wf_short_name else None,
@@ -129,12 +126,11 @@ def main(args):
                 }
             ]
         },
-        'file': [],
-        'sample': get_sample_info(seq_experiment_analysis_dict.get('sample')),
-        'experiment': {
-            'sequencing_experiment_id': seq_experiment_analysis_dict.get('analysisId'),
-            'submitter_sequencing_experiment_id': seq_experiment_analysis_dict.get('submitter_sequencing_experiment_id')
-        }
+        'files': [],
+        'samples': get_sample_info(seq_experiment_analysis_dict.get('samples')),
+        'experiment': {},
+        'read_group_count': seq_experiment_analysis_dict.get('read_group_count'),
+        'read_groups': seq_experiment_analysis_dict.get('read_groups')
     }
 
     payload['experiment'].update(seq_experiment_analysis_dict.get('experiment', {}))
@@ -153,8 +149,8 @@ def main(args):
 
     # get file of the payload
     for f in args.files_to_upload:
-      renamed_file = rename_file(f, payload, seq_experiment_analysis_dict['sample'])
-      payload['file'].append(get_files_info(renamed_file))
+      renamed_file = rename_file(f, payload, seq_experiment_analysis_dict['samples'])
+      payload['files'].append(get_files_info(renamed_file))
 
     with open("%s.dna_alignment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
