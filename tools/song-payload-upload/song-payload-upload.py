@@ -32,7 +32,7 @@ def main(args):
     payload_str = p.read()
 
   payload = json.loads(payload_str)
-  study = payload['study']
+  study = payload['studyId']
 
   with open(args.token_file, 'r') as t:
     token = t.read().strip()
@@ -44,21 +44,23 @@ def main(args):
   }
 
   try:
-    res = requests.post("%s/upload/%s" % (args.song_url, study),
+    res = requests.post("%s/submit/%s" % (args.song_url, study),
                         data=payload_str,
                         headers=headers)
     res.raise_for_status()
   except requests.exceptions.HTTPError as err:
-    sys.exit("SONG payload upload failed, HTTPError: %s" % err)
+    sys.exit("SONG payload submit failed, HTTPError: %s" % err)
   except requests.exceptions.RequestException as err:
-    sys.exit("SONG payload upload failed, RequestException: %s" % err)
+    sys.exit("SONG payload submit failed, RequestException: %s" % err)
 
   if res.status_code == 200:
     resp = res.json()
     resp.update({'study': study})
-    print(json.dumps(resp, indent=2))
+    analysis_id = resp.get('analysisId')
+    with open("%s.%s.analysis.json" % (analysis_id, study), 'w') as s:
+      s.write(json.dumps(resp, indent=2))
   else:
-    sys.exit("SONG payload upload failed HTTP status code not 200: %s" % res)
+    sys.exit("SONG payload submit failed HTTP status code not 200: %s" % res)
 
 
 if __name__ == "__main__":
