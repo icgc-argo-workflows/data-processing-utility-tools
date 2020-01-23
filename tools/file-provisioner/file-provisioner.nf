@@ -26,13 +26,13 @@ nextflow.preview.dsl=2
 params.file_path = "/home/ubuntu/A.ARGO/git/data-processing-utility-tools/tools/file-provisioner/tests/work/c1/7ca66bf161590661f7838f64e07e9f/out/f677818e71ecd40145cebca12e17441f.BD233T_CTTGTA_L008_R1_001.fastq.bz2"
 //params.file_path = "score://collab/EGAR00001264286/1a5436f1-0268-5f72-88b5-b49628264ff5"
 params.token_file = "NO_FILE"
-//params.token_file = "/home/ubuntu/access_token"
 params.song_url = ""
 params.score_url = ""
-
+params.transport_mem = 2
+params.container_version = '0.1.1.0'
 
 process scoreDownload {
-  container "quay.io/icgc-argo/file-provisioner:file-provisioner.0.1.0.0"
+  container "quay.io/icgc-argo/file-provisioner:file-provisioner.${params.container_version}"
 
   input:
     val file_path
@@ -49,13 +49,15 @@ process scoreDownload {
     """
     score-download.py \
       -p ${file_path} \
-      -t ${token_file} ${args_song_url} ${args_score_url}
+      -t ${token_file} ${args_song_url} ${args_score_url} \
+      -n ${task.cpus} \
+      -y ${params.transport_mem}
     """
 }
 
 
 process localFilePathToFile {
-  container "quay.io/icgc-argo/file-provisioner:file-provisioner.0.1.0.0"
+  container "quay.io/icgc-argo/file-provisioner:file-provisioner.${params.container_version}"
 
   input:
     val file_path

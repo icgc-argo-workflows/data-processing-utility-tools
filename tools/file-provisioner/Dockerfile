@@ -1,4 +1,4 @@
-FROM overture/score:2.2.1
+FROM overture/score:3.0.1
 
 RUN chmod -R 777 /score-client
 
