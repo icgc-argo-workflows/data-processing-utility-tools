@@ -4,5 +4,7 @@
                 "data/*.lane.bam.ubam_qc_metrics.tgz",
                 "data/SA610149.3.20200211.wgs.grch38.cram.qc_metrics.tgz",
                 "data/grch38-aligned.merged.duplicates-metrics.tgz"
-              ]
+              ],
+  "cpus": 1,
+  "mem": 0.5
 }
