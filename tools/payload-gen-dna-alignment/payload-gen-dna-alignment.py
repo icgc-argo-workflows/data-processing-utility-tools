@@ -103,7 +103,7 @@ def get_files_info(file_to_upload):
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
         'fileAccess': 'controlled',
-        'dataType': 'AlignedReads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'AlignedReadsIndex'
+        'dataType': 'aligned_reads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'aligned_reads_index'
     }
 
 
