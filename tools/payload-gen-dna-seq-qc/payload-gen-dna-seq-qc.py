@@ -30,6 +30,7 @@ import uuid
 import subprocess
 import copy
 from datetime import date
+import tarfile
 
 
 def calculate_size(file_path):
@@ -56,10 +57,16 @@ def get_files_info(file_to_upload):
     if re.match(r'.+?\.lane\.bam\.ubam_qc_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'rgqc'})
 
-        # TODO: 'info' field for ubam qc files
+        tar = tarfile.open(file_to_upload)
+        for member in tar.getmembers():
+            if member.name.endswith('.ubam_info.json'):
+                f = tar.extractfile(member)
+                ubam_info = json.load(f)
+                break
+
         file_info.update({'info': {
-            'read_group_id': '',
-            'ubam_size': 0
+            'read_group_id': ubam_info['read_group_id'],
+            'ubam_size': ubam_info['size']
         }})
 
     elif re.match(r'.+?\.(cram|bam)\.qc_metrics\.tgz$', file_to_upload):
