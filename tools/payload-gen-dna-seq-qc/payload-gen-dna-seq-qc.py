@@ -109,6 +109,7 @@ def main(args):
             ]
         },
         'files': [],
+        'experiment': {},
         'samples': get_sample_info(seq_experiment_analysis_dict.get('samples'))
     }
 
