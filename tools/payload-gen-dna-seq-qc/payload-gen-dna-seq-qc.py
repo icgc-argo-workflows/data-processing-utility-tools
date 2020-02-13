@@ -64,7 +64,7 @@ def get_files_info(file_to_upload):
     }
 
     if re.match(r'.+?\.lane\.bam\.ubam_qc_metrics\.tgz$', file_to_upload):
-        file_info.update({'dataType': 'rgqc'})
+        file_info.update({'dataType': 'read_group_qc'})
 
         tar = tarfile.open(file_to_upload)
         for member in tar.getmembers():
