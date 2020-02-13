@@ -82,6 +82,10 @@ def get_files_info(file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
     elif re.match(r'.+?\.duplicates_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
+    elif re.match(r'.+?\.oxog_metrics\.tgz$', file_to_upload):
+        file_info.update({'dataType': 'alignment_qc'})
+    else:
+        sys.exit('Error: unknown QC metrics file: %s' % file_to_upload)
 
     return file_info
 
