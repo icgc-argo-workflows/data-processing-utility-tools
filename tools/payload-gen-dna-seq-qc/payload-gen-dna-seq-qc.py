@@ -80,7 +80,7 @@ def get_files_info(file_to_upload):
 
     elif re.match(r'.+?\.(cram|bam)\.qc_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
-    elif re.match(r'.+?\.duplicates-metrics.tgz$', file_to_upload):
+    elif re.match(r'.+?\.duplicates_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
 
     return file_info
