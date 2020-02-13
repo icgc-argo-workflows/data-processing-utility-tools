@@ -24,6 +24,7 @@
  */
 
 nextflow.preview.dsl=2
+version = '0.1.3.0'
 
 params.files_to_upload = ""
 params.seq_experiment_analysis = ""
@@ -31,10 +32,10 @@ params.read_group_ubam_analysis = ""
 params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
-params.container_version = '0.1.2.0'
+params.container_version = ''
 
 process payloadGenDnaAlignment {
-  container "quay.io/icgc-argo/payload-gen-dna-alignment:payload-gen-dna-alignment.${params.container_version}"
+  container "quay.io/icgc-argo/payload-gen-dna-alignment:payload-gen-dna-alignment.${params.container_version ?: version}"
 
   input:
     path files_to_upload

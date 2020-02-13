@@ -43,13 +43,26 @@ def calculate_md5(file_path):
     return md5.hexdigest()
 
 
-def rename_file(f, payload, sample_info):
+def get_rg_count(aligned_file):
+    cmd = "samtools view -H %s | grep '^@RG' | tr '\t' '\n' | grep '^ID:'" % aligned_file
+
+    try:
+        p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True, check=True)
+
+    except subprocess.CalledProcessError as e:
+        print("Execution of 'samtools view' returned non-zero code: %s.\nStderr: %s" % \
+                (e.returncode, e.stderr), file=sys.stderr)
+        sys.exit(e.returncode)
+
+    except Exception as e:
+        sys.exit("Error: %s. Unable to run 'samtools view' on aligned file: %s\n" % (e, aligned_file))
+
+    return len(p.stdout.decode('utf-8').strip().split('\n'))
+
+
+def rename_file(f, payload, rg_count, sample_info):
     sample_id = sample_info[0]['sampleId']
 
-    number_of_ubam_input = 0
-    for a in payload['workflow']['inputs']:
-        if a.get('analysis_type') == 'read_group_ubam':
-            number_of_ubam_input += 1
     library_strategy = payload['experiment']['library_strategy'].lower()
 
     if f.endswith('.bam'):
@@ -65,7 +78,7 @@ def rename_file(f, payload, sample_info):
 
     new_name = "%s.%s.%s.%s.grch38.%s" % (
         sample_id,
-        number_of_ubam_input,
+        rg_count,
         date.today().strftime("%Y%m%d"),
         library_strategy,
         file_ext
@@ -90,7 +103,7 @@ def get_files_info(file_to_upload):
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
         'fileAccess': 'controlled',
-        'dataType': 'AlignedReads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'AlignedReadsIndex'
+        'dataType': 'aligned_reads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'aligned_reads_index'
     }
 
 
@@ -147,9 +160,13 @@ def main(args):
             }
         )
 
+    # get number of read groups from aligned seq file
+    aligned_file = [ f for f in args.files_to_upload if (f.endswith('.bam') or f.endswith('.cram')) ][0]
+    rg_count = get_rg_count(aligned_file)
+
     # get file of the payload
     for f in args.files_to_upload:
-      renamed_file = rename_file(f, payload, seq_experiment_analysis_dict['samples'])
+      renamed_file = rename_file(f, payload, rg_count, seq_experiment_analysis_dict['samples'])
       payload['files'].append(get_files_info(renamed_file))
 
     with open("%s.dna_alignment.payload.json" % str(uuid.uuid4()), 'w') as f:
