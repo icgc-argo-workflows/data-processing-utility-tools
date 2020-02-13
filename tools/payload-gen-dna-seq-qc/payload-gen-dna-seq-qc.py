@@ -45,6 +45,15 @@ def calculate_md5(file_path):
     return md5.hexdigest()
 
 
+def get_aligned_seq_basename(qc_files):
+    # get aligned bam/cram basename from '*.wgs.grch38.(cram|bam).qc_metrics.tgz'
+    for f in qc_files:
+        m = re.match(r'(.+?\.(cram|bam))\.qc_metrics\.tgz$', f)
+        if m: return(m.group(1))
+
+    sys.exit('Error: missing DNA alignment QC metrics file with patten: *.{bam,cram}.qc_metrics.tgz')
+
+
 def get_files_info(file_to_upload):
     file_info = {
         'fileName': os.path.basename(file_to_upload),
@@ -109,7 +118,7 @@ def main(args):
             ]
         },
         'files': [],
-        'experiment': {},
+        'experiment': seq_experiment_analysis_dict.get('experiment'),
         'samples': get_sample_info(seq_experiment_analysis_dict.get('samples'))
     }
 
@@ -119,8 +128,17 @@ def main(args):
     except FileExistsError:
         pass
 
+    aligned_seq_basename = get_aligned_seq_basename(args.qc_files)
+
     # get file of the payload
     for f in args.qc_files:
+        # renmame duplicates-metrics file
+        if re.match(r'.+\.duplicates-metrics.tgz$', f):
+            new_name = '%s.duplicates_metrics.tgz' % aligned_seq_basename
+            dst = os.path.join(os.getcwd(), new_name)
+            os.symlink(os.path.abspath(f), dst)
+            f = new_name
+
         payload['files'].append(get_files_info(f))
 
         dst = os.path.join(os.getcwd(), new_dir, f)
