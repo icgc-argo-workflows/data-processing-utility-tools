@@ -1,0 +1,11 @@
+{
+  "seq_experiment_analysis": "data/40054341-119d-492e-8543-41119dc92ea1.sequencing_experiment.4.analysis.json",
+  "qc_files": [
+                "data/*.lane.bam.ubam_qc_metrics.tgz",
+                "data/SA610149.3.20200211.wgs.grch38.cram.qc_metrics.tgz",
+                "data/grch38-aligned.merged.duplicates-metrics.tgz",
+                "data/SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.tgz"
+              ],
+  "cpus": 1,
+  "mem": 0.5
+}
