@@ -152,8 +152,8 @@ def main(args):
 
     # get file of the payload
     for f in args.qc_files:
-        # renmame duplicates-metrics file
-        if re.match(r'.+\.duplicates-metrics.tgz$', f):
+        # renmame duplicates_metrics file to have the same base name as the aligned seq
+        if re.match(r'.+\.duplicates_metrics.tgz$', f):
             new_name = '%s.duplicates_metrics.tgz' % aligned_seq_basename
             dst = os.path.join(os.getcwd(), new_name)
             os.symlink(os.path.abspath(f), dst)
