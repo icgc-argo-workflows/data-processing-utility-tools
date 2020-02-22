@@ -73,10 +73,7 @@ def get_files_info(file_to_upload):
                 ubam_info = json.load(f)
                 break
 
-        file_info.update({'info': {
-            'read_group_id': ubam_info['read_group_id'],
-            'ubam_size': ubam_info['size']
-        }})
+        file_info.update({'info': ubam_info})
 
     elif re.match(r'.+?\.(cram|bam)\.qc_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
