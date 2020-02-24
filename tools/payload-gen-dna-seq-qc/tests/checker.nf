@@ -30,7 +30,7 @@ params.wf_name = "dna-seq-alignment"
 params.wf_version = "0.5.0-dev"
 params.container_version = ""
 
-include "../payload-gen-dna-seq-qc" params(params)
+include payloadGenDnaSeqQc from "../payload-gen-dna-seq-qc" params(params)
 
 workflow {
   main:

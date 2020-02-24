@@ -73,10 +73,7 @@ def get_files_info(file_to_upload):
                 ubam_info = json.load(f)
                 break
 
-        file_info.update({'info': {
-            'read_group_id': ubam_info['read_group_id'],
-            'ubam_size': ubam_info['size']
-        }})
+        file_info.update({'info': ubam_info})
 
     elif re.match(r'.+?\.(cram|bam)\.qc_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
@@ -152,8 +149,8 @@ def main(args):
 
     # get file of the payload
     for f in args.qc_files:
-        # renmame duplicates-metrics file
-        if re.match(r'.+\.duplicates-metrics.tgz$', f):
+        # renmame duplicates_metrics file to have the same base name as the aligned seq
+        if re.match(r'.+\.duplicates_metrics.tgz$', f):
             new_name = '%s.duplicates_metrics.tgz' % aligned_seq_basename
             dst = os.path.join(os.getcwd(), new_name)
             os.symlink(os.path.abspath(f), dst)
