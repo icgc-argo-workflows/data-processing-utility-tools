@@ -28,7 +28,7 @@ params.token_file = "NO_FILE"
 params.song_url = ""
 params.score_url = ""
 
-include "../file-provisioner" params(params)
+include FileProvisioner from "../file-provisioner" params(params)
 
 workflow {
   main:
