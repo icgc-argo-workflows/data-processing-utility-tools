@@ -65,40 +65,24 @@ def get_files_info(file_to_upload):
 
     if re.match(r'.+?\.lane\.bam\.ubam_qc_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'read_group_qc'})
-
-        tar = tarfile.open(file_to_upload)
-        for member in tar.getmembers():
-            if member.name.endswith('.ubam_info.json'):
-                f = tar.extractfile(member)
-                ubam_info = json.load(f)
-                break
-
-        file_info.update({'info': ubam_info})
-
     elif re.match(r'.+?\.(cram|bam)\.qc_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
     elif re.match(r'.+?\.duplicates_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
     elif re.match(r'.+?\.oxog_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
-
-        tar = tarfile.open(file_to_upload)
-        oxoQ_score = None
-        for member in tar.getmembers():
-            if member.name == 'CCG.oxoQ_score.txt':
-                f = tar.extractfile(member)
-                oxoQ_score = f.read()
-                break
-
-        if oxoQ_score == None:
-            sys.exit('Error: unable to extract oxoQ score, make sure CCG.oxoQ_score.txt exists in the QC tgz')
-
-        file_info.update({'info': {
-            'oxoQ_score': float(oxoQ_score)
-        }})
-
     else:
         sys.exit('Error: unknown QC metrics file: %s' % file_to_upload)
+
+    extra_info = {}
+    tar = tarfile.open(file_to_upload)
+    for member in tar.getmembers():
+        if member.name.endswith('.extra_info.json'):
+            f = tar.extractfile(member)
+            extra_info = json.load(f)
+            break
+
+    file_info.update({'info': extra_info})
 
     return file_info
 
@@ -120,7 +104,7 @@ def main(args):
 
     payload = {
         'analysisType': {
-            'name': 'dna_seq_qc'
+            'name': 'qc_metrics'
         },
         'studyId': seq_experiment_analysis_dict.get('studyId'),
         'workflow': {
