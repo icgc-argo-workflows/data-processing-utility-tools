@@ -29,7 +29,6 @@ params.files_to_upload = ""
 params.seq_experiment_analysis = ""
 params.read_group_ubam_analysis = "NO_FILE"
 params.wf_name = ""
-params.wf_short_name = ""
 params.wf_version = ""
 
 include "../payload-gen-dna-alignment" params(params)
@@ -41,7 +40,6 @@ workflow {
       file(params.seq_experiment_analysis),
       Channel.fromPath(params.read_group_ubam_analysis).collect(),
       params.wf_name,
-      params.wf_short_name,
       params.wf_version
     )
   publish:

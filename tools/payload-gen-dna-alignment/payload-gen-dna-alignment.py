@@ -129,7 +129,6 @@ def main(args):
         'studyId': seq_experiment_analysis_dict.get('studyId'),
         'workflow': {
             'name': args.wf_name,
-            'short_name': args.wf_short_name if args.wf_short_name else None,
             'version': args.wf_version,
             'run_id': args.wf_run,
             'inputs': [
@@ -182,7 +181,6 @@ if __name__ == "__main__":
     parser.add_argument("-u", "--read_group_ubam_analysis", dest="read_group_ubam_analysis", default=[],
                         help="Input payloads for the analysis", type=str, nargs='+')
     parser.add_argument("-w", "--wf_name", dest="wf_name", required=True, help="Workflow name")
-    parser.add_argument("-c", "--wf_short_name", dest="wf_short_name", help="Workflow short name")
     parser.add_argument("-v", "--wf_version", dest="wf_version", required=True, help="Workflow version")
     parser.add_argument("-r", "--wf_run", dest="wf_run", required=True, help="workflow run ID")
     args = parser.parse_args()
