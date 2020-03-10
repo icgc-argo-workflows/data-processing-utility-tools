@@ -134,7 +134,7 @@ def main(args):
             'inputs': [
                 {
                     'analysis_type': 'sequencing_experiment',
-                    'id': seq_experiment_analysis_dict.get('analysisId')
+                    'input_analysis_id': seq_experiment_analysis_dict.get('analysisId')
                 }
             ]
         },
@@ -155,7 +155,7 @@ def main(args):
         payload['workflow']['inputs'].append(
             {
                 'analysis_type': 'read_group_ubam',
-                'id': ubam_analysis_dict.get('analysisId')
+                'input_analysis_id': ubam_analysis_dict.get('analysisId')
             }
         )
 
