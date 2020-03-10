@@ -36,5 +36,5 @@ workflow {
       params.pattern
     )
   publish:
-    extractFilesFromTarball.out.output_files to: 'outdir', overwrite: true
+    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
 }
