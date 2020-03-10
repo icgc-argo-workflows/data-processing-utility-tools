@@ -28,16 +28,14 @@ params.pattern = ""
 
 
 process extractFilesFromTarball {
-  container 'alpine:3.10'
+  container 'cfmanteiga/alpine-bash-curl-jq'
 
   input:
     path tarball
     val pattern
 
   output:
-    path "*${pattern}{.bam,.cram,.vcf.gz}", emit: output_file
-    path "*${pattern}{.bam.bai,.cram.crai,.vcf.gz.tbi}", emit: output_file_index
-    path "*${pattern}*{.md5}", emit: output_file_md5
+    tuple path("*${pattern}{.bam,.cram,.vcf.gz}"), path("*${pattern}{.bam.bai,.cram.crai,.vcf.gz.tbi}"), emit: output_files
 
   script:
     """
