@@ -1,0 +1,11 @@
+{
+  "normal_analysis": "data/seq-exp.bam.metadata.json",
+  "tumour_analysis": "data/seq-exp.fq.metadata.json",
+  "files_to_upload": [
+    "data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz",
+    "data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.tbi"
+  ],
+  "wf_name": "sanger-wgs-variant-calling",
+  "wf_short_name": "sanger-wgs",
+  "wf_version": "0.1.0"
+}
