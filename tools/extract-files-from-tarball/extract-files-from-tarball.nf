@@ -26,13 +26,11 @@ nextflow.preview.dsl=2
 params.tarball = ""
 params.pattern = ""
 
-
 process extractFilesFromTarball {
   container 'cfmanteiga/alpine-bash-curl-jq'
 
   input:
-    path tarball
-    val pattern
+    tuple val(pattern), path(tarball)
 
   output:
     tuple path("*${pattern}{.bam,.cram,.vcf.gz}"), path("*${pattern}{.bam.bai,.cram.crai,.vcf.gz.tbi}"), emit: output_files
