@@ -33,7 +33,7 @@ process extractFilesFromTarball {
     tuple val(pattern), path(tarball)
 
   output:
-    tuple path("*${pattern}{.bam,.cram,.vcf.gz}"), path("*${pattern}{.bam.bai,.cram.crai,.vcf.gz.tbi}"), emit: output_files
+    tuple path("*${pattern}{.bam,.cram,.vcf.gz}"), path("*${pattern}{.bam.bai,.cram.crai,.vcf.gz.tbi}"), emit: extracted_files
 
   script:
     """
