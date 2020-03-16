@@ -1,6 +1,6 @@
 {
-  "normal_analysis": "data/seq-exp.bam.metadata.json",
-  "tumour_analysis": "data/seq-exp.fq.metadata.json",
+  "normal_analysis": "data/7ad90309-21df-4345-9903-0921df73456b.sequencing_alignment.analysis.json",
+  "tumour_analysis": "data/f64ae545-11c1-46f7-8ae5-4511c156f7be.sequencing_alignment.analysis.json",
   "files_to_upload": [
     "data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz",
     "data/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.tbi"

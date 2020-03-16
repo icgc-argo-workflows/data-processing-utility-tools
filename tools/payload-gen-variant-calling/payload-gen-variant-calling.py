@@ -25,6 +25,7 @@ import sys
 import uuid
 import json
 import hashlib
+import copy
 from argparse import ArgumentParser
 
 
@@ -49,6 +50,17 @@ def get_files_info(file_to_upload):
         'fileAccess': 'controlled',
         'dataType': 'SSM' if not file_to_upload.split(".")[-1] in ('tbi', 'idx') else 'vcf_index'
     }
+
+
+def get_sample_info(sample_list):
+    samples = copy.deepcopy(sample_list)
+    for sample in samples:
+        for item in ['info', 'sampleId', 'specimenId', 'donorId', 'studyId']:
+            sample.pop(item, None)
+            sample['specimen'].pop(item, None)
+            sample['donor'].pop(item, None)
+
+    return samples
 
 
 def main(args):
@@ -76,32 +88,40 @@ def main(args):
         'analysisType': {
             'name': 'variant_calling'
         },
-        'studyId': metadata.get('program_id'),
+        'studyId': metadata.get('studyId'),
         'experiment': {},
         'samples': [],
         'files': [],
-        'inputs': []
-    }
-
-    # get sample of the payload
-    sample = {
-        'submitterSampleId': metadata.get('submitter_sample_id'),
-        'matchedNormalSubmitterSampleId': metadata.get('submitter_matched_normal_sample_id'),
-        'sampleType': metadata.get('sample_type'),
-        'specimen': {
-            'submitterSpecimenId': metadata.get('submitter_specimen_id'),
-            'tumourNormalDesignation': metadata.get('tumour_normal_designation'),
-            'specimenTissueSource': metadata.get('specimen_tissue_source'),
-            'specimenType': metadata.get('specimen_type')
-        },
-        'donor': {
-            'submitterDonorId': metadata.get('submitter_donor_id'),
-            'gender': metadata.get('gender')
+        'workflow': {
+            'name': args.wf_name,
+            'short_name': args.wf_short_name,
+            'version': args.wf_version,
+            'run_id': args.wf_run,
+            'inputs': []
         }
     }
 
-    payload['samples'].append(sample)
-
+    # get sample of the payload
+    if tumour_analysis:  # somatic variants
+        payload['samples'] = get_sample_info(tumour_analysis.get('samples'))
+        payload['workflow']['inputs'] = [
+            {
+                "tumour_analysis_id": tumour_analysis.get("analysisId"),
+                "analysis_type": "sequencing_alignment"
+            },
+            {
+                "normal_analysis_id": normal_analysis.get("analysisId"),
+                "analysis_type": "sequencing_alignment"
+            }
+        ]
+    else:   # germline variants
+        payload['samples'] = get_sample_info(normal_analysis.get('samples'))
+        payload['workflow']['inputs'] = [
+            {
+                "normal_analysis_id": normal_analysis.get("analysisId"),
+                "analysis_type": "sequencing_alignment"
+            }
+        ]
 
     for f in args.files_to_upload:
       payload['files'].append(get_files_info(f))

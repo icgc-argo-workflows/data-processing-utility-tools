@@ -47,6 +47,8 @@ process payloadGenVariantCalling {
     val wf_version
 
   output:
+    path "*.variant_calling.payload.json", emit: payload
+    path files_to_upload, emit: files_to_upload
     tuple path("*.variant_calling.payload.json"), path(files_to_upload), emit: data
 
   script:

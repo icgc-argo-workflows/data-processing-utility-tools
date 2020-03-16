@@ -36,6 +36,7 @@ include payloadGenVariantCalling from "../payload-gen-variant-calling" params(pa
 
 
 workflow {
+  main:
   payloadGenVariantCalling(
     file(params.normal_analysis),
     file(params.tumour_analysis),
@@ -44,4 +45,7 @@ workflow {
     params.wf_short_name,
     params.wf_version
   )
+  publish:
+  payloadGenVariantCalling.out.payload to: 'outdir'
+  payloadGenVariantCalling.out.files_to_upload to: 'outdir'
 }
