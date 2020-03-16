@@ -28,14 +28,14 @@ params.pattern = "flagged.muts"
 
 include extractFilesFromTarball from "../extract-files-from-tarball"
 
-repack_tuple = Channel.of( [params.pattern, file(params.tarball)] )
-
 workflow {
   main:
     extractFilesFromTarball(
-      repack_tuple
+      file(params.tarball),
+      params.pattern
     )
-    
+
   publish:
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
+    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
 }
