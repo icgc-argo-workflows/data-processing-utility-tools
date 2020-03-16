@@ -44,11 +44,11 @@ def calculate_md5(file_path):
 def get_files_info(file_to_upload):
     return {
         'fileName': os.path.basename(file_to_upload),
-        'fileType': file_to_upload.split(".")[-1].upper(),
+        'fileType': 'VCF' if file_to_upload.endswith('.vcf.gz') else file_to_upload.split(".")[-1].upper(),
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
         'fileAccess': 'controlled',
-        'dataType': 'SSM' if not file_to_upload.split(".")[-1] in ('tbi', 'idx') else 'vcf_index'
+        'dataType': 'SSM' if not file_to_upload.split(".")[-1] in ('tbi', 'idx') else 'vcf_index'  # TODO: determine dataType by check file name convention: indel, cnv, sv etc
     }
 
 
