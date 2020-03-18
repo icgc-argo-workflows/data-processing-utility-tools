@@ -54,7 +54,7 @@ def get_aligned_seq_basename(qc_files):
     sys.exit('Error: missing DNA alignment QC metrics file with patten: *.{bam,cram}.qc_metrics.tgz')
 
 
-def get_files_info(file_to_upload):
+def get_files_info(file_to_upload, seq_experiment_analysis_dict):
     file_info = {
         'fileName': os.path.basename(file_to_upload),
         'fileType': file_to_upload.split(".")[-1].upper(),
@@ -81,6 +81,16 @@ def get_files_info(file_to_upload):
             f = tar.extractfile(member)
             extra_info = json.load(f)
             break
+
+    if file_info.get('dataType') == 'read_group_qc':
+        map_to_new_id =  {}
+        for rg in seq_experiment_analysis_dict['read_groups']:  # build map read_group_id_in_bam to submitter_read_group_id
+            if rg.get('read_group_id_in_bam'):
+                map_to_new_id[rg['read_group_id_in_bam']] = rg['submitter_read_group_id']
+            else:
+                map_to_new_id[rg['submitter_read_group_id']] = rg['submitter_read_group_id']
+
+        extra_info['read_group_id'] = map_to_new_id[extra_info['read_group_id']]
 
     file_info.update({'info': extra_info})
 
@@ -140,7 +150,7 @@ def main(args):
             os.symlink(os.path.abspath(f), dst)
             f = new_name
 
-        payload['files'].append(get_files_info(f))
+        payload['files'].append(get_files_info(f, seq_experiment_analysis_dict))
 
         dst = os.path.join(os.getcwd(), new_dir, f)
         os.symlink(os.path.abspath(f), dst)
