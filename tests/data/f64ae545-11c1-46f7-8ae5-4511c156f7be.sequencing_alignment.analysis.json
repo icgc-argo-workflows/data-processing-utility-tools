@@ -4,13 +4,13 @@
   "analysisState": "PUBLISHED",
   "samples": [
     {
-      "sampleId": "SA610149",
-      "specimenId": "SP210129",
+      "sampleId": "SA610148",
+      "specimenId": "SP210128",
       "submitterSampleId": "HCC1143_FASTQ_INPUT",
       "matchedNormalSubmitterSampleId": "HCC1143_BAM_INPUT",
       "sampleType": "Total DNA",
       "specimen": {
-        "specimenId": "SP210129",
+        "specimenId": "SP210128",
         "donorId": "DO250122",
         "submitterSpecimenId": "HCC1143_FASTQ_INPUT",
         "tumourNormalDesignation": "Tumour",

@@ -26,6 +26,7 @@ import uuid
 import json
 import hashlib
 import copy
+from datetime import date
 from argparse import ArgumentParser
 
 
@@ -41,15 +42,70 @@ def calculate_md5(file_path):
     return md5.hexdigest()
 
 
-def get_files_info(file_to_upload):
-    return {
-        'fileName': os.path.basename(file_to_upload),
+def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germline, normal_analysis, tumour_analysis):
+    file_info = {
         'fileType': 'VCF' if file_to_upload.endswith('.vcf.gz') else file_to_upload.split(".")[-1].upper(),
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
-        'fileAccess': 'controlled',
-        'dataType': 'SSM' if not file_to_upload.split(".")[-1] in ('tbi', 'idx') else 'vcf_index'  # TODO: determine dataType by check file name convention: indel, cnv, sv etc
+        'fileAccess': 'controlled'
     }
+
+    if somatic_or_germline == 'somatic':
+        fname_sample_part = '%s_vs_%s' % (tumour_analysis['samples'][0]['sampleId'], normal_analysis['samples'][0]['sampleId'])
+        metadata = tumour_analysis
+    elif somatic_or_germline == 'germline':
+        fname_sample_part = normal_analysis['samples'][0]['sampleId']
+        metadata = normal_analysis
+    else:
+        pass  # should never happen
+
+    library_strategy = metadata['experiment']['library_strategy'].lower()
+    date_str = date.today().strftime("%Y%m%d")
+
+    variant_type = ''
+    if wf_short_name in (['sanger-wgs', 'sanger-wxs']):
+        if file_to_upload.endswith('.flagged.muts.vcf.gz') or file_to_upload.endswith('.flagged.muts.vcf.gz.tbi'):
+            variant_type = 'snv'
+        if file_to_upload.endswith('.flagged.vcf.gz') or file_to_upload.endswith('.flagged.vcf.gz.tbi'):
+            variant_type = 'indel'
+        if file_to_upload.endswith('.copynumber.caveman.vcf.gz') or file_to_upload.endswith('.copynumber.caveman.vcf.gz.tbi'):
+            variant_type = 'cnv'
+        if file_to_upload.endswith('.annot.vcf.gz') or file_to_upload.endswith('.annot.vcf.gz.tbi'):
+            variant_type = 'sv'
+
+    elif wf_short_name in (['HaplotypeCaller']):
+        sys.exit('Error: not implemented yet for "%s"' % wf_short_name)
+
+    else:
+        pass  # should never happen
+
+    # file naming patterns:
+    #   somatic: <argo_sample_id_tumour>_vs_<argo_sample_id_normal>.[wgs|wxs].<date>.<wf_short_name>.<wf_version>.[somatic].[snv|indel|cnv|sv].vcf.gz
+    #   germline:                           <argo_sample_id_normal>.[wgs|wxs].<date>.<wf_short_name>.<wf_version>.[germline].[snv|indel|cnv|sv].vcf.gz
+    new_fname = '.'.join([
+                            fname_sample_part,
+                            library_strategy,
+                            date_str,
+                            wf_short_name,
+                            wf_version,
+                            somatic_or_germline,
+                            variant_type,
+                            'vcf.gz'
+                        ] + (['tbi'] if file_to_upload.endswith('.tbi') else []))
+
+    file_info['fileName'] = new_fname
+    file_info['dataType'] = '%s_%s' % (somatic_or_germline, variant_type) if new_fname.endswith('.vcf.gz') else 'vcf_index'
+
+    new_dir = 'out'
+    try:
+        os.mkdir(new_dir)
+    except FileExistsError:
+        pass
+
+    dst = os.path.join(os.getcwd(), new_dir, new_fname)
+    os.symlink(os.path.abspath(file_to_upload), dst)
+
+    return file_info
 
 
 def get_sample_info(sample_list):
@@ -73,13 +129,11 @@ def main(args):
         with open(args.tumour_analysis, 'r') as f:
             tumour_analysis = json.load(f)
 
-    somatic_or_germline = 'somatic'
-    if args.wf_short_name == 'sanger-wgs':
-        metadata = tumour_analysis
-    elif args.wf_short_name == 'sanger-wxs':
-        metadata = tumour_analysis
-    elif args.wf_short_name == 'HaplotypeCaller':
-        metadata = tumour_analysis
+    somatic_or_germline = 'somatic'   # default
+    if args.wf_short_name in ['sanger-wgs', 'sanger-wxs']:
+        if not tumour_analysis:
+            sys.exit('Error: metadata for tumour is missing!')
+    elif args.wf_short_name in ['HaplotypeCaller']:
         somatic_or_germline = 'germline'
     else:
         sys.exit("Unsupported variant caller: %s" % args.wf_short_name)
@@ -88,7 +142,7 @@ def main(args):
         'analysisType': {
             'name': 'variant_calling'
         },
-        'studyId': metadata.get('studyId'),
+        'studyId': normal_analysis.get('studyId'),  # normal/tumour analysis should always from the same study
         'experiment': {},
         'samples': [],
         'files': [],
@@ -102,7 +156,7 @@ def main(args):
     }
 
     # get sample of the payload
-    if tumour_analysis:  # somatic variants
+    if somatic_or_germline == 'somatic':  # somatic variants
         payload['samples'] = get_sample_info(tumour_analysis.get('samples'))
         payload['workflow']['inputs'] = [
             {
@@ -124,7 +178,7 @@ def main(args):
         ]
 
     for f in args.files_to_upload:
-      payload['files'].append(get_files_info(f))
+      payload['files'].append(get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis))
 
     with open("%s.variant_calling.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
