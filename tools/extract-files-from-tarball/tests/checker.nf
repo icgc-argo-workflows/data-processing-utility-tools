@@ -38,4 +38,5 @@ workflow {
   publish:
     extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
     extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
+    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
 }
