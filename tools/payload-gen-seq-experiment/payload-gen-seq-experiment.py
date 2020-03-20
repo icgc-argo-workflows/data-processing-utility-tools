@@ -26,9 +26,21 @@ import uuid
 import json
 from argparse import ArgumentParser
 
+
+def empty_str_to_null(metadata):
+    for k in metadata:
+        if k in ['read_groups', 'files']:
+            for i in range(len(metadata[k])):
+                empty_str_to_null(metadata[k][i])
+        if isinstance(metadata[k], str) and metadata[k] in ["", "_NULL_"]:
+            metadata[k] = None
+
+
 def main(args):
     with open(args.user_submit_metadata, 'r') as f:
         metadata = json.load(f)
+
+    empty_str_to_null(metadata)
 
     payload = {
         'analysisType': {
@@ -77,7 +89,7 @@ def main(args):
                 'fileMd5sum': input_file.get('md5sum'),
                 'fileType': input_file.get('format'),
                 'fileAccess': 'controlled',
-                'dataType': 'UnalignedReads'
+                'dataType': 'submitted_reads'
             }
         )
 
