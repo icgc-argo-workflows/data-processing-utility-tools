@@ -169,7 +169,7 @@ def main(args):
         # renmame ubam_qc_metrics file to have the same base name as the aligned seq
         if re.match(r'.+?\.lane\.bam\.ubam_qc_metrics\.tgz$', f):
             rg_id = get_rg_id_from_ubam_qc(f, seq_experiment_analysis_dict)
-            new_name = '%s.%s.ubam_qc_metrics.tgz' % (re.sub(r'\.aln\.cram$', '', aligned_seq_basename), rg_id)
+            new_name = '%s.%s.ubam_qc_metrics.tgz' % (re.sub(r'\.aln\.(cram|bam)$', '', aligned_seq_basename), rg_id)
             dst = os.path.join(os.getcwd(), new_name)
             os.symlink(os.path.abspath(f), dst)
             f = new_name
