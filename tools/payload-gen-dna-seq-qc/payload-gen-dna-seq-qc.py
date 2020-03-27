@@ -67,7 +67,7 @@ def get_rg_id_from_ubam_qc(tar, metadata):
             return rg.get("submitter_read_group_id")
 
     # up to this point no match found, then something wrong
-    sys.exit('Error: unable to match ubam qc metric tar to read group id')
+    sys.exit('Error: unable to match ubam qc metric tar "%s" to read group id' % tar_basename)
 
 
 def get_files_info(file_to_upload, seq_experiment_analysis_dict):
