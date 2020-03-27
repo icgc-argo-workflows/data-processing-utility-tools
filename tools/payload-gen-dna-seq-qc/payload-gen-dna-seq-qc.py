@@ -54,6 +54,22 @@ def get_aligned_seq_basename(qc_files):
     sys.exit('Error: missing DNA alignment QC metrics file with patten: *.{bam,cram}.qc_metrics.tgz')
 
 
+def get_rg_id_from_ubam_qc(tar, metadata):
+    tar_basename = os.path.basename(tar)  # TEST-PR.DO250122.SA610149.D0RE2_1_.6cae87bf9f05cdfaa4a26f2da625f3b2.lane.bam.ubam_qc_metrics.tgz
+    md5sum_from_filename = tar_basename.split('.')[-5]
+    if not re.match(r'^[a-f0-9]{32}$', md5sum_from_filename):
+        sys.exit('Error: ubam naming not expected %s' % tar_basename)
+
+    for rg in metadata.get("read_groups"):
+        rg_id_in_bam = rg.get("read_group_id_in_bam") if rg.get("read_group_id_in_bam") else rg.get("submitter_read_group_id")
+        md5sum_from_metadata = hashlib.md5(rg_id_in_bam.encode('utf-8')).hexdigest()
+        if md5sum_from_metadata == md5sum_from_filename:
+            return rg.get("submitter_read_group_id")
+
+    # up to this point no match found, then something wrong
+    sys.exit('Error: unable to match ubam qc metric tar "%s" to read group id' % tar_basename)
+
+
 def get_files_info(file_to_upload, seq_experiment_analysis_dict):
     file_info = {
         'fileName': os.path.basename(file_to_upload),
@@ -63,7 +79,7 @@ def get_files_info(file_to_upload, seq_experiment_analysis_dict):
         'fileAccess': 'controlled'
     }
 
-    if re.match(r'.+?\.lane\.bam\.ubam_qc_metrics\.tgz$', file_to_upload):
+    if re.match(r'.+?\.ubam_qc_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'read_group_qc'})
     elif re.match(r'.+?\.(cram|bam)\.qc_metrics\.tgz$', file_to_upload):
         file_info.update({'dataType': 'alignment_qc'})
@@ -144,8 +160,16 @@ def main(args):
     # get file of the payload
     for f in args.qc_files:
         # renmame duplicates_metrics file to have the same base name as the aligned seq
-        if re.match(r'.+\.duplicates_metrics.tgz$', f):
+        if re.match(r'.+\.duplicates_metrics\.tgz$', f):
             new_name = '%s.duplicates_metrics.tgz' % aligned_seq_basename
+            dst = os.path.join(os.getcwd(), new_name)
+            os.symlink(os.path.abspath(f), dst)
+            f = new_name
+
+        # renmame ubam_qc_metrics file to have the same base name as the aligned seq
+        if re.match(r'.+?\.lane\.bam\.ubam_qc_metrics\.tgz$', f):
+            rg_id = get_rg_id_from_ubam_qc(f, seq_experiment_analysis_dict)
+            new_name = '%s.%s.ubam_qc_metrics.tgz' % (re.sub(r'\.aln\.(cram|bam)$', '', aligned_seq_basename), rg_id)
             dst = os.path.join(os.getcwd(), new_name)
             os.symlink(os.path.abspath(f), dst)
             f = new_name
