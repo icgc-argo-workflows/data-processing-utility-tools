@@ -31,7 +31,7 @@ params.read_group_ubam_analysis = "NO_FILE"
 params.wf_name = ""
 params.wf_version = ""
 
-include "../payload-gen-dna-alignment" params(params)
+include payloadGenDnaAlignment from "../payload-gen-dna-alignment" params(params)
 
 workflow {
   main:

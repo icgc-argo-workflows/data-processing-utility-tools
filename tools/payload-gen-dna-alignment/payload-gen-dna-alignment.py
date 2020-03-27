@@ -61,8 +61,6 @@ def get_rg_count(aligned_file):
 
 
 def rename_file(f, payload, rg_count, sample_info):
-    sample_id = sample_info[0]['sampleId']
-
     library_strategy = payload['experiment']['library_strategy'].lower()
 
     if f.endswith('.bam'):
@@ -76,11 +74,13 @@ def rename_file(f, payload, rg_count, sample_info):
     else:
         sys.exit('Error: unknown aligned seq extention: %s' % f)
 
-    new_name = "%s.%s.%s.%s.grch38.%s" % (
-        sample_id,
-        rg_count,
-        date.today().strftime("%Y%m%d"),
+    new_name = "%s.%s.%s.%s.%s.%s.%s" % (
+        payload['studyId'],
+        sample_info[0]['donor']['donorId'],
+        sample_info[0]['sampleId'],
         library_strategy,
+        date.today().strftime("%Y%m%d"),
+        'aln',
         file_ext
     )
 
