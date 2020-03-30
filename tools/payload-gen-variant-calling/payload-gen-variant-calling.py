@@ -167,6 +167,9 @@ def main(args):
                 "analysis_type": "sequencing_alignment"
             }
         ]
+        payload['experiment'] = {
+            'library_strategy': tumour_analysis['experiment']['library_strategy']
+        }
     else:   # germline variants
         payload['samples'] = get_sample_info(normal_analysis.get('samples'))
         payload['workflow']['inputs'] = [
@@ -175,6 +178,9 @@ def main(args):
                 "analysis_type": "sequencing_alignment"
             }
         ]
+        payload['experiment'] = {
+            'library_strategy': normal_analysis['experiment']['library_strategy']
+        }
 
     for f in args.files_to_upload:
       payload['files'].append(get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis))
