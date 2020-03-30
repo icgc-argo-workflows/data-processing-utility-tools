@@ -51,10 +51,8 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
     }
 
     if somatic_or_germline == 'somatic':
-        fname_sample_part = '%s_vs_%s' % (tumour_analysis['samples'][0]['sampleId'], normal_analysis['samples'][0]['sampleId'])
         metadata = tumour_analysis
     elif somatic_or_germline == 'germline':
-        fname_sample_part = normal_analysis['samples'][0]['sampleId']
         metadata = normal_analysis
     else:
         pass  # should never happen
@@ -80,14 +78,15 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         pass  # should never happen
 
     # file naming patterns:
-    #   somatic: <argo_sample_id_tumour>_vs_<argo_sample_id_normal>.[wgs|wxs].<date>.<wf_short_name>.<wf_version>.[somatic].[snv|indel|cnv|sv].vcf.gz
-    #   germline:                           <argo_sample_id_normal>.[wgs|wxs].<date>.<wf_short_name>.<wf_version>.[germline].[snv|indel|cnv|sv].vcf.gz
+    #   pattern:  <argo_sample_id_tumour>.[wgs|wxs].<date>.<wf_short_name>.[somatic|germline].[snv|indel|cnv|sv].vcf.gz
+    #   example: TEST-PR.DO250183.SA610229.wxs.20200319.sanger-wxs.somatic.snv.vcf.gz
     new_fname = '.'.join([
-                            fname_sample_part,
+                            metadata['studyId'],
+                            metadata['samples'][0]['donor']['donorId'],
+                            metadata['samples'][0]['sampleId'],
                             library_strategy,
                             date_str,
                             wf_short_name,
-                            wf_version,
                             somatic_or_germline,
                             variant_type,
                             'vcf.gz'
