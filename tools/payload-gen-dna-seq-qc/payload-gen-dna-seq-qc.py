@@ -54,6 +54,34 @@ def get_aligned_seq_basename(qc_files):
     sys.exit('Error: missing DNA alignment QC metrics file with patten: *.{bam,cram}.qc_metrics.tgz')
 
 
+def insert_filename_friendly_rg_id(metadata):
+    filename_friendly_rg_ids = set()
+
+    # let's loop it two times, first for the rg id actually doesn't need to convert
+    for rg in metadata['read_groups']:
+        submitter_read_group_id = rg['submitter_read_group_id']
+        filename_friendly_rg_id = "".join([ c if re.match(r"[a-zA-Z0-9\.\-_]", c) else "_" for c in submitter_read_group_id ])
+
+        if filename_friendly_rg_id == submitter_read_group_id:  # no change, safe to use
+            rg['filename_friendly_rg_id'] = filename_friendly_rg_id
+            filename_friendly_rg_ids.add(filename_friendly_rg_id)
+
+    i = 0
+    for rg in metadata['read_groups']:
+        submitter_read_group_id = rg['submitter_read_group_id']
+        filename_friendly_rg_id = "".join([ c if re.match(r"[a-zA-Z0-9\.\-_]", c) else "_" for c in submitter_read_group_id ])
+
+        if filename_friendly_rg_id == submitter_read_group_id:  # no change, already covered
+            continue
+
+        if filename_friendly_rg_id in filename_friendly_rg_ids:  # the converted new friendly ID conflicts with existing one
+            i += 1
+            filename_friendly_rg_id += '_%s' % i
+
+        rg['filename_friendly_rg_id'] = filename_friendly_rg_id
+        filename_friendly_rg_ids.add(filename_friendly_rg_id)
+
+
 def get_rg_id_from_ubam_qc(tar, metadata):
     tar_basename = os.path.basename(tar)  # TEST-PR.DO250122.SA610149.D0RE2_1_.6cae87bf9f05cdfaa4a26f2da625f3b2.lane.bam.ubam_qc_metrics.tgz
     md5sum_from_filename = tar_basename.split('.')[-5]
@@ -64,7 +92,7 @@ def get_rg_id_from_ubam_qc(tar, metadata):
         rg_id_in_bam = rg.get("read_group_id_in_bam") if rg.get("read_group_id_in_bam") else rg.get("submitter_read_group_id")
         md5sum_from_metadata = hashlib.md5(rg_id_in_bam.encode('utf-8')).hexdigest()
         if md5sum_from_metadata == md5sum_from_filename:
-            return rg.get("submitter_read_group_id")
+            return rg.get("filename_friendly_rg_id")
 
     # up to this point no match found, then something wrong
     sys.exit('Error: unable to match ubam qc metric tar "%s" to read group id' % tar_basename)
@@ -154,6 +182,8 @@ def main(args):
         os.mkdir(new_dir)
     except FileExistsError:
         pass
+
+    insert_filename_friendly_rg_id(seq_experiment_analysis_dict)
 
     aligned_seq_basename = get_aligned_seq_basename(args.qc_files)
 
