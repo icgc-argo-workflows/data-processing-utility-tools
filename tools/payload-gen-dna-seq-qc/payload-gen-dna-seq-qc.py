@@ -66,7 +66,6 @@ def insert_filename_friendly_rg_id(metadata):
             rg['filename_friendly_rg_id'] = filename_friendly_rg_id
             filename_friendly_rg_ids.add(filename_friendly_rg_id)
 
-    i = 0
     for rg in metadata['read_groups']:
         submitter_read_group_id = rg['submitter_read_group_id']
         filename_friendly_rg_id = "".join([ c if re.match(r"[a-zA-Z0-9\.\-_]", c) else "_" for c in submitter_read_group_id ])
@@ -75,8 +74,10 @@ def insert_filename_friendly_rg_id(metadata):
             continue
 
         if filename_friendly_rg_id in filename_friendly_rg_ids:  # the converted new friendly ID conflicts with existing one
-            i += 1
-            filename_friendly_rg_id += '_%s' % i
+            for i in range(len(metadata['read_groups'])):
+                if not '%s_%s' % (filename_friendly_rg_id, i+1) in filename_friendly_rg_ids:
+                    filename_friendly_rg_id += '_%s' % str(i+1)
+                    break
 
         rg['filename_friendly_rg_id'] = filename_friendly_rg_id
         filename_friendly_rg_ids.add(filename_friendly_rg_id)
