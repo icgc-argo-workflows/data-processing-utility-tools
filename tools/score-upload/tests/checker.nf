@@ -18,25 +18,28 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.manifest_file = ""
+params.upload_files = ""
+//params.token_file = "/home/ubuntu/.access_token"
+params.token_file = "/Users/junjun/access_token"
+params.song_url = "https://song.dev.argo.cancercollaboratory.org"
+params.score_url = "https://score.dev.argo.cancercollaboratory.org"
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+
+include "../score-upload" params(params)
 
 workflow {
-  main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
-    )
-
-  publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+  scoreUpload(
+    file(params.manifest_file),
+    Channel.fromPath(params.upload_files).collect(),
+    file(params.token_file),
+    params.song_url,
+    params.score_url
+  )
+  scoreUpload.out[0].view()
 }

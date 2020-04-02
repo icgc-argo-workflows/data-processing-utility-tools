@@ -1,4 +1,4 @@
-#!/bin/bash nextflow
+#!/usr/bin/env nextflow
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
@@ -18,25 +18,50 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.upload_files = ""
+params.manifest_file = ""
+params.song_url = ""
+params.score_url = ""
+params.transport_mem = 2
+params.container_version = '0.1.1.0'
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+process scoreUpload {
+  container "quay.io/icgc-argo/score-upload:score-upload.${params.container_version}"
+
+  input:
+    path manifest_file
+    path upload_files
+    path token_file
+    val song_url
+    val score_url
+
+  output:
+    stdout()
+
+  script:
+    """
+    score-upload.py \
+      -m ${manifest_file} \
+      -s ${song_url} \
+      -c ${score_url} \
+      -t ${token_file} \
+      -n ${task.cpus} \
+      -y ${params.transport_mem}
+    """
+}
 
 workflow {
-  main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
-    )
-
-  publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+  scoreUpload(
+    file(params.manifest_file),
+    Channel.fromPath(params.upload_files).collect(),
+    file(params.token_file),
+    params.song_url,
+    params.score_url
+  )
+  scoreUpload.out[0].view()
 }

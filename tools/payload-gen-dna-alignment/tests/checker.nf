@@ -18,25 +18,31 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Authors:
+ *   Linda Xiang <linda.xiang@oicr.on.ca>
+ *   Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.files_to_upload = ""
+params.seq_experiment_analysis = ""
+params.read_group_ubam_analysis = "NO_FILE"
+params.wf_name = ""
+params.wf_version = ""
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+include payloadGenDnaAlignment from "../payload-gen-dna-alignment" params(params)
 
 workflow {
   main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
+    payloadGenDnaAlignment(
+      Channel.fromPath(params.files_to_upload).collect(),
+      file(params.seq_experiment_analysis),
+      Channel.fromPath(params.read_group_ubam_analysis).collect(),
+      params.wf_name,
+      params.wf_version
     )
-
   publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+    payloadGenDnaAlignment.out.payload to: 'outdir', overwrite: true
+    payloadGenDnaAlignment.out.alignment_files to: 'outdir', overwrite: true
 }

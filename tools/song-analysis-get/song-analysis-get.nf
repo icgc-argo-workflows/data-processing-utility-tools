@@ -1,4 +1,4 @@
-#!/bin/bash nextflow
+#!/usr/bin/env nextflow
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
@@ -18,25 +18,44 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.analysis_id = ""
+params.study = ""
+params.song_url = ""
+params.token_file = "NO_FILE"
+params.container_version = "0.1.2.0"
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+process songAnalysisGet {
+  container "quay.io/icgc-argo/song-analysis-get:song-analysis-get.${params.container_version}"
+
+  input:
+    val analysis_id
+    val study
+    val song_url
+    path token_file
+
+  output:
+    path "*.analysis.json", emit: song_analysis
+
+  script:
+    token_args = token_file.name != "NO_FILE" ? "-t ${token_file}" : ""
+    """
+    song-analysis-get.py -a ${analysis_id} -p ${study} -s ${song_url} ${token_args}
+    """
+}
 
 workflow {
   main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
+    songAnalysisGet(
+      params.analysis_id,
+      params.study,
+      params.song_url,
+      file(params.token_file)
     )
-
   publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+    songAnalysisGet.out.song_analysis to: 'outdir', mode: 'copy', overwrite: true
 }

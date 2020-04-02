@@ -1,0 +1,9 @@
+{
+  "seq_experiment_analysis": "data/0ae2c59b-2976-485c-a2c5-9b2976085cbf.fq.sequencing_experiment.song-analysis.json",
+  "files_to_upload": [
+    "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
+    "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam.bai"
+  ],
+  "wf_name": "dna-seq-alignment",
+  "wf_version": "0.4.0"
+}

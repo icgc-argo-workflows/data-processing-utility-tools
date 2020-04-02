@@ -1,4 +1,4 @@
-#!/bin/bash nextflow
+#!/usr/bin/env nextflow
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
@@ -18,25 +18,44 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.analysis_id = ""
+params.study = ""
+params.song_url = ""
+params.token_file = ""
+params.score_upload_status = ""
+params.container_version = '0.1.1.0'
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+process songAnalysisPublish {
+  container "quay.io/icgc-argo/song-analysis-publish:song-analysis-publish.${params.container_version}"
+
+  input:
+    val analysis_id
+    val study
+    val score_upload_status
+    val song_url
+    path token_file
+
+  output:
+    stdout()
+
+  script:
+    """
+    song-analysis-publish.py -a ${analysis_id} -p ${study} -s ${song_url} -t ${token_file}
+    """
+}
 
 workflow {
-  main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
-    )
-
-  publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+  songAnalysisPublish(
+    params.analysis_id,
+    params.study,
+    params.score_upload_status,
+    params.song_url,
+    file(params.token_file)
+  )
+  songAnalysisPublish.out[0].view()
 }

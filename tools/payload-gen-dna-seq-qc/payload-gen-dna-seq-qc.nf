@@ -1,4 +1,4 @@
-#!/bin/bash nextflow
+#!/usr/bin/env nextflow
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
@@ -18,25 +18,44 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Authors:
+ *   Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
+version = '0.2.4.1'
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.seq_experiment_analysis = ""
+params.qc_files = []
+params.wf_name = ""
+params.wf_version = ""
+params.container_version = ""
+params.cpus = 1
+params.mem = 1  // GB
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
 
-workflow {
-  main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
-    )
+process payloadGenDnaSeqQc {
+  container "quay.io/icgc-argo/payload-gen-dna-seq-qc:payload-gen-dna-seq-qc.${params.container_version ?: version}"
+  cpus params.cpus
+  memory "${params.mem} GB"
 
-  publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+  input:
+    path seq_experiment_analysis
+    path qc_files
+    val wf_name
+    val wf_version
+
+  output:
+    path "*.dna_seq_qc.payload.json", emit: payload
+    path "out/*.tgz", emit: qc_files
+
+  script:
+    """
+    payload-gen-dna-seq-qc.py \
+      -a ${seq_experiment_analysis} \
+      -f ${qc_files} \
+      -w ${wf_name} \
+      -r ${workflow.runName} \
+      -v ${wf_version}
+    """
 }

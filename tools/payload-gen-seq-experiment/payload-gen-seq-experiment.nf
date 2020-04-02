@@ -1,4 +1,4 @@
-#!/bin/bash nextflow
+#!/usr/bin/env nextflow
 
 /*
  * Copyright (c) 2019, Ontario Institute for Cancer Research (OICR).
@@ -18,25 +18,37 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author Linda Xiang <linda.xiang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.user_submit_metadata = ""
+params.wf_name = ""
+params.wf_short_name = ""
+params.wf_version = ""
+params.container_version = '0.1.2.0'
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+process payloadGenSeqExperiment {
+  container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.${params.container_version}"
 
-workflow {
-  main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
-    )
+  input:
+    path user_submit_metadata
+    val wf_name
+    val wf_short_name
+    val wf_version
+    val seq_valid
 
-  publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+  output:
+    path "*.sequencing_experiment.payload.json", emit: payload
+
+  script:
+    args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""
+    """
+    payload-gen-seq-experiment.py \
+         -m ${user_submit_metadata} \
+         -w ${wf_name} \
+         -r ${workflow.runName} \
+         -v ${wf_version} ${args_wf_short_name}
+    """
 }

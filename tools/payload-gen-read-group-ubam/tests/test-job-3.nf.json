@@ -1,0 +1,6 @@
+{
+  "sequencing_experiment_analysis": "data/0ae2c59b-2976-485c-a2c5-9b2976085cbf.fq.sequencing_experiment.song-analysis.json",
+  "ubam": "data/D0RH0.2.db2e15cf9008af2ecda8743e7fd7060a.lane.bam",
+  "wf_name": "dna-seq-alignment",
+  "wf_version": "0.4.0"
+}

@@ -23,20 +23,22 @@
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.user_submit_metadata = ""
+params.wf_name = ""
+params.wf_short_name = ""
+params.wf_version = ""
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+include "../payload-gen-seq-experiment" params(params)
 
 workflow {
   main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
+    payloadGenSeqExperiment(
+      file(params.user_submit_metadata),
+      params.wf_name,
+      params.wf_short_name,
+      params.wf_version,
+      'ok'
     )
-
   publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+    payloadGenSeqExperiment.out.payload to: 'outdir', mode: 'copy', overwrite: true
 }

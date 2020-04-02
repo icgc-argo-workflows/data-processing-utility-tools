@@ -18,25 +18,26 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.analysis_id = ""
+params.study = ""
+params.song_url = "https://song.qa.argo.cancercollaboratory.org"
+params.token_file = "NO_FILE"
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+include "../song-analysis-get" params(params)
 
 workflow {
   main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
+    songAnalysisGet(
+      params.analysis_id,
+      params.study,
+      params.song_url,
+      file(params.token_file)
     )
-
   publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+    songAnalysisGet.out.song_analysis to: 'outdir', mode: 'copy', overwrite: true
 }

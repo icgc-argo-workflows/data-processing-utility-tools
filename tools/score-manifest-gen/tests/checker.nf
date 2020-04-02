@@ -18,25 +18,24 @@
  */
 
 /*
- * author Junjun Zhang <junjun.zhang@oicr.on.ca>
+ * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
 nextflow.preview.dsl=2
 
-params.tarball = "data/test.caveman.tgz"
-params.pattern = "flagged.muts"
+params.song_analysis = ""
+params.files = ""
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+include "../score-manifest-gen" params(params)
+
 
 workflow {
   main:
-    extractFilesFromTarball(
-      file(params.tarball),
-      params.pattern
+    scoreManifestGen(
+      file(params.song_analysis),
+      Channel.fromPath(params.files).collect()
     )
 
   publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
+    scoreManifestGen.out.manifest_file to: 'outdir', mode: 'copy', overwrite: true
 }
