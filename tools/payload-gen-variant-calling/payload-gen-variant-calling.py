@@ -26,6 +26,7 @@ import uuid
 import json
 import hashlib
 import copy
+import tarfile
 from datetime import date
 from argparse import ArgumentParser
 
@@ -97,14 +98,25 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
                         ] + (['tbi'] if file_to_upload.endswith('.tbi') else []))
 
     file_info['fileName'] = new_fname
+    extra_info = {}
     if new_fname.endswith('.vcf.gz'):
         file_info['dataType'] = '%s_%s' % (somatic_or_germline, variant_type)
     elif new_fname.endswith('.vcf.gz.tbi'):
         file_info['dataType'] = 'vcf_index'
     elif new_fname.endswith('.tgz'):
         file_info['dataType'] = variant_type
+        tar = tarfile.open(file_to_upload)
+        for member in tar.getmembers():
+            if member.name.endswith('.extra_info.json'):
+                f = tar.extractfile(member)
+                extra_info = json.load(f)
+                break
+
     else:
         sys.exit('Error: unknown file type "%s"' % file_to_upload)
+
+    if extra_info:
+        file_info.update({'info': extra_info})
 
     new_dir = 'out'
     try:
