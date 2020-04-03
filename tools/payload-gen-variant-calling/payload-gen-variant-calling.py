@@ -64,12 +64,16 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
     if wf_short_name in (['sanger-wgs', 'sanger-wxs']):
         if file_to_upload.endswith('.flagged.muts.vcf.gz') or file_to_upload.endswith('.flagged.muts.vcf.gz.tbi'):
             variant_type = 'snv'
-        if file_to_upload.endswith('.flagged.vcf.gz') or file_to_upload.endswith('.flagged.vcf.gz.tbi'):
+        elif file_to_upload.endswith('.flagged.vcf.gz') or file_to_upload.endswith('.flagged.vcf.gz.tbi'):
             variant_type = 'indel'
-        if file_to_upload.endswith('.copynumber.caveman.vcf.gz') or file_to_upload.endswith('.copynumber.caveman.vcf.gz.tbi'):
+        elif file_to_upload.endswith('.copynumber.caveman.vcf.gz') or file_to_upload.endswith('.copynumber.caveman.vcf.gz.tbi'):
             variant_type = 'cnv'
-        if file_to_upload.endswith('.annot.vcf.gz') or file_to_upload.endswith('.annot.vcf.gz.tbi'):
+        elif file_to_upload.endswith('.annot.vcf.gz') or file_to_upload.endswith('.annot.vcf.gz.tbi'):
             variant_type = 'sv'
+        elif file_to_upload.endswith('.supplement.tgz'):
+            variant_type = 'supplement'
+        else:
+            sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
     elif wf_short_name in (['HaplotypeCaller']):
         sys.exit('Error: not implemented yet for "%s"' % wf_short_name)
@@ -89,11 +93,18 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
                             wf_short_name,
                             somatic_or_germline,
                             variant_type,
-                            'vcf.gz'
+                            'vcf.gz' if variant_type != 'supplement' else 'tgz'
                         ] + (['tbi'] if file_to_upload.endswith('.tbi') else []))
 
     file_info['fileName'] = new_fname
-    file_info['dataType'] = '%s_%s' % (somatic_or_germline, variant_type) if new_fname.endswith('.vcf.gz') else 'vcf_index'
+    if new_fname.endswith('.vcf.gz'):
+        file_info['dataType'] = '%s_%s' % (somatic_or_germline, variant_type)
+    elif new_fname.endswith('.vcf.gz.tbi'):
+        file_info['dataType'] = 'vcf_index'
+    elif new_fname.endswith('.tgz'):
+        file_info['dataType'] = variant_type
+    else:
+        sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
     new_dir = 'out'
     try:
@@ -139,7 +150,7 @@ def main(args):
 
     payload = {
         'analysisType': {
-            'name': 'variant_calling'
+            'name': None
         },
         'studyId': normal_analysis.get('studyId'),  # normal/tumour analysis should always from the same study
         'experiment': {},
@@ -182,8 +193,12 @@ def main(args):
             'library_strategy': normal_analysis['experiment']['library_strategy']
         }
 
+    analysis_type = 'variant_calling'
     for f in args.files_to_upload:
-      payload['files'].append(get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis))
+        if f.endswith('.tgz'): analysis_type = 'variant_calling_supplement'
+        payload['files'].append(get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis))
+
+    payload['analysisType']['name'] = analysis_type
 
     with open("%s.variant_calling.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
