@@ -26,6 +26,7 @@ import uuid
 import json
 import hashlib
 import copy
+import re
 import tarfile
 from datetime import date
 from argparse import ArgumentParser
@@ -164,6 +165,8 @@ def main(args):
         'analysisType': {
             'name': None
         },
+        'variant_class': None,
+        'variant_type': None,
         'studyId': normal_analysis.get('studyId'),  # normal/tumour analysis should always from the same study
         'experiment': {},
         'samples': [],
@@ -206,11 +209,32 @@ def main(args):
         }
 
     analysis_type = 'variant_calling'
+    variant_type = None
     for f in args.files_to_upload:
         if f.endswith('.tgz'): analysis_type = 'variant_calling_supplement'
-        payload['files'].append(get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis))
+        file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
+        if re.match(r'.+_(snv|indel|cnv|sv)$', file_info['dataType']):
+            variant_type = [ file_info['dataType'].split('_')[-1] ]
+        elif file_info['dataType'] == 'supplement':
+            variant_type = []
+            for c in file_info['info']['contents']:
+                if c['path'] == 'caveman':
+                    variant_type.append('snv')
+                elif c['path'] == 'pindel':
+                    variant_type.append('indel')
+                elif c['path'] == 'ascat':
+                    variant_type.append('cnv')
+                elif c['path'] == 'brass':
+                    variant_type.append('sv')
+                else:
+                    sys.exit('Error: unknown path "%s" in supplement tarball' % c['path'])
+
+        payload['files'].append(file_info)
 
     payload['analysisType']['name'] = analysis_type
+
+    payload['variant_class'] = somatic_or_germline
+    payload['variant_type'] = variant_type
 
     with open("%s.variant_calling.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
