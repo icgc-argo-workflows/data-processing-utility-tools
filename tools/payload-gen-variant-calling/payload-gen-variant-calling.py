@@ -81,7 +81,7 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         sys.exit('Error: not implemented yet for "%s"' % wf_short_name)
 
     else:
-        pass  # should never happen
+        sys.exit('Error: unknown variant calling workflow "%s"' % wf_short_name)
 
     # file naming patterns:
     #   pattern:  <argo_sample_id_tumour>.[wgs|wxs].<date>.<wf_short_name>.[somatic|germline].[snv|indel|cnv|sv].vcf.gz
