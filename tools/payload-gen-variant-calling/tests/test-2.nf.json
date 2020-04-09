@@ -4,7 +4,7 @@
   "files_to_upload": [
     "data/WXS_SA610229_vs_SA610228.supplement.tgz"
   ],
-  "wf_name": "sanger-wgs-variant-calling",
-  "wf_short_name": "sanger-wgs",
+  "wf_name": "sanger-wxs-variant-calling",
+  "wf_short_name": "sanger-wxs",
   "wf_version": "0.1.0"
 }

@@ -64,6 +64,7 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
 
     variant_type = ''
     if wf_short_name in (['sanger-wgs', 'sanger-wxs']):
+        fname_sample_part = metadata['samples'][0]['sampleId']
         if file_to_upload.endswith('.flagged.muts.vcf.gz') or file_to_upload.endswith('.flagged.muts.vcf.gz.tbi'):
             variant_type = 'snv'
         elif file_to_upload.endswith('.flagged.vcf.gz') or file_to_upload.endswith('.flagged.vcf.gz.tbi'):
@@ -72,8 +73,13 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
             variant_type = 'cnv'
         elif file_to_upload.endswith('.annot.vcf.gz') or file_to_upload.endswith('.annot.vcf.gz.tbi'):
             variant_type = 'sv'
-        elif file_to_upload.endswith('.supplement.tgz'):
-            variant_type = 'supplement'
+        elif file_to_upload.endswith('.supplement.tgz') or file_to_upload.endswith('_metrics.tgz'):
+            variant_type = file_to_upload.split(".")[-2]
+            if re.match(r'.+?\.normal.contamination_metrics.tgz', file_to_upload) or re.match(r'.+?\.bas_metrics.tgz', file_to_upload) and not fname_sample_part in file_to_upload:
+                fname_sample_part = normal_analysis['samples'][0]['sampleId']
+            else:
+                pass
+
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
@@ -89,13 +95,13 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
     new_fname = '.'.join([
                             metadata['studyId'],
                             metadata['samples'][0]['donor']['donorId'],
-                            metadata['samples'][0]['sampleId'],
+                            fname_sample_part,
                             library_strategy,
                             date_str,
                             wf_short_name,
                             somatic_or_germline,
                             variant_type,
-                            'vcf.gz' if variant_type != 'supplement' else 'tgz'
+                            'vcf.gz' if variant_type in ['snv', 'indel', 'cnv', 'sv'] else 'tgz'
                         ] + (['tbi'] if file_to_upload.endswith('.tbi') else []))
 
     file_info['fileName'] = new_fname
@@ -211,7 +217,8 @@ def main(args):
     analysis_type = 'variant_calling'
     variant_type = None
     for f in args.files_to_upload:
-        if f.endswith('.tgz'): analysis_type = 'variant_calling_supplement'
+        if f.endswith('supplement.tgz'): analysis_type = 'variant_calling_supplement'
+        if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
         file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
         if re.match(r'.+_(snv|indel|cnv|sv)$', file_info['dataType']):
             variant_type = [ file_info['dataType'].split('_')[-1] ]
