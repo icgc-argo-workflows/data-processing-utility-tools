@@ -240,8 +240,9 @@ def main(args):
 
     payload['analysisType']['name'] = analysis_type
 
-    payload['variant_class'] = [ somatic_or_germline ]
-    payload['variant_type'] = variant_type
+    if not analysis_type == 'qc_metrics':
+        payload['variant_class'] = [ somatic_or_germline ]
+        payload['variant_type'] = variant_type
 
     with open("%s.variant_calling.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
