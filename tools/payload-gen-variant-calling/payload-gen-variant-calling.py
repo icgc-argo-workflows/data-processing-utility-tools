@@ -73,13 +73,13 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
             variant_type = 'cnv'
         elif file_to_upload.endswith('.annot.vcf.gz') or file_to_upload.endswith('.annot.vcf.gz.tbi'):
             variant_type = 'sv'
-        elif file_to_upload.endswith('.supplement.tgz') or file_to_upload.endswith('_metrics.tgz'):
+        elif file_to_upload.endswith('-supplement.tgz'):
             variant_type = file_to_upload.split(".")[-2]
-            if re.match(r'.+?\.normal.contamination_metrics.tgz', file_to_upload) or re.match(r'.+?\.bas_metrics.tgz', file_to_upload) and not fname_sample_part in file_to_upload:
+        elif file_to_upload.endswith('_metrics.tgz'):
+            variant_type = file_to_upload.split(".")[-2]
+            if re.match(r'.+?\.normal.contamination_metrics.tgz', file_to_upload) \
+                    or ( (re.match(r'.+?\.bas_metrics.tgz', file_to_upload) and not f'.{fname_sample_part}.' in file_to_upload) ):
                 fname_sample_part = normal_analysis['samples'][0]['sampleId']
-            else:
-                pass
-
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
@@ -110,7 +110,9 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         file_info['dataType'] = '%s_%s' % (somatic_or_germline, variant_type)
     elif new_fname.endswith('.vcf.gz.tbi'):
         file_info['dataType'] = 'vcf_index'
-    elif new_fname.endswith('.tgz'):
+    elif new_fname.endswith('-supplement.tgz'):
+        file_info['dataType'] = 'supplement'
+    elif new_fname.endswith('_metrics.tgz'):
         file_info['dataType'] = variant_type
         tar = tarfile.open(file_to_upload)
         for member in tar.getmembers():
@@ -171,8 +173,6 @@ def main(args):
         'analysisType': {
             'name': None
         },
-        'variant_class': None,
-        'variant_type': None,
         'studyId': normal_analysis.get('studyId'),  # normal/tumour analysis should always from the same study
         'experiment': {},
         'samples': [],
@@ -221,20 +221,22 @@ def main(args):
         if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
         file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
         if re.match(r'.+_(snv|indel|cnv|sv)$', file_info['dataType']):
-            variant_type = [ file_info['dataType'].split('_')[-1] ]
+            if not variant_type: variant_type = []
+            variant_type.append(file_info['dataType'].split('_')[-1])
         elif file_info['dataType'] == 'supplement':
-            variant_type = []
-            for c in file_info['info']['contents']:
-                if c['path'] == 'caveman':
-                    variant_type.append('snv')
-                elif c['path'] == 'pindel':
-                    variant_type.append('indel')
-                elif c['path'] == 'ascat':
-                    variant_type.append('cnv')
-                elif c['path'] == 'brass':
-                    variant_type.append('sv')
-                else:
-                    sys.exit('Error: unknown path "%s" in supplement tarball' % c['path'])
+            if not variant_type: variant_type = []
+            if '.caveman-supplement.' in f:
+                variant_type.append('snv')
+            elif '.pindel-supplement.' in f:
+                variant_type.append('indel')
+            elif '.ascat-supplement.' in f:
+                variant_type.append('cnv')
+            elif '.brass-supplement.' in f:
+                variant_type.append('sv')
+            elif '.timings-supplement.' in f:
+                pass  # do nothing
+            else:
+                sys.exit('Error: unknown supplement tarball %s' % f)
 
         payload['files'].append(file_info)
 
@@ -244,7 +246,7 @@ def main(args):
         payload['variant_class'] = [ somatic_or_germline ]
         payload['variant_type'] = variant_type
 
-    with open("%s.variant_calling.payload.json" % str(uuid.uuid4()), 'w') as f:
+    with open("%s.%s.payload.json" % (str(uuid.uuid4()), analysis_type), 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
 

@@ -2,7 +2,9 @@
   "normal_analysis": "data/7ad90309-21df-4345-9903-0921df73456b.sequencing_alignment.analysis.json",
   "tumour_analysis": "data/f64ae545-11c1-46f7-8ae5-4511c156f7be.sequencing_alignment.analysis.json",
   "files_to_upload": [
-    "data/WXS_SA610229_vs_SA610228.supplement.tgz"
+    "data/WXS_SA610229_vs_SA610228.timings-supplement.tgz",
+    "data/WXS_SA610229_vs_SA610228.caveman-supplement.tgz",
+    "data/WXS_SA610229_vs_SA610228.pindel-supplement.tgz"
   ],
   "wf_name": "sanger-wxs-variant-calling",
   "wf_short_name": "sanger-wxs",
