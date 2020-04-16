@@ -149,6 +149,10 @@ def main(args):
 
     payload['experiment'].update(seq_experiment_analysis_dict.get('experiment', {}))
 
+    if 'library_strategy' in payload['experiment']:
+        experimental_strategy = payload['experiment'].pop('library_strategy')
+        payload['experiment']['experimental_strategy'] = experimental_strategy
+
     # get inputs from read_group_ubam_analysis
     for ubam_analysis in args.read_group_ubam_analysis:
         with open(ubam_analysis, 'r') as f:
