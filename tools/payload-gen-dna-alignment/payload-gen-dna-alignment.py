@@ -61,7 +61,7 @@ def get_rg_count(aligned_file):
 
 
 def rename_file(f, payload, rg_count, sample_info):
-    library_strategy = payload['experiment']['library_strategy'].lower()
+    experimental_strategy = payload['experiment']['experimental_strategy'].lower()
 
     if f.endswith('.bam'):
         file_ext = 'bam'
@@ -78,7 +78,7 @@ def rename_file(f, payload, rg_count, sample_info):
         payload['studyId'],
         sample_info[0]['donor']['donorId'],
         sample_info[0]['sampleId'],
-        library_strategy,
+        experimental_strategy,
         date.today().strftime("%Y%m%d"),
         'aln',
         file_ext
