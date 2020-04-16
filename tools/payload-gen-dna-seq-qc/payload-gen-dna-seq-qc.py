@@ -180,6 +180,10 @@ def main(args):
         'samples': get_sample_info(seq_experiment_analysis_dict.get('samples'))
     }
 
+    if 'library_strategy' in payload['experiment']:
+        experimental_strategy = payload['experiment'].pop('library_strategy')
+        payload['experiment']['experimental_strategy'] = experimental_strategy
+
     new_dir = 'out'
     try:
         os.mkdir(new_dir)
