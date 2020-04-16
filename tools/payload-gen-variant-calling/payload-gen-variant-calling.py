@@ -78,7 +78,9 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         elif file_to_upload.endswith('_metrics.tgz'):
             variant_type = file_to_upload.split(".")[-2]
             if re.match(r'.+?\.normal.contamination_metrics.tgz', file_to_upload) \
-                    or ( (re.match(r'.+?\.bas_metrics.tgz', file_to_upload) and not f'.{fname_sample_part}.' in file_to_upload) ):
+                    or ((re.match(r'.+?\.bas_metrics.tgz', file_to_upload) \
+                        and not f'{fname_sample_part}.' in file_to_upload)  # this assumes .bas filename contains sampleID
+                    ):
                 fname_sample_part = normal_analysis['samples'][0]['sampleId']
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
@@ -217,7 +219,7 @@ def main(args):
     analysis_type = 'variant_calling'
     variant_type = None
     for f in args.files_to_upload:
-        if f.endswith('supplement.tgz'): analysis_type = 'variant_calling_supplement'
+        if f.endswith('-supplement.tgz'): analysis_type = 'variant_calling_supplement'
         if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
         file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
         if re.match(r'.+_(snv|indel|cnv|sv)$', file_info['dataType']):
