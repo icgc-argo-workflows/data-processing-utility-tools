@@ -112,10 +112,11 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         file_info['dataType'] = '%s_%s' % (somatic_or_germline, variant_type)
     elif new_fname.endswith('.vcf.gz.tbi'):
         file_info['dataType'] = 'vcf_index'
-    elif new_fname.endswith('-supplement.tgz'):
-        file_info['dataType'] = 'supplement'
-    elif new_fname.endswith('_metrics.tgz'):
-        file_info['dataType'] = variant_type
+    elif new_fname.endswith('.tgz'):
+        if new_fname.endswith('-supplement.tgz'):
+            file_info['dataType'] = 'supplement'
+        elif new_fname.endswith('_metrics.tgz'):
+            file_info['dataType'] = variant_type
         tar = tarfile.open(file_to_upload)
         for member in tar.getmembers():
             if member.name.endswith('.extra_info.json'):
