@@ -117,13 +117,15 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
             file_info['dataType'] = 'supplement'
         elif new_fname.endswith('_metrics.tgz'):
             file_info['dataType'] = variant_type
+        else:
+            sys.exit('Error: unknown file type "%s"' % file_to_upload)
+
         tar = tarfile.open(file_to_upload)
         for member in tar.getmembers():
             if member.name.endswith('.extra_info.json'):
                 f = tar.extractfile(member)
                 extra_info = json.load(f)
                 break
-
     else:
         sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
