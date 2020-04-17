@@ -163,8 +163,10 @@ def main(args):
         },
         'studyId': seq_experiment_analysis_dict.get('studyId'),
         'workflow': {
-            'name': args.wf_name,
-            'version': args.wf_version,
+            'workflow_name': args.wf_name,
+            'workflow_version': args.wf_version,
+            'analysis_tools': None,
+            'genome_build': 'GRCh38_hla_decoy_ebv',
             'run_id': args.wf_run,
             'inputs': [
                 {
@@ -177,6 +179,10 @@ def main(args):
         'experiment': seq_experiment_analysis_dict.get('experiment'),
         'samples': get_sample_info(seq_experiment_analysis_dict.get('samples'))
     }
+
+    if 'library_strategy' in payload['experiment']:
+        experimental_strategy = payload['experiment'].pop('library_strategy')
+        payload['experiment']['experimental_strategy'] = experimental_strategy
 
     new_dir = 'out'
     try:
