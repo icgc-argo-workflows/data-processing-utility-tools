@@ -46,7 +46,7 @@
     "platform": "ILLUMINA",
     "platform_model": null,
     "sequencing_date": "2014-12-12",
-    "library_strategy": "WGS",
+    "experimental_strategy": "WGS",
     "sequencing_center": "OICR",
     "submitter_sequencing_experiment_id": "TEST-EXP-303"
   },

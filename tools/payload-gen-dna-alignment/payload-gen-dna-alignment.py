@@ -61,7 +61,7 @@ def get_rg_count(aligned_file):
 
 
 def rename_file(f, payload, rg_count, sample_info):
-    library_strategy = payload['experiment']['library_strategy'].lower()
+    experimental_strategy = payload['experiment']['experimental_strategy'].lower()
 
     if f.endswith('.bam'):
         file_ext = 'bam'
@@ -78,7 +78,7 @@ def rename_file(f, payload, rg_count, sample_info):
         payload['studyId'],
         sample_info[0]['donor']['donorId'],
         sample_info[0]['sampleId'],
-        library_strategy,
+        experimental_strategy,
         date.today().strftime("%Y%m%d"),
         'aln',
         file_ext
@@ -128,8 +128,10 @@ def main(args):
         },
         'studyId': seq_experiment_analysis_dict.get('studyId'),
         'workflow': {
-            'name': args.wf_name,
-            'version': args.wf_version,
+            'workflow_name': args.wf_name,
+            'workflow_version': args.wf_version,
+            'analysis_tools': ['BWA-MEM', 'biobambam'],
+            'genome_build': 'GRCh38_hla_decoy_ebv',
             'run_id': args.wf_run,
             'inputs': [
                 {
@@ -146,6 +148,10 @@ def main(args):
     }
 
     payload['experiment'].update(seq_experiment_analysis_dict.get('experiment', {}))
+
+    if 'library_strategy' in payload['experiment']:
+        experimental_strategy = payload['experiment'].pop('library_strategy')
+        payload['experiment']['experimental_strategy'] = experimental_strategy
 
     # get inputs from read_group_ubam_analysis
     for ubam_analysis in args.read_group_ubam_analysis:
