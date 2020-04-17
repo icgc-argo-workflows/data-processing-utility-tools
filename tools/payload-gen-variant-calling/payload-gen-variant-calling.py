@@ -59,7 +59,7 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
     else:
         pass  # should never happen
 
-    library_strategy = metadata['experiment']['library_strategy'].lower()
+    experimental_strategy = metadata['experiment']['experimental_strategy'].lower() if 'experimental_strategy' in metadata['experiment'] else metadata['experiment']['library_strategy'].lower()
     date_str = date.today().strftime("%Y%m%d")
 
     variant_type = ''
@@ -98,7 +98,7 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
                             metadata['studyId'],
                             metadata['samples'][0]['donor']['donorId'],
                             fname_sample_part,
-                            library_strategy,
+                            experimental_strategy,
                             date_str,
                             wf_short_name,
                             somatic_or_germline,
@@ -183,11 +183,13 @@ def main(args):
         'samples': [],
         'files': [],
         'workflow': {
-            'name': args.wf_name,
-            'short_name': args.wf_short_name,
-            'version': args.wf_version,
+            'workflow_name': args.wf_name,
+            'workflow_short_name': args.wf_short_name,
+            'workflow_version': args.wf_version,
             'run_id': args.wf_run,
-            'inputs': []
+            'inputs': [],
+            'genome_build': 'GRCh38_hla_decoy_ebv',
+            'analysis_tools': None
         }
     }
 
@@ -205,7 +207,8 @@ def main(args):
             }
         ]
         payload['experiment'] = {
-            'library_strategy': tumour_analysis['experiment']['library_strategy']
+            'experimental_strategy': tumour_analysis['experiment']['experimental_strategy'] if 'experimental_strategy' in tumour_analysis['experiment'] else tumour_analysis['experiment']['library_strategy'],
+            'platform': tumour_analysis['experiment']['platform']
         }
     else:   # germline variants
         payload['samples'] = get_sample_info(normal_analysis.get('samples'))
@@ -216,11 +219,13 @@ def main(args):
             }
         ]
         payload['experiment'] = {
-            'library_strategy': normal_analysis['experiment']['library_strategy']
+            'experimental_strategy': normal_analysis['experiment']['experimental_strategy'] if 'experimental_strategy' in normal_analysis['experiment'] else normal_analysis['experiment']['library_strategy'],
+            'platform': normal_analysis['experiment']['platform']
         }
 
     analysis_type = 'variant_calling'
     variant_type = None
+    analysis_tools = None
     for f in args.files_to_upload:
         if f.endswith('-supplement.tgz'): analysis_type = 'variant_calling_supplement'
         if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
@@ -228,16 +233,33 @@ def main(args):
         if re.match(r'.+_(snv|indel|cnv|sv)$', file_info['dataType']):
             if not variant_type: variant_type = []
             variant_type.append(file_info['dataType'].split('_')[-1])
+            if not analysis_tools: analysis_tools = []
+            if file_info['dataType'].endswith('snv'):
+                analysis_tools.append('CaVEMan')
+            elif file_info['dataType'].endswith('indel'):
+                analysis_tools.append('Pindel')
+            elif file_info['dataType'].endswith('cnv'):
+                analysis_tools.append('ASCAT')
+            elif file_info['dataType'].endswith('sv'):
+                analysis_tools.append('BRASS')
+            else:
+                sys.exit('Error: unknown file "%s"' % f)
+
         elif file_info['dataType'] == 'supplement':
             if not variant_type: variant_type = []
+            if not analysis_tools: analysis_tools = []
             if '.caveman-supplement.' in f:
                 variant_type.append('snv')
+                analysis_tools.append('CaVEMan')
             elif '.pindel-supplement.' in f:
                 variant_type.append('indel')
+                analysis_tools.append('Pindel')
             elif '.ascat-supplement.' in f:
                 variant_type.append('cnv')
+                analysis_tools.append('ASCAT')
             elif '.brass-supplement.' in f:
                 variant_type.append('sv')
+                analysis_tools.append('BRASS')
             elif '.timings-supplement.' in f:
                 pass  # do nothing
             else:
@@ -246,6 +268,8 @@ def main(args):
         payload['files'].append(file_info)
 
     payload['analysisType']['name'] = analysis_type
+
+    payload['workflow'].update({'analysis_tools': analysis_tools})
 
     if not analysis_type == 'qc_metrics':
         payload['variant_class'] = [ somatic_or_germline ]
