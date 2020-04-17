@@ -247,19 +247,14 @@ def main(args):
 
         elif file_info['dataType'] == 'supplement':
             if not variant_type: variant_type = []
-            if not analysis_tools: analysis_tools = []
             if '.caveman-supplement.' in f:
                 variant_type.append('snv')
-                analysis_tools.append('CaVEMan')
             elif '.pindel-supplement.' in f:
                 variant_type.append('indel')
-                analysis_tools.append('Pindel')
             elif '.ascat-supplement.' in f:
                 variant_type.append('cnv')
-                analysis_tools.append('ASCAT')
             elif '.brass-supplement.' in f:
                 variant_type.append('sv')
-                analysis_tools.append('BRASS')
             elif '.timings-supplement.' in f:
                 pass  # do nothing
             else:
