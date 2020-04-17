@@ -52,7 +52,7 @@ def main(args):
             'sequencing_center': metadata.get('sequencing_center'),
             'platform': metadata.get('platform'),
             'platform_model': metadata.get('platform_model'),
-            'library_strategy': metadata.get('library_strategy'),
+            'experimental_strategy': metadata.get('experimental_strategy'),
             'sequencing_date': metadata.get('sequencing_date')
         },
         'read_group_count': metadata.get('read_group_count'),
