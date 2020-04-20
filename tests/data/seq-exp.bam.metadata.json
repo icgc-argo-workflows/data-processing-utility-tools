@@ -11,10 +11,10 @@
   "submitter_sample_id": "HCC1143_BAM_INPUT",
   "sample_type": "Total DNA",
   "submitter_matched_normal_sample_id": null,
-  "sequencing_center": "EXT",
+  "sequencing_center": "",
   "platform": "ILLUMINA",
   "platform_model": "HiSeq 2000",
-  "library_strategy": "WGS",
+  "experimental_strategy": "WGS",
   "sequencing_date": "2014-12-12",
   "read_group_count": 3,
   "read_groups": [

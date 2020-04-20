@@ -22,15 +22,16 @@
  */
 
 nextflow.preview.dsl=2
+version = '0.1.3.0'
 
 params.user_submit_metadata = ""
 params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
-params.container_version = '0.1.2.0'
+params.container_version = ''
 
 process payloadGenSeqExperiment {
-  container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.${params.container_version}"
+  container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.${params.container_version ?: version}"
 
   input:
     path user_submit_metadata
