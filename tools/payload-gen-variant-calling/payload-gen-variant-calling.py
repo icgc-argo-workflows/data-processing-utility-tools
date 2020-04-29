@@ -66,7 +66,7 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         'fileType': 'VCF' if file_to_upload.endswith('.vcf.gz') else file_to_upload.split(".")[-1].upper(),
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
-        'fileAccess': 'Controlled',
+        'fileAccess': 'controlled',
         'info': {}
     }
 
