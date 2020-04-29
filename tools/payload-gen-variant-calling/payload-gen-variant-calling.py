@@ -32,6 +32,23 @@ from datetime import date
 from argparse import ArgumentParser
 
 
+variant_type_to_data_type_etc = {
+    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan']],   # dataCategory, dataType, analysis_tools
+    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel']],
+    'cnv': ['Copy Number Variation', 'Raw CNV Calls', ['ASCAT']],
+    'sv': ['Structural Variation', 'Raw SV Calls', ['BRASS']],
+    'caveman-supplement': ['Simple Nucleotide Variation', 'Variant Calling Supplement', ['CaVEMan']],
+    'pindel-supplement': ['Simple Nucleotide Variation', 'Variant Calling Supplement', ['Pindel']],
+    'ascat-supplement': ['Copy Number Variation', 'Variant Calling Supplement', ['ASCAT']],
+    'brass-supplement': ['Structural Variation', 'Variant Calling Supplement', ['BRASS']],
+    'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
+    'bas_metrics': ['Qualitiy Control Metrics', 'Alignment QC', ['bas_stats']],
+    'contamination_metrics': ['Qualitiy Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk']],
+    'ascat_metrics': ['Qualitiy Control Metrics', 'Ploidy and Purity Estimation', ['compareBamGenotypes']],
+    'genotyped_gender_metrics': ['Qualitiy Control Metrics', 'Genotyping Inferred Gender', ['ASCAT']],
+}
+
+
 def calculate_size(file_path):
     return os.stat(file_path).st_size
 
@@ -49,12 +66,13 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         'fileType': 'VCF' if file_to_upload.endswith('.vcf.gz') else file_to_upload.split(".")[-1].upper(),
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
-        'fileAccess': 'controlled'
+        'fileAccess': 'Controlled',
+        'info': {}
     }
 
-    if somatic_or_germline == 'somatic':
+    if somatic_or_germline == 'Somatic':
         metadata = tumour_analysis
-    elif somatic_or_germline == 'germline':
+    elif somatic_or_germline == 'Germline':
         metadata = normal_analysis
     else:
         pass  # should never happen
@@ -101,7 +119,7 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
                             experimental_strategy,
                             date_str,
                             wf_short_name,
-                            somatic_or_germline,
+                            somatic_or_germline.lower(),
                             variant_type,
                             'vcf.gz' if variant_type in ['snv', 'indel', 'cnv', 'sv'] else 'tgz'
                         ] + (['tbi'] if file_to_upload.endswith('.tbi') else []))
@@ -109,14 +127,14 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
     file_info['fileName'] = new_fname
     extra_info = {}
     if new_fname.endswith('.vcf.gz'):
-        file_info['dataType'] = '%s_%s' % (somatic_or_germline, variant_type)
+        file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1]
     elif new_fname.endswith('.vcf.gz.tbi'):
-        file_info['dataType'] = 'vcf_index'
+        file_info['dataType'] = 'VCF Index'
     elif new_fname.endswith('.tgz'):
         if new_fname.endswith('-supplement.tgz'):
-            file_info['dataType'] = 'supplement'
+            file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1]
         elif new_fname.endswith('_metrics.tgz'):
-            file_info['dataType'] = variant_type
+            file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1]
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
@@ -129,8 +147,14 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
     else:
         sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
+    file_info['info'] = {
+        'dataCategory': variant_type_to_data_type_etc[variant_type][0],
+        'dataType': file_info['dataType'],
+        'analysisTools': variant_type_to_data_type_etc[variant_type][2],
+    }
+
     if extra_info:
-        file_info.update({'info': extra_info})
+        file_info['info'].update(extra_info)
 
     new_dir = 'out'
     try:
@@ -165,12 +189,12 @@ def main(args):
         with open(args.tumour_analysis, 'r') as f:
             tumour_analysis = json.load(f)
 
-    somatic_or_germline = 'somatic'   # default
+    somatic_or_germline = 'Somatic'   # default
     if args.wf_short_name in ['sanger-wgs', 'sanger-wxs']:
         if not tumour_analysis:
             sys.exit('Error: metadata for tumour is missing!')
     elif args.wf_short_name in ['HaplotypeCaller']:
-        somatic_or_germline = 'germline'
+        somatic_or_germline = 'Germline'
     else:
         sys.exit("Unsupported variant caller: %s" % args.wf_short_name)
 
@@ -230,35 +254,22 @@ def main(args):
         if f.endswith('-supplement.tgz'): analysis_type = 'variant_calling_supplement'
         if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
         file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
-        if re.match(r'.+_(snv|indel|cnv|sv)$', file_info['dataType']):
+        print(file_info)
+        if re.match(r' Calls$', file_info['dataType']):
             if not variant_type: variant_type = []
             variant_type.append(file_info['dataType'].split('_')[-1])
+
             if not analysis_tools: analysis_tools = []
-            if file_info['dataType'].endswith('snv'):
+            if file_info['dataType'] == 'Raw SNV Calls':
                 analysis_tools.append('CaVEMan')
-            elif file_info['dataType'].endswith('indel'):
+            elif file_info['dataType'] ==  'Raw InDel Calls':
                 analysis_tools.append('Pindel')
-            elif file_info['dataType'].endswith('cnv'):
+            elif file_info['dataType'] ==  'Raw CNV Calls':
                 analysis_tools.append('ASCAT')
-            elif file_info['dataType'].endswith('sv'):
+            elif file_info['dataType'] ==  'Raw SV Calls':
                 analysis_tools.append('BRASS')
             else:
                 sys.exit('Error: unknown file "%s"' % f)
-
-        elif file_info['dataType'] == 'supplement':
-            if not variant_type: variant_type = []
-            if '.caveman-supplement.' in f:
-                variant_type.append('snv')
-            elif '.pindel-supplement.' in f:
-                variant_type.append('indel')
-            elif '.ascat-supplement.' in f:
-                variant_type.append('cnv')
-            elif '.brass-supplement.' in f:
-                variant_type.append('sv')
-            elif '.timings-supplement.' in f:
-                pass  # do nothing
-            else:
-                sys.exit('Error: unknown supplement tarball %s' % f)
 
         payload['files'].append(file_info)
 
@@ -266,9 +277,7 @@ def main(args):
 
     payload['workflow'].update({'analysis_tools': analysis_tools})
 
-    if not analysis_type == 'qc_metrics':
-        payload['variant_class'] = [ somatic_or_germline ]
-        payload['variant_type'] = variant_type
+    payload['variant_class'] = [ somatic_or_germline ]
 
     with open("%s.%s.payload.json" % (str(uuid.uuid4()), analysis_type), 'w') as f:
         f.write(json.dumps(payload, indent=2))
