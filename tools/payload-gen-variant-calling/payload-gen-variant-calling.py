@@ -218,7 +218,7 @@ def main(args):
     }
 
     # get sample of the payload
-    if somatic_or_germline == 'somatic':  # somatic variants
+    if somatic_or_germline == 'Somatic':  # somatic variants
         payload['samples'] = get_sample_info(tumour_analysis.get('samples'))
         payload['workflow']['inputs'] = [
             {
