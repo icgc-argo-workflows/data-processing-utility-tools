@@ -41,7 +41,7 @@ variant_type_to_data_type_etc = {
     'pindel-supplement': ['Simple Nucleotide Variation', 'Variant Calling Supplement', ['Pindel']],
     'ascat-supplement': ['Copy Number Variation', 'Variant Calling Supplement', ['ASCAT']],
     'brass-supplement': ['Structural Variation', 'Variant Calling Supplement', ['BRASS']],
-    'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
+    'timings-supplement': ['Unknown: Place Holder', 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
     'bas_metrics': ['Qualitiy Control Metrics', 'Alignment QC', ['bas_stats']],
     'contamination_metrics': ['Qualitiy Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk']],
     'ascat_metrics': ['Qualitiy Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
@@ -153,7 +153,7 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
 
     file_info['info'] = {
         'dataCategory': variant_type_to_data_type_etc[variant_type][0],
-        'dataType': file_info['dataType'],
+        # 'dataType': file_info['dataType'],
         'analysisTools': variant_type_to_data_type_etc[variant_type][2],
     }
 
@@ -259,9 +259,8 @@ def main(args):
         if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
 
         file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
-        print(file_info)
+
         if re.match(r'.+?\ Calls$', file_info['dataType']):
-            print("YES")
             if not variant_type: variant_type = []
             variant_type.append(file_info['dataType'].split('_')[-1])
 
@@ -283,7 +282,8 @@ def main(args):
 
     payload['workflow'].update({'analysis_tools': analysis_tools})
 
-    if not analysis_type == "qc_metrics": payload['variant_class'] = [ somatic_or_germline ]
+    if not analysis_type == "qc_metrics":
+        payload['variant_class'] = somatic_or_germline
 
     with open("%s.%s.payload.json" % (str(uuid.uuid4()), analysis_type), 'w') as f:
         f.write(json.dumps(payload, indent=2))
