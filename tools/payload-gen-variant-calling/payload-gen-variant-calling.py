@@ -101,6 +101,12 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
+        if wf_short_name == 'sanger-wxs':
+            if 'ASCAT' in variant_type_to_data_type_etc['timings-supplement'][2]:
+                variant_type_to_data_type_etc['timings-supplement'][2].remove('ASCAT')
+            if 'BRASS' in variant_type_to_data_type_etc['timings-supplement'][2]:
+                variant_type_to_data_type_etc['timings-supplement'][2].remove('BRASS')
+
     elif wf_short_name in (['HaplotypeCaller']):
         sys.exit('Error: not implemented yet for "%s"' % wf_short_name)
 
