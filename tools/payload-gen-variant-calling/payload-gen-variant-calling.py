@@ -44,8 +44,8 @@ variant_type_to_data_type_etc = {
     'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
     'bas_metrics': ['Qualitiy Control Metrics', 'Alignment QC', ['bas_stats']],
     'contamination_metrics': ['Qualitiy Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk']],
-    'ascat_metrics': ['Qualitiy Control Metrics', 'Ploidy and Purity Estimation', ['compareBamGenotypes']],
-    'genotyped_gender_metrics': ['Qualitiy Control Metrics', 'Genotyping Inferred Gender', ['ASCAT']],
+    'ascat_metrics': ['Qualitiy Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
+    'genotyped_gender_metrics': ['Qualitiy Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
 }
 
 
@@ -257,9 +257,11 @@ def main(args):
     for f in args.files_to_upload:
         if f.endswith('-supplement.tgz'): analysis_type = 'variant_calling_supplement'
         if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
+
         file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
         print(file_info)
-        if re.match(r' Calls$', file_info['dataType']):
+        if re.match(r'.+?\ Calls$', file_info['dataType']):
+            print("YES")
             if not variant_type: variant_type = []
             variant_type.append(file_info['dataType'].split('_')[-1])
 
@@ -281,7 +283,7 @@ def main(args):
 
     payload['workflow'].update({'analysis_tools': analysis_tools})
 
-    payload['variant_class'] = [ somatic_or_germline ]
+    if not analysis_type == "qc_metrics": payload['variant_class'] = [ somatic_or_germline ]
 
     with open("%s.%s.payload.json" % (str(uuid.uuid4()), analysis_type), 'w') as f:
         f.write(json.dumps(payload, indent=2))
