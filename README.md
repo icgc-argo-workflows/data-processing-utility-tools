@@ -8,7 +8,7 @@ Every tool is self-sufficient, can be independently developed, tested, released 
 These tools are building blocks to create multi-step data analysis workflows as needed, like the
 workflows here: https://github.com/icgc-argo/dna-seq-processing-wfs and here: https://github.com/icgc-argo/variant-calling-wfs
 
-## Development
+## Development Process
 As tools are meant to be independent from each other, arguably a better choice is to
 develop each tool using its own source control repository and container image. In
 reality, it's undesirable to have to manage too many repositories, so we ended up
