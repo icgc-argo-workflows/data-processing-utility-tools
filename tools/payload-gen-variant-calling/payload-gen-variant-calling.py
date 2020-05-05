@@ -41,13 +41,17 @@ variant_type_to_data_type_etc = {
     'pindel-supplement': ['Simple Nucleotide Variation', 'Variant Calling Supplement', ['Pindel']],
     'ascat-supplement': ['Copy Number Variation', 'Variant Calling Supplement', ['ASCAT']],
     'brass-supplement': ['Structural Variation', 'Variant Calling Supplement', ['BRASS']],
-    'timings-supplement': ['Unknown: Place Holder', 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
+    'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
     'bas_metrics': ['Qualitiy Control Metrics', 'Alignment QC', ['bas_stats']],
     'contamination_metrics': ['Qualitiy Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk']],
     'ascat_metrics': ['Qualitiy Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
     'genotyped_gender_metrics': ['Qualitiy Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
 }
 
+workflow_full_name = {
+    'sanger-wgs-variant-calling': 'Sanger WGS Variant Calling',
+    'sanger-wxs-variant-calling': 'Sanger WXS Variant Calling'
+}
 
 def calculate_size(file_path):
     return os.stat(file_path).st_size
@@ -152,9 +156,8 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
     file_info['info'] = {
-        'dataCategory': variant_type_to_data_type_etc[variant_type][0],
-        # 'dataType': file_info['dataType'],
-        'analysisTools': variant_type_to_data_type_etc[variant_type][2],
+        'data_category': variant_type_to_data_type_etc[variant_type][0],
+        'analysis_tools': variant_type_to_data_type_etc[variant_type][2],
     }
 
     if extra_info:
@@ -211,13 +214,12 @@ def main(args):
         'samples': [],
         'files': [],
         'workflow': {
-            'workflow_name': args.wf_name,
+            'workflow_name': workflow_full_name[args.wf_name],
             'workflow_short_name': args.wf_short_name,
             'workflow_version': args.wf_version,
             'run_id': args.wf_run,
             'inputs': [],
-            'genome_build': 'GRCh38_hla_decoy_ebv',
-            'analysis_tools': None
+            'genome_build': 'GRCh38_hla_decoy_ebv'
         }
     }
 
@@ -252,35 +254,15 @@ def main(args):
         }
 
     analysis_type = 'variant_calling'
-    variant_type = None
-    analysis_tools = None
     for f in args.files_to_upload:
         if f.endswith('-supplement.tgz'): analysis_type = 'variant_calling_supplement'
         if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
 
         file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
 
-        if re.match(r'.+?\ Calls$', file_info['dataType']):
-            if not variant_type: variant_type = []
-            variant_type.append(file_info['dataType'].split('_')[-1])
-
-            if not analysis_tools: analysis_tools = []
-            if file_info['dataType'] == 'Raw SNV Calls':
-                analysis_tools.append('CaVEMan')
-            elif file_info['dataType'] ==  'Raw InDel Calls':
-                analysis_tools.append('Pindel')
-            elif file_info['dataType'] ==  'Raw CNV Calls':
-                analysis_tools.append('ASCAT')
-            elif file_info['dataType'] ==  'Raw SV Calls':
-                analysis_tools.append('BRASS')
-            else:
-                sys.exit('Error: unknown file "%s"' % f)
-
         payload['files'].append(file_info)
 
     payload['analysisType']['name'] = analysis_type
-
-    payload['workflow'].update({'analysis_tools': analysis_tools})
 
     if not analysis_type == "qc_metrics":
         payload['variant_class'] = somatic_or_germline
