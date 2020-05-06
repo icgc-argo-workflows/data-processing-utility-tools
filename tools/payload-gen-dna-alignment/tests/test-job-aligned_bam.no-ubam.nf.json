@@ -4,6 +4,6 @@
     "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
     "data/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam.bai"
   ],
-  "wf_name": "dna-seq-alignment",
+  "wf_name": "DNA Seq Alignment",
   "wf_version": "0.4.0"
 }

@@ -103,7 +103,11 @@ def get_files_info(file_to_upload):
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
         'fileAccess': 'controlled',
-        'dataType': 'aligned_reads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'aligned_reads_index'
+        'dataType': 'Aligned Reads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'Aligned Reads Index',
+        'info': {
+            'data_category': 'Sequencing Reads',
+            'analysis_tools': ["BWA-MEM", "biobambam"]
+        }
     }
 
 
@@ -130,7 +134,6 @@ def main(args):
         'workflow': {
             'workflow_name': args.wf_name,
             'workflow_version': args.wf_version,
-            'analysis_tools': ['BWA-MEM', 'biobambam'],
             'genome_build': 'GRCh38_hla_decoy_ebv',
             'run_id': args.wf_run,
             'inputs': [

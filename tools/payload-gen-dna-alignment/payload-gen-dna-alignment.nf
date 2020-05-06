@@ -24,7 +24,7 @@
  */
 
 nextflow.preview.dsl=2
-version = '0.2.0.0'
+version = '0.3.0.0'
 
 params.files_to_upload = ""
 params.seq_experiment_analysis = ""
@@ -53,7 +53,7 @@ process payloadGenDnaAlignment {
     payload-gen-dna-alignment.py \
       -f ${files_to_upload} \
       -a ${seq_experiment_analysis} \
-      -w ${wf_name} \
+      -w "${wf_name}" \
       -r ${workflow.runName} \
       -v ${wf_version} ${args_read_group_ubam_analysis}
     """
