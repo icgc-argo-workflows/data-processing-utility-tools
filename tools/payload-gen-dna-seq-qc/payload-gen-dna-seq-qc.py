@@ -31,6 +31,7 @@ import subprocess
 import copy
 from datetime import date
 import tarfile
+import itertools 
 
 workflow_full_name = {
     'dna-seq-alignment': 'DNA Seq Alignment'
@@ -101,6 +102,35 @@ def get_rg_id_from_ubam_qc(tar, metadata):
     # up to this point no match found, then something wrong
     sys.exit('Error: unable to match ubam qc metric tar "%s" to read group id' % tar_basename)
 
+def get_dupmetrics(file_to_upload):
+    with tarfile.open(file_to_upload, 'r') as tar:
+        for member in tar.getmembers():
+            if member.name.endswith('.duplicates_metrics.txt'):
+                f = tar.extractfile(member)
+                dupMetric = False
+                library = []
+                for r in f:
+                    row = r.decode('utf-8')                    
+                    if row.startswith('LIBRARY'): 
+                        dupMetric = True
+                        cols_name = row.strip().split('\t')
+                        continue
+                    if dupMetric and row.strip():
+                        dupMetric = True
+                        metric = {}
+                        cols = row.strip().split('\t')
+                        for n, c in zip(cols_name, cols):
+                            if n == "LIBRARY":
+                                metric.update({n: c})
+                            elif '.' in c or 'e' in c:
+                                metric.update({n: float(c)}) 
+                            else:
+                                metric.update({n: int(c)})
+                        library.append(metric)
+                        continue       
+                    if dupMetric and not row.strip(): dupMetric = False
+                    if not dupMetric: continue 
+    return library
 
 def get_files_info(file_to_upload, seq_experiment_analysis_dict):
     file_info = {
@@ -135,13 +165,17 @@ def get_files_info(file_to_upload, seq_experiment_analysis_dict):
         sys.exit('Error: unknown QC metrics file: %s' % file_to_upload)
 
     extra_info = {}
-    tar = tarfile.open(file_to_upload)
-    for member in tar.getmembers():
-        if member.name.endswith('.extra_info.json'):
-            f = tar.extractfile(member)
-            extra_info = json.load(f)
-        else:
-            file_info['info']['files_in_tgz'].append(os.path.basename(member.name))
+    with tarfile.open(file_to_upload, 'r') as tar:
+        for member in tar.getmembers():
+            if member.name.endswith('.extra_info.json'):
+                f = tar.extractfile(member)
+                extra_info = json.load(f)
+            else:
+                file_info['info']['files_in_tgz'].append(os.path.basename(member.name))
+
+    # retrieve duplicates metrics from the file
+    if file_info.get('dataType') == 'Duplicates Metrics':
+        extra_info['library'] = get_dupmetrics(file_to_upload) 
 
     if file_info.get('dataType') == 'Read Group QC':
         map_to_new_id =  {}
@@ -152,7 +186,7 @@ def get_files_info(file_to_upload, seq_experiment_analysis_dict):
                 map_to_new_id[rg['submitter_read_group_id']] = rg['submitter_read_group_id']
         
         extra_info['read_group_id'] = map_to_new_id[extra_info['read_group_id']]
-    
+        
     extra_info.pop('tool')
     if extra_info:
         file_info['info'].update({'metrics': extra_info})
