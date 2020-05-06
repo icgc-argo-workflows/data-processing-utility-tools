@@ -30,6 +30,9 @@ import subprocess
 import copy
 from datetime import date
 
+workflow_full_name = {
+    'dna-seq-alignment': 'DNA Seq Alignment'
+}
 
 def calculate_size(file_path):
     return os.stat(file_path).st_size
@@ -106,7 +109,7 @@ def get_files_info(file_to_upload):
         'dataType': 'Aligned Reads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'Aligned Reads Index',
         'info': {
             'data_category': 'Sequencing Reads',
-            'analysis_tools': ["BWA-MEM", "biobambam"]
+            'analysis_tools': ["BWA-MEM", "biobambam2"]
         }
     }
 
@@ -132,7 +135,7 @@ def main(args):
         },
         'studyId': seq_experiment_analysis_dict.get('studyId'),
         'workflow': {
-            'workflow_name': args.wf_name,
+            'workflow_name': workflow_full_name.get(args.wf_name, args.wf_name),
             'workflow_version': args.wf_version,
             'genome_build': 'GRCh38_hla_decoy_ebv',
             'run_id': args.wf_run,
