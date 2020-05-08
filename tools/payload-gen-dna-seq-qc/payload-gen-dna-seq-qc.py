@@ -103,33 +103,27 @@ def get_rg_id_from_ubam_qc(tar, metadata):
     sys.exit('Error: unable to match ubam qc metric tar "%s" to read group id' % tar_basename)
 
 def get_dupmetrics(file_to_upload):
+    library = []
     with tarfile.open(file_to_upload, 'r') as tar:
         for member in tar.getmembers():
             if member.name.endswith('.duplicates_metrics.txt'):
                 f = tar.extractfile(member)
-                dupMetric = False
-                library = []
+                cols_name = []
                 for r in f:
                     row = r.decode('utf-8')                    
                     if row.startswith('LIBRARY'): 
-                        dupMetric = True
                         cols_name = row.strip().split('\t')
                         continue
-                    if dupMetric and row.strip():
-                        dupMetric = True
+                    if cols_name:
+                        if not row.strip(): break
                         metric = {}
                         cols = row.strip().split('\t')
                         for n, c in zip(cols_name, cols):
-                            if n == "LIBRARY":
-                                metric.update({n: c})
-                            elif '.' in c or 'e' in c:
-                                metric.update({n: float(c)}) 
-                            else:
-                                metric.update({n: int(c)})
-                        library.append(metric)
-                        continue       
-                    if dupMetric and not row.strip(): dupMetric = False
-                    if not dupMetric: continue 
+                            if n == "LIBRARY": metric.update({n: c})
+                            elif '.' in c or 'e' in c: metric.update({n: float(c)}) 
+                            else: metric.update({n: int(c)})
+                        library.append(metric)      
+
     return library
 
 def get_files_info(file_to_upload, seq_experiment_analysis_dict):
