@@ -23,7 +23,7 @@
  */
 
 nextflow.preview.dsl=2
-version = '0.3.0.0'
+version = '0.4.0.0'
 
 params.seq_experiment_analysis = ""
 params.qc_files = []
@@ -54,7 +54,7 @@ process payloadGenDnaSeqQc {
     payload-gen-dna-seq-qc.py \
       -a ${seq_experiment_analysis} \
       -f ${qc_files} \
-      -w ${wf_name} \
+      -w "${wf_name}" \
       -r ${workflow.runName} \
       -v ${wf_version}
     """

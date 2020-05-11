@@ -6,6 +6,7 @@
                 "data/grch38-aligned.merged.duplicates_metrics.tgz",
                 "data/SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.tgz"
               ],
+  "wf_name": "DNA Seq Alignment",         
   "cpus": 1,
   "mem": 0.5
 }
