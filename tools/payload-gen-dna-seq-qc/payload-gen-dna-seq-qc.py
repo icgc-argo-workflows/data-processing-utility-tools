@@ -31,7 +31,6 @@ import subprocess
 import copy
 from datetime import date
 import tarfile
-import itertools 
 
 workflow_full_name = {
     'dna-seq-alignment': 'DNA Seq Alignment'
@@ -123,7 +122,6 @@ def get_dupmetrics(file_to_upload):
                             elif '.' in c or 'e' in c: metric.update({n: float(c)}) 
                             else: metric.update({n: int(c)})
                         library.append(metric)      
-
     return library
 
 def get_files_info(file_to_upload, seq_experiment_analysis_dict):
@@ -169,7 +167,7 @@ def get_files_info(file_to_upload, seq_experiment_analysis_dict):
 
     # retrieve duplicates metrics from the file
     if file_info.get('dataType') == 'Duplicates Metrics':
-        extra_info['library'] = get_dupmetrics(file_to_upload) 
+        extra_info['libraries'] = get_dupmetrics(file_to_upload) 
 
     if file_info.get('dataType') == 'Read Group QC':
         map_to_new_id =  {}
@@ -177,8 +175,7 @@ def get_files_info(file_to_upload, seq_experiment_analysis_dict):
             if rg.get('read_group_id_in_bam'):
                 map_to_new_id[rg['read_group_id_in_bam']] = rg['submitter_read_group_id']
             else:
-                map_to_new_id[rg['submitter_read_group_id']] = rg['submitter_read_group_id']
-        
+                map_to_new_id[rg['submitter_read_group_id']] = rg['submitter_read_group_id']       
         extra_info['read_group_id'] = map_to_new_id[extra_info['read_group_id']]
 
     extra_info.pop('tool')
