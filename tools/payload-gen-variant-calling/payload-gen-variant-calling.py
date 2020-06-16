@@ -42,10 +42,10 @@ variant_type_to_data_type_etc = {
     'ascat-supplement': ['Copy Number Variation', 'Variant Calling Supplement', ['ASCAT']],
     'brass-supplement': ['Structural Variation', 'Variant Calling Supplement', ['BRASS']],
     'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
-    'bas_metrics': ['Qualitiy Control Metrics', 'Alignment QC', ['bas_stats']],
-    'contamination_metrics': ['Qualitiy Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk']],
-    'ascat_metrics': ['Qualitiy Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
-    'genotyped_gender_metrics': ['Qualitiy Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
+    'bas_metrics': ['Quality Control Metrics', 'Alignment QC', ['bas_stats']],
+    'contamination_metrics': ['Quality Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk']],
+    'ascat_metrics': ['Quality Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
+    'genotyped_gender_metrics': ['Quality Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
 }
 
 workflow_full_name = {
