@@ -210,6 +210,7 @@ def main(args):
             'workflow_version': args.wf_version,
             'genome_build': 'GRCh38_hla_decoy_ebv',
             'run_id': args.wf_run,
+            'session_id': args.wf_session,
             'inputs': [
                 {
                     'analysis_type': 'sequencing_experiment',
@@ -270,6 +271,7 @@ if __name__ == "__main__":
                         nargs="+", help="All QC TGZ files")
     parser.add_argument("-w", "--wf-name", dest="wf_name", required=True, help="Workflow name")
     parser.add_argument("-r", "--wf-run", dest="wf_run", required=True, help="workflow run ID")
+    parser.add_argument("-s", "--wf-session", dest="wf_session", required=True, help="workflow session ID")
     parser.add_argument("-v", "--wf-version", dest="wf_version", required=True, help="Workflow version")
     args = parser.parse_args()
 
