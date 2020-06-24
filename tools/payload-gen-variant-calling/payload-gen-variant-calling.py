@@ -218,6 +218,7 @@ def main(args):
             'workflow_short_name': args.wf_short_name,
             'workflow_version': args.wf_version,
             'run_id': args.wf_run,
+            'session_id': args.wf_session,
             'inputs': [],
             'genome_build': 'GRCh38_hla_decoy_ebv'
         }
@@ -282,6 +283,7 @@ if __name__ == "__main__":
     parser.add_argument("-s", dest="wf_short_name", type=str, help="workflow short name", required=True)
     parser.add_argument("-v", dest="wf_version", type=str, required=True, help="workflow version")
     parser.add_argument("-r", dest="wf_run", type=str, required=True, help="workflow run ID")
+    parser.add_argument("-j", dest="wf_session", type=str, required=True, help="workflow session ID")
     args = parser.parse_args()
 
     main(args)
