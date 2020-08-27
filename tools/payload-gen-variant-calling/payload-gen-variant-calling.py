@@ -211,7 +211,7 @@ def main(args):
             tumour_analysis = json.load(f)
 
     somatic_or_germline = 'Somatic'   # default
-    if args.wf_short_name in ['sanger-wgs', 'sanger-wxs']:
+    if args.wf_short_name in ['sanger-wgs', 'sanger-wxs', 'gatk-mutect2']:
         if not tumour_analysis:
             sys.exit('Error: metadata for tumour is missing!')
     elif args.wf_short_name in ['HaplotypeCaller']:
