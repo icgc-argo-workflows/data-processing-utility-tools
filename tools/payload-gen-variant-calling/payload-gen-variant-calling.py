@@ -33,8 +33,8 @@ from argparse import ArgumentParser
 
 
 variant_type_to_data_type_etc = {
-    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan']],   # dataCategory, dataType, analysis_tools
-    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel']],
+    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan'], ['Mutect2']],   # dataCategory, dataType, analysis_tools
+    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel'], ['Mutect2']],
     'cnv': ['Copy Number Variation', 'Raw CNV Calls', ['ASCAT']],
     'sv': ['Structural Variation', 'Raw SV Calls', ['BRASS']],
     'caveman-supplement': ['Simple Nucleotide Variation', 'Variant Calling Supplement', ['CaVEMan']],
@@ -50,7 +50,8 @@ variant_type_to_data_type_etc = {
 
 workflow_full_name = {
     'sanger-wgs-variant-calling': 'Sanger WGS Variant Calling',
-    'sanger-wxs-variant-calling': 'Sanger WXS Variant Calling'
+    'sanger-wxs-variant-calling': 'Sanger WXS Variant Calling',
+    'gatk-mutect2-variant-calling': 'GATK Mutect2 Variant Calling'
 }
 
 def calculate_size(file_path):
@@ -111,6 +112,15 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
             if 'BRASS' in variant_type_to_data_type_etc['timings-supplement'][2]:
                 variant_type_to_data_type_etc['timings-supplement'][2].remove('BRASS')
 
+    elif wf_short_name in (['gatk-mutect2']):
+        fname_sample_part = metadata['samples'][0]['sampleId']
+        if file_to_upload.endswith('mutect2-snv.vcf.gz') or file_to_upload.endswith('mutect2-snv.vcf.gz.tbi'):
+            variant_type = 'snv'
+        elif file_to_upload.endswith('mutect2-indel.vcf.gz') or file_to_upload.endswith('mutect2-indel.vcf.gz.tbi'):
+            variant_type = 'indel'
+        else:
+            sys.exit('Error: unknown file type "%s"' % file_to_upload)
+
     elif wf_short_name in (['HaplotypeCaller']):
         sys.exit('Error: not implemented yet for "%s"' % wf_short_name)
 
@@ -156,9 +166,13 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
     file_info['info'] = {
-        'data_category': variant_type_to_data_type_etc[variant_type][0],
-        'analysis_tools': variant_type_to_data_type_etc[variant_type][2],
+        'data_category': variant_type_to_data_type_etc[variant_type][0]
     }
+
+    if wf_short_name in (['sanger-wgs', 'sanger-wxs']):
+        file_info['info']['analysis_tools'] = variant_type_to_data_type_etc[variant_type][2]
+    elif wf_short_name in (['gatk-mutect2']):
+        file_info['info']['analysis_tools'] = variant_type_to_data_type_etc[variant_type][3]
 
     if extra_info:
         file_info['info'].update(extra_info)
