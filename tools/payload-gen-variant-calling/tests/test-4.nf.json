@@ -5,7 +5,7 @@
     "data/mutect2-snv.vcf.gz",
     "data/mutect2-snv.vcf.gz.tbi"
   ],
-  "wf_name": "sanger-wgs-variant-calling",
-  "wf_short_name": "sanger-wgs",
+  "wf_name": "gatk-mutect2-variant-calling",
+  "wf_short_name": "gatk-mutect2",
   "wf_version": "0.1.0"
 }
