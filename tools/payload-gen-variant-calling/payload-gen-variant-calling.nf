@@ -21,8 +21,8 @@
  * Author Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl = 2
-version = '0.2.2.0'
+nextflow.enable.dsl = 2
+version = '0.3.0.0'
 
 params.normal_analysis = ""
 params.tumour_analysis = ""
