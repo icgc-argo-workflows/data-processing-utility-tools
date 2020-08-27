@@ -32,7 +32,7 @@ params.wf_version = ""
 params.cpus = 1
 params.mem = 1  // GB
 
-include payloadGenVariantCalling from "../payload-gen-variant-calling" params(params)
+include { payloadGenVariantCalling } from "../payload-gen-variant-calling" params(params)
 
 
 workflow {
