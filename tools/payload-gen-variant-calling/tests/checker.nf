@@ -21,7 +21,7 @@
  * author Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 params.normal_analysis = ""
 params.tumour_analysis = ""
@@ -32,11 +32,10 @@ params.wf_version = ""
 params.cpus = 1
 params.mem = 1  // GB
 
-include payloadGenVariantCalling from "../payload-gen-variant-calling" params(params)
+include { payloadGenVariantCalling } from "../payload-gen-variant-calling" params(params)
 
 
 workflow {
-  main:
   payloadGenVariantCalling(
     file(params.normal_analysis),
     file(params.tumour_analysis),
@@ -45,7 +44,4 @@ workflow {
     params.wf_short_name,
     params.wf_version
   )
-  publish:
-  payloadGenVariantCalling.out.payload to: 'outdir'
-  payloadGenVariantCalling.out.files_to_upload to: 'outdir'
 }
