@@ -42,7 +42,7 @@ def get_contamination_extra_info(file_path):
                 continue
             cols = row.strip().split()
             extra_info.update({
-                'sample': cols[0],
+                'sample_id': cols[0],
                 'contamination': float(cols[1]),
                 'error': float(cols[2])
             })
