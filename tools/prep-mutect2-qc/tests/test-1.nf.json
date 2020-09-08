@@ -1,0 +1,6 @@
+{
+  "qc_files": [
+                "data/SA610228.normal.contamination",
+                "data/SA610229.tumour.contamination"
+  ]
+}
