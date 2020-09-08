@@ -43,7 +43,7 @@ variant_type_to_data_type_etc = {
     'brass-supplement': ['Structural Variation', 'Variant Calling Supplement', ['BRASS']],
     'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
     'bas_metrics': ['Quality Control Metrics', 'Alignment QC', ['bas_stats']],
-    'contamination_metrics': ['Quality Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk', 'CalculateContamination']],
+    'contamination_metrics': ['Quality Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk'], ['CalculateContamination']],
     'ascat_metrics': ['Quality Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
     'genotyped_gender_metrics': ['Quality Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
 }
