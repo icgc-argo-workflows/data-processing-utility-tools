@@ -31,6 +31,7 @@ params.wf_short_name = ""
 params.wf_version = ""
 params.cpus = 1
 params.mem = 1  // GB
+params.publish_dir = "out"
 
 include { payloadGenVariantCalling } from "../payload-gen-variant-calling" params(params)
 
