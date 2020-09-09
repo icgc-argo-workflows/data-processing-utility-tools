@@ -24,6 +24,7 @@
 nextflow.enable.dsl=2
 
 params.qc_files = ""
+params.publish_dir = "out"
 
 include { prepMutect2Qc } from '../prep-mutect2-qc'
 

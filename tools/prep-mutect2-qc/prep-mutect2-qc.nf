@@ -29,12 +29,14 @@ params.qc_files = ""
 params.container_version = ""
 params.cpus = 1
 params.mem = 2  // in GB
+params.publish_dir = ""
 
 
 process prepMutect2Qc {
   container "quay.io/icgc-argo/prep-mutect2-qc:prep-mutect2-qc.${params.container_version ?: version}"
   cpus params.cpus
   memory "${params.mem} GB"
+  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", enabled: "${params.publish_dir ? true : ''}"
 
   input:
     path qc_files
