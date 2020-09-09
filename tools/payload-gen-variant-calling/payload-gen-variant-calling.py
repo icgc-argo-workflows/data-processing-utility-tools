@@ -43,7 +43,7 @@ variant_type_to_data_type_etc = {
     'brass-supplement': ['Structural Variation', 'Variant Calling Supplement', ['BRASS']],
     'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
     'bas_metrics': ['Quality Control Metrics', 'Alignment QC', ['bas_stats']],
-    'contamination_metrics': ['Quality Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk']],
+    'contamination_metrics': ['Quality Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk'], ['CalculateContamination']],
     'ascat_metrics': ['Quality Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
     'genotyped_gender_metrics': ['Quality Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
 }
@@ -118,6 +118,10 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
             variant_type = 'snv'
         elif file_to_upload.endswith('mutect2-indel.vcf.gz') or file_to_upload.endswith('mutect2-indel.vcf.gz.tbi'):
             variant_type = 'indel'
+        elif file_to_upload.endswith('_metrics.tgz'):
+            variant_type = file_to_upload.split(".")[-2]
+            if re.match(r'.+?\.normal.contamination_metrics.tgz', file_to_upload):
+                fname_sample_part = normal_analysis['samples'][0]['sampleId']
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
