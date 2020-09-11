@@ -1,4 +1,4 @@
-FROM python:3.7.5-slim-buster
+FROM python:3.7.9
 
 RUN groupadd -g 1000 ubuntu &&\
     useradd -l -u 1000 -g ubuntu ubuntu &&\
