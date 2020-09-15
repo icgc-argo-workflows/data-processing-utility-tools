@@ -92,7 +92,7 @@ def main(args):
     qc_file_patterns = {
         'tumour_contamination': '*.tumour.*_metrics',
         'normal_contamination': '*.normal.*_metrics',
-        'callable_stats': '*.callable-stats',
+        'callable_stats': '*.stats',
         'filtering_stats': '*.filtering-stats'
     }
 
@@ -142,7 +142,7 @@ def main(args):
             callable_stats_file = None
             qc_files = glob.glob(qc_file_patterns[qc_file_pttn])
             for f in qc_files:
-                if f.endswith('.callable-stats'):
+                if f.endswith('.stats'):
                     callable_stats_file = f
                     tar_name = f'{f}.callable_metrics.tgz'
                 extra_info['files_in_tgz'].append(f)
