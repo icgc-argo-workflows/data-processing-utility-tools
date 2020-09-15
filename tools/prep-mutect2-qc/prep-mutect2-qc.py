@@ -138,7 +138,7 @@ def main(args):
 
             metrics = get_filtering_stats_extra_info(filtering_stats_file)
 
-        elif qc_file_patterns.endswith('callable_stats'):
+        elif qc_file_pttn.endswith('callable_stats'):
             callable_stats_file = None
             qc_files = glob.glob(qc_file_patterns[qc_file_pttn])
             for f in qc_files:
