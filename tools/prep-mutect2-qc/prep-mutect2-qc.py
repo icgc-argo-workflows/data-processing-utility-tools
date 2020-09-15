@@ -65,7 +65,7 @@ def get_callable_stats_extra_info(file_path):
             if row.startswith('callable'):
                 cols = row.strip().split()
                 extra_info.update({
-                    'callable': float(cols[1])
+                    'callable': int(cols[1])
                 })
                 break
 
