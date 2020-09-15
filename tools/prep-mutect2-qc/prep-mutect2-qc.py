@@ -49,11 +49,11 @@ def get_filtering_stats_extra_info(file_path):
     with open(file_path, 'r') as fp:
         rdr = csv.DictReader(filter(lambda row: row[0] != '#', fp), delimiter='\t')
         for row in rdr:
-            filter = row.pop('filter')
+            filter_name = row.pop('filter')
             values = row
             for k, v in values.items():
                 values[k] = float(v)
-            extra_info['stats'][filter] = values
+            extra_info['stats'][filter_name] = values
 
     return extra_info
 
