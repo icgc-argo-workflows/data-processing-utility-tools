@@ -41,7 +41,7 @@ def get_filtering_stats_extra_info(file_path):
     with open(file_path, 'r') as fp:
         for row in fp.readlines():
             row.strip()
-            row.replace('#<METADATA>', '')
+            row = row.replace('#<METADATA>', '')
             if row.startswith('threshold=') or row.startswith('fdr=') or row.startswith('sensitivity='):
                 key, value = row.split('=')
                 extra_info[key] = float(value)
