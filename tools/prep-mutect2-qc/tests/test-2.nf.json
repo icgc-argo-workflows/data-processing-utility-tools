@@ -1,0 +1,9 @@
+{
+  "qc_files": [
+    "data/141f7e0b869a059953894fbf920e8134.tumour.contamination_metrics",
+    "data/141f7e0b869a059953894fbf920e8134.tumour.segmentation_metrics",
+    "data/82b4e5f5d6a28262cb3d6974f40d7f9a.normal.contamination_metrics",
+    "data/82b4e5f5d6a28262cb3d6974f40d7f9a.normal.segmentation_metrics",
+    "data/filter-mutect-calls.filtering-stats"
+  ]
+}
