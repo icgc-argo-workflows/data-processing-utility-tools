@@ -35,7 +35,7 @@ def run_cmd(cmd):
 
 def get_filtering_stats_extra_info(file_path):
     extra_info = {
-        'stats': {}
+        'filtering_stats': {}
     }
     # just to make it simpler, go through the file twice
     with open(file_path, 'r') as fp:
@@ -53,7 +53,7 @@ def get_filtering_stats_extra_info(file_path):
             values = row
             for k, v in values.items():
                 values[k] = float(v)
-            extra_info['stats'][filter_name] = values
+            extra_info['filtering_stats'][filter_name] = values
 
     return extra_info
 
@@ -122,7 +122,7 @@ def main(args):
             metrics = get_filtering_stats_extra_info(filtering_stats_file)
 
         extra_info.update({"metrics": metrics})
-        extra_json = 'qc_metrics.extra_info.json'
+        extra_json = f'{qc_file_pttn}.extra_info.json'
         extra_info['files_in_tgz'].append(extra_json)
         with open(extra_json, 'w') as j:
             j.write(json.dumps(extra_info, indent=2))
