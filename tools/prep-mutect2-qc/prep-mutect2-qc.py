@@ -58,6 +58,20 @@ def get_filtering_stats_extra_info(file_path):
     return extra_info
 
 
+def get_callable_stats_extra_info(file_path):
+    extra_info = {}
+    with open(file_path, 'r') as fp:
+        for row in fp.readlines():
+            if row.startswith('callable'):
+                cols = row.strip().split()
+                extra_info.update({
+                    'callable': float(cols[1])
+                })
+                break
+
+    return extra_info
+
+
 def get_contamination_extra_info(file_path):
     extra_info = {}
     with open(file_path, 'r') as fp:
@@ -78,14 +92,17 @@ def main(args):
     qc_file_patterns = {
         'tumour_contamination': '*.tumour.*_metrics',
         'normal_contamination': '*.normal.*_metrics',
+        'callable_stats': '*.callable-stats',
         'filtering_stats': '*.filtering-stats'
     }
 
     # only contamination metrics for now, may have more later
     description = {
         'contamination': 'Cross sample contamination estimated by GATK CalculateContamination tool',
+        'callable_stats': 'Number of sites that are considered callable for Mutect stats with read depth equals or '
+                          'is higher than callable-depth which we set to default 10',
         'filtering_stats': 'Information on the probability threshold chosen to optimize the F score '
-                                   'and the number of false positives and false negatives from each filter to be expected from this choice.'
+                           'and the number of false positives and false negatives from each filter to be expected from this choice.'
     }
 
     for qc_file_pttn in qc_file_patterns:
@@ -120,6 +137,19 @@ def main(args):
             extra_info['description'] = description['filtering_stats']
 
             metrics = get_filtering_stats_extra_info(filtering_stats_file)
+
+        elif qc_file_patterns.endswith('callable_stats'):
+            callable_stats_file = None
+            qc_files = glob.glob(qc_file_patterns[qc_file_pttn])
+            for f in qc_files:
+                if f.endswith('.callable-stats'):
+                    callable_stats_file = f
+                    tar_name = f'{f}.callable_metrics.tgz'
+                extra_info['files_in_tgz'].append(f)
+
+            extra_info['description'] = description['callable_stats']
+
+            metrics = get_callable_stats_extra_info(callable_stats_file)
 
         extra_info.update({"metrics": metrics})
         extra_json = f'{qc_file_pttn}.extra_info.json'
