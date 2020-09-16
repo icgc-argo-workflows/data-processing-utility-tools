@@ -33,8 +33,8 @@ from argparse import ArgumentParser
 
 
 variant_type_to_data_type_etc = {
-    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan'], ['Mutect2']],   # dataCategory, dataType, analysis_tools
-    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel'], ['Mutect2']],
+    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan'], ['GATK-Mutect2']],   # dataCategory, dataType, analysis_tools
+    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel'], ['GATK-Mutect2']],
     'cnv': ['Copy Number Variation', 'Raw CNV Calls', ['ASCAT']],
     'sv': ['Structural Variation', 'Raw SV Calls', ['BRASS']],
     'caveman-supplement': ['Simple Nucleotide Variation', 'Variant Calling Supplement', ['CaVEMan']],
@@ -43,9 +43,11 @@ variant_type_to_data_type_etc = {
     'brass-supplement': ['Structural Variation', 'Variant Calling Supplement', ['BRASS']],
     'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
     'bas_metrics': ['Quality Control Metrics', 'Alignment QC', ['bas_stats']],
-    'contamination_metrics': ['Quality Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk'], ['CalculateContamination']],
+    'contamination_metrics': ['Quality Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk'], ['GATK-CalculateContamination']],
     'ascat_metrics': ['Quality Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
     'genotyped_gender_metrics': ['Quality Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
+    'mutect_filtering_metrics': ['Quality Control Metrics', 'Mutect2 Filtering Stats', [], ['GATK-FilterMutectCalls']],
+    'mutect_callable_metrics': ['Quality Control Metrics', 'Mutect2 Callabe Stats', [], ['GATK-Mutect2']],
 }
 
 workflow_full_name = {
@@ -119,9 +121,14 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         elif file_to_upload.endswith('mutect2-indel.vcf.gz') or file_to_upload.endswith('mutect2-indel.vcf.gz.tbi'):
             variant_type = 'indel'
         elif file_to_upload.endswith('_metrics.tgz'):
-            variant_type = file_to_upload.split(".")[-2]
-            if re.match(r'.+?\.normal.contamination_metrics.tgz', file_to_upload):
-                fname_sample_part = normal_analysis['samples'][0]['sampleId']
+            if file_to_upload.endswith('.contamination_metrics.tgz'):
+                variant_type = file_to_upload.split(".")[-2]
+                if re.match(r'.+?\.normal.contamination_metrics.tgz', file_to_upload):
+                    fname_sample_part = normal_analysis['samples'][0]['sampleId']
+            elif file_to_upload.endswith('.filtering_metrics.tgz'):
+                variant_type = 'mutect_filtering_metrics'
+            elif file_to_upload.endswith('.callable_metrics.tgz'):
+                variant_type = 'mutect_callable_metrics'
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
