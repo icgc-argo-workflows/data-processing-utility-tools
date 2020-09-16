@@ -33,9 +33,47 @@ def run_cmd(cmd):
     return
 
 
+def get_filtering_stats_extra_info(file_path):
+    extra_info = {
+        'filtering_stats': {}
+    }
+    # just to make it simpler, go through the file twice
+    with open(file_path, 'r') as fp:
+        for row in fp.readlines():
+            row.strip()
+            row = row.replace('#<METADATA>', '')
+            if row.startswith('threshold=') or row.startswith('fdr=') or row.startswith('sensitivity='):
+                key, value = row.split('=')
+                extra_info[key] = float(value)
+
+    with open(file_path, 'r') as fp:
+        rdr = csv.DictReader(filter(lambda row: row[0] != '#', fp), delimiter='\t')
+        for row in rdr:
+            filter_name = row.pop('filter')
+            values = row
+            for k, v in values.items():
+                values[k] = float(v)
+            extra_info['filtering_stats'][filter_name] = values
+
+    return extra_info
+
+
+def get_callable_stats_extra_info(file_path):
+    extra_info = {}
+    with open(file_path, 'r') as fp:
+        for row in fp.readlines():
+            if row.startswith('callable'):
+                cols = row.strip().split()
+                extra_info.update({
+                    'callable': int(float(cols[1]))
+                })
+                break
+
+    return extra_info
+
+
 def get_contamination_extra_info(file_path):
     extra_info = {}
-    print(file_path)
     with open(file_path, 'r') as fp:
         for row in fp.readlines():
             if row.startswith('sample'):
@@ -53,12 +91,18 @@ def get_contamination_extra_info(file_path):
 def main(args):
     qc_file_patterns = {
         'tumour_contamination': '*.tumour.*_metrics',
-        'normal_contamination': '*.normal.*_metrics'
+        'normal_contamination': '*.normal.*_metrics',
+        'callable_stats': '*.stats',
+        'filtering_stats': '*.filtering-stats'
     }
 
     # only contamination metrics for now, may have more later
     description = {
-        'contamination': 'Cross sample contamination estimated by GATK CalculateContamination tool'
+        'contamination': 'Cross sample contamination estimated by GATK CalculateContamination tool',
+        'callable_stats': 'Number of sites that are considered callable for Mutect stats with read depth equals or '
+                          'is higher than callable-depth which we set to default 10',
+        'filtering_stats': 'Information on the probability threshold chosen to optimize the F score '
+                           'and the number of false positives and false negatives from each filter to be expected from this choice.'
     }
 
     for qc_file_pttn in qc_file_patterns:
@@ -68,21 +112,47 @@ def main(args):
         }
         metrics = {}
         tar_name = None
-        cont_metrics_file = None
-        qc_files = glob.glob(qc_file_patterns[qc_file_pttn])
-        for f in qc_files:
-            if f.endswith('contamination_metrics'):
-                cont_metrics_file = f
-                tar_name = f'{f}.tgz'
-            extra_info['files_in_tgz'].append(f)
+        if qc_file_pttn.endswith('_contamination'):
+            cont_metrics_file = None
+            qc_files = glob.glob(qc_file_patterns[qc_file_pttn])
+            for f in qc_files:
+                if f.endswith('contamination_metrics'):
+                    cont_metrics_file = f
+                    tar_name = f'{f}.tgz'
+                extra_info['files_in_tgz'].append(f)
 
-        extra_info['description'] = description['contamination']
+            extra_info['description'] = description['contamination']
 
-        # TODO: populate metrics info
-        metrics = get_contamination_extra_info(cont_metrics_file)
+            metrics = get_contamination_extra_info(cont_metrics_file)
+
+        elif qc_file_pttn.endswith('filtering_stats'):
+            filtering_stats_file = None
+            qc_files = glob.glob(qc_file_patterns[qc_file_pttn])
+            for f in qc_files:
+                if f.endswith('.filtering-stats'):
+                    filtering_stats_file = f
+                    tar_name = f'{f}.filtering_metrics.tgz'
+                extra_info['files_in_tgz'].append(f)
+
+            extra_info['description'] = description['filtering_stats']
+
+            metrics = get_filtering_stats_extra_info(filtering_stats_file)
+
+        elif qc_file_pttn.endswith('callable_stats'):
+            callable_stats_file = None
+            qc_files = glob.glob(qc_file_patterns[qc_file_pttn])
+            for f in qc_files:
+                if f.endswith('.stats'):
+                    callable_stats_file = f
+                    tar_name = f'{f}.callable_metrics.tgz'
+                extra_info['files_in_tgz'].append(f)
+
+            extra_info['description'] = description['callable_stats']
+
+            metrics = get_callable_stats_extra_info(callable_stats_file)
 
         extra_info.update({"metrics": metrics})
-        extra_json = f'{cont_metrics_file}.extra_info.json'
+        extra_json = f'{qc_file_pttn}.extra_info.json'
         extra_info['files_in_tgz'].append(extra_json)
         with open(extra_json, 'w') as j:
             j.write(json.dumps(extra_info, indent=2))
