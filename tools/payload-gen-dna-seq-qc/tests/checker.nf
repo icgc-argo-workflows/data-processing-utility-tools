@@ -22,7 +22,7 @@
  *   Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 params.seq_experiment_analysis = ""
 params.qc_files = [ ]
@@ -30,7 +30,7 @@ params.wf_name = "dna-seq-alignment"
 params.wf_version = "0.5.0-dev"
 params.container_version = ""
 
-include payloadGenDnaSeqQc from "../payload-gen-dna-seq-qc" params(params)
+include {payloadGenDnaSeqQc} from "../payload-gen-dna-seq-qc" params(params)
 
 workflow {
   main:
@@ -40,7 +40,4 @@ workflow {
       params.wf_name,
       params.wf_version
     )
-  publish:
-    payloadGenDnaSeqQc.out.payload to: 'outdir', overwrite: true
-    payloadGenDnaSeqQc.out.qc_files to: 'outdir', overwrite: true
 }
