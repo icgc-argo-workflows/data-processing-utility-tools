@@ -22,8 +22,8 @@
  *   Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
-version = '0.5.0'
+nextflow.enable.dsl=2
+version = '0.5.0.0'
 
 params.seq_experiment_analysis = ""
 params.qc_files = []
