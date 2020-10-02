@@ -6,6 +6,7 @@
                 "data/grch38-aligned.merged-multi-library.duplicates_metrics.tgz",
                 "data/SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.tgz"
               ],
+  "publish_dir": "output",
   "cpus": 1,
   "mem": 0.5
 }

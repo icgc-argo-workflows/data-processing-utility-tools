@@ -32,12 +32,14 @@ params.wf_version = ""
 params.container_version = ""
 params.cpus = 1
 params.mem = 1  // GB
+params.publish_dir = ""
 
 
 process payloadGenDnaSeqQc {
   container "quay.io/icgc-argo/payload-gen-dna-seq-qc:payload-gen-dna-seq-qc.${params.container_version ?: version}"
   cpus params.cpus
   memory "${params.mem} GB"
+  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", enabled: "${params.publish_dir ? true : ''}"
 
   input:
     path seq_experiment_analysis
