@@ -96,7 +96,7 @@ def get_rg_id_from_ubam_qc(tar, metadata):
         rg_id_in_bam = rg.get("read_group_id_in_bam") if rg.get("read_group_id_in_bam") else rg.get("submitter_read_group_id")
         seq_file_name = rg.get("file_r1")
         bam_name = seq_file_name if seq_file_name.endswith('.bam') else ''
-        md5sum_from_metadata = hashlib.md5(("%s.%s" % (bam_name, rg_id_in_bam)).encode('utf-8')).hexdigest()
+        md5sum_from_metadata = hashlib.md5(("%s %s" % (bam_name, rg_id_in_bam)).encode('utf-8')).hexdigest()
         if md5sum_from_metadata == md5sum_from_filename:
             return rg.get("filename_friendly_rg_id")
 
