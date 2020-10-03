@@ -21,7 +21,7 @@
  * author Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 params.seq_files = "NO_FILE"  // optional
 params.file_tsv = "data/file-fq.sm.tsv"
@@ -29,7 +29,7 @@ params.repository = "collab"
 params.token_file = "/Users/junjun/access_token"
 
 
-include '../score-download'
+include { scoreDownload } from '../score-download'
 
 workflow {
   main:
@@ -39,6 +39,4 @@ workflow {
       params.repository,
       file(params.token_file)
     )
-  publish:
-    scoreDownload.out.download_file to: 'outdir', mode: 'copy', overwrite: true
 }

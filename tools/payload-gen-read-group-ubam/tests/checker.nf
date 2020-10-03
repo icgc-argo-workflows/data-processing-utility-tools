@@ -21,7 +21,7 @@
  * author Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 params.sequencing_experiment_analysis = ""
 params.ubam = ""
@@ -29,7 +29,7 @@ params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
 
-include "../payload-gen-read-group-ubam" params(params)
+include {payloadGenReadGroupUbam} from "../payload-gen-read-group-ubam" params(params)
 
 
 workflow {
@@ -41,7 +41,4 @@ workflow {
       params.wf_short_name,
       params.wf_version
     )
-
-  publish:
-    payloadGenReadGroupUbam.out.payload to: 'outdir', overwrite: true
 }

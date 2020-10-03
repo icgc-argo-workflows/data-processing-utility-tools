@@ -23,7 +23,7 @@
  *   Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 version = '0.3.1.0'
 
 params.files_to_upload = ""

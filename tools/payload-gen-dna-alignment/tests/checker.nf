@@ -23,7 +23,7 @@
  *   Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 params.files_to_upload = ""
 params.seq_experiment_analysis = ""
@@ -31,7 +31,7 @@ params.read_group_ubam_analysis = "NO_FILE"
 params.wf_name = ""
 params.wf_version = ""
 
-include payloadGenDnaAlignment from "../payload-gen-dna-alignment" params(params)
+include { payloadGenDnaAlignment } from "../payload-gen-dna-alignment" params(params)
 
 workflow {
   main:
@@ -42,7 +42,4 @@ workflow {
       params.wf_name,
       params.wf_version
     )
-  publish:
-    payloadGenDnaAlignment.out.payload to: 'outdir', overwrite: true
-    payloadGenDnaAlignment.out.alignment_files to: 'outdir', overwrite: true
 }

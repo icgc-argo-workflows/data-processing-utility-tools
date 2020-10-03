@@ -21,12 +21,12 @@
  * Author: Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 params.song_analysis = ""
 params.files = ""
 
-include "../score-manifest-gen" params(params)
+include {scoreManifestGen} from "../score-manifest-gen" params(params)
 
 
 workflow {
@@ -35,7 +35,4 @@ workflow {
       file(params.song_analysis),
       Channel.fromPath(params.files).collect()
     )
-
-  publish:
-    scoreManifestGen.out.manifest_file to: 'outdir', mode: 'copy', overwrite: true
 }

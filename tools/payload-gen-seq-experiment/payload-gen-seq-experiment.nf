@@ -21,7 +21,7 @@
  * Author Linda Xiang <linda.xiang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 version = '0.1.3.0'
 
 params.user_submit_metadata = ""

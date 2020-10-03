@@ -21,12 +21,12 @@
  * author Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 params.tarball = "data/test.caveman.tgz"
 params.pattern = "flagged.muts"
 
-include extractFilesFromTarball from "../extract-files-from-tarball"
+include { extractFilesFromTarball } from "../extract-files-from-tarball"
 
 workflow {
   main:
@@ -35,8 +35,4 @@ workflow {
       params.pattern
     )
 
-  publish:
-    extractFilesFromTarball.out.output_file to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.output_file_index to: 'outdir', overwrite: true
-    extractFilesFromTarball.out.extracted_files to: 'outdir', overwrite: true
 }

@@ -22,7 +22,7 @@
  *         Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 version = "0.1.2.0"
 
 params.sequencing_experiment_analysis = ""
@@ -68,7 +68,4 @@ workflow {
       params.wf_short_name,
       params.wf_version
     )
-
-  publish:
-    payloadGenReadGroupUbam.out.payload to: 'outdir', overwrite: true
 }

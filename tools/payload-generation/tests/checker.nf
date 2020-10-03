@@ -21,7 +21,7 @@
  * author Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
-nextflow.preview.dsl=2
+nextflow.enable.dsl=2
 
 params.bundle_type = "dna_alignment"
 params.payload_schema_version = "0.1.0-rc.2"
@@ -35,7 +35,7 @@ params.analysis_input_payload = [
 params.wf_short_name = ""
 params.wf_version = ""
 
-include "../payload-generation" params(params)
+include {payloadGeneration; getSecondaryFile} from "../payload-generation" params(params)
 
 Channel
   .fromPath(params.analysis_input_payload, checkIfExists: false)
@@ -53,6 +53,4 @@ workflow {
       params.wf_short_name,
       params.wf_version
     )
-  publish:
-    payloadGeneration.out.payload to: 'outdir', mode: 'copy', overwrite: true
 }
