@@ -31,10 +31,17 @@ params.seq_experiment_analysis = ""
 params.read_group_ubam_analysis = ""
 params.wf_name = ""
 params.wf_version = ""
-params.container_version = ''
+params.container_version = ""
+params.cpus = 1
+params.mem = 1  // GB
+params.publish_dir = ""
 
 process payloadGenDnaAlignment {
   container "quay.io/icgc-argo/payload-gen-dna-alignment:payload-gen-dna-alignment.${params.container_version ?: version}"
+  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", enabled: "${params.publish_dir ? true : ''}"
+
+  cpus params.cpus
+  memory "${params.mem} GB"
 
   input:
     path files_to_upload
