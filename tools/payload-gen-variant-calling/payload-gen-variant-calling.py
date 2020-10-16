@@ -68,7 +68,7 @@ def calculate_md5(file_path):
     return md5.hexdigest()
 
 
-def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germline, normal_analysis, tumour_analysis):
+def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germline, normal_analysis, tumour_analysis, date_str):
     file_info = {
         'fileType': 'VCF' if file_to_upload.endswith('.vcf.gz') else file_to_upload.split(".")[-1].upper(),
         'fileSize': calculate_size(file_to_upload),
@@ -85,7 +85,6 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         pass  # should never happen
 
     experimental_strategy = metadata['experiment']['experimental_strategy'].lower() if 'experimental_strategy' in metadata['experiment'] else metadata['experiment']['library_strategy'].lower()
-    date_str = date.today().strftime("%Y%m%d")
 
     variant_type = ''
     if wf_short_name in (['sanger-wgs', 'sanger-wxs']):
@@ -280,11 +279,12 @@ def main(args):
         }
 
     analysis_type = 'variant_calling'
+    date_str = date.today().strftime("%Y%m%d")
     for f in args.files_to_upload:
         if f.endswith('-supplement.tgz'): analysis_type = 'variant_calling_supplement'
         if f.endswith('_metrics.tgz'): analysis_type = 'qc_metrics'
 
-        file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis)
+        file_info = get_files_info(f, args.wf_short_name, args.wf_version, somatic_or_germline, normal_analysis, tumour_analysis, date_str)
 
         payload['files'].append(file_info)
 
