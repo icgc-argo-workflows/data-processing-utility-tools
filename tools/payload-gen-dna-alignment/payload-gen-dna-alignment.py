@@ -63,7 +63,7 @@ def get_rg_count(aligned_file):
     return len(p.stdout.decode('utf-8').strip().split('\n'))
 
 
-def rename_file(f, payload, rg_count, sample_info):
+def rename_file(f, payload, rg_count, sample_info, date_str):
     experimental_strategy = payload['experiment']['experimental_strategy'].lower()
 
     if f.endswith('.bam'):
@@ -82,7 +82,7 @@ def rename_file(f, payload, rg_count, sample_info):
         sample_info[0]['donor']['donorId'],
         sample_info[0]['sampleId'],
         experimental_strategy,
-        date.today().strftime("%Y%m%d"),
+        date_str,
         'aln',
         file_ext
     )
@@ -177,9 +177,10 @@ def main(args):
     rg_count = get_rg_count(aligned_file)
 
     # get file of the payload
+    date_str = date.today().strftime("%Y%m%d")
     for f in args.files_to_upload:
-      renamed_file = rename_file(f, payload, rg_count, seq_experiment_analysis_dict['samples'])
-      payload['files'].append(get_files_info(renamed_file))
+        renamed_file = rename_file(f, payload, rg_count, seq_experiment_analysis_dict['samples'], date_str)
+        payload['files'].append(get_files_info(renamed_file))
 
     with open("%s.dna_alignment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
