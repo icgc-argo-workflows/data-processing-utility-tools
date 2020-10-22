@@ -47,7 +47,7 @@ variant_type_to_data_type_etc = {
     'ascat_metrics': ['Quality Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
     'genotyped_gender_metrics': ['Quality Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
     'mutect_filtering_metrics': ['Quality Control Metrics', 'Mutect2 Filtering Stats', [], ['GATK-FilterMutectCalls']],
-    'mutect_callable_metrics': ['Quality Control Metrics', 'Mutect2 Callabe Stats', [], ['GATK-Mutect2']],
+    'mutect_callable_metrics': ['Quality Control Metrics', 'Mutect2 Callable Stats', [], ['GATK-Mutect2']],
 }
 
 workflow_full_name = {
