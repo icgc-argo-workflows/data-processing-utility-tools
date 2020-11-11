@@ -23,7 +23,7 @@
  */
 
 nextflow.enable.dsl=2
-version = '0.5.1.0'
+version = '0.5.2.0'
 
 params.seq_experiment_analysis = ""
 params.qc_files = []
@@ -39,7 +39,7 @@ process payloadGenDnaSeqQc {
   container "quay.io/icgc-argo/payload-gen-dna-seq-qc:payload-gen-dna-seq-qc.${params.container_version ?: version}"
   cpus params.cpus
   memory "${params.mem} GB"
-  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", enabled: "${params.publish_dir ? true : ''}"
+  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", mode: "copy", enabled: "${params.publish_dir ? true : ''}"
 
   input:
     path seq_experiment_analysis
