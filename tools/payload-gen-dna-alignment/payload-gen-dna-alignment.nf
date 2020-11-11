@@ -24,7 +24,7 @@
  */
 
 nextflow.enable.dsl=2
-version = '0.3.2.0'
+version = '0.3.3.0'
 
 params.files_to_upload = ""
 params.seq_experiment_analysis = ""
@@ -38,7 +38,7 @@ params.publish_dir = ""
 
 process payloadGenDnaAlignment {
   container "quay.io/icgc-argo/payload-gen-dna-alignment:payload-gen-dna-alignment.${params.container_version ?: version}"
-  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", enabled: "${params.publish_dir ? true : ''}"
+  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", mode: "copy", enabled: "${params.publish_dir ? true : ''}"
 
   cpus params.cpus
   memory "${params.mem} GB"
