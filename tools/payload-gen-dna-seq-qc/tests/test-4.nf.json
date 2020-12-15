@@ -1,0 +1,9 @@
+{
+  "seq_experiment_analysis": "data/89176bbc-ffca-4d73-984a-4a92ed931a98.sequencing_experiment.4.analysis.json",
+  "qc_files": [
+                "data/SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.tgz"
+              ],
+  "publish_dir": "output",
+  "cpus": 1,
+  "mem": 0.5
+}
