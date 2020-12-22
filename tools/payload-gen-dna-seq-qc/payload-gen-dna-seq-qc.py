@@ -50,11 +50,12 @@ def calculate_md5(file_path):
 
 def get_aligned_seq_basename(qc_files):
     # get aligned bam/cram basename from '*.wgs.grch38.(cram|bam).qc_metrics.tgz'
+    # or '*.wgs.grch38.(cram|bam).oxog_metrics.tgz'
     for f in qc_files:
-        m = re.match(r'(.+?\.(cram|bam))\.qc_metrics\.tgz$', f)
+        m = re.match(r'(.+?\.(cram|bam))\.(qc_metrics|oxog_metrics)\.tgz$', f)
         if m: return(m.group(1))
 
-    sys.exit('Error: missing DNA alignment QC metrics file with patten: *.{bam,cram}.qc_metrics.tgz')
+    sys.exit('Error: missing DNA alignment QC metrics or oxog metrics file with patten: *.{bam,cram}.{qc_metrics, oxog_metrics}.tgz')
 
 
 def insert_filename_friendly_rg_id(metadata):
