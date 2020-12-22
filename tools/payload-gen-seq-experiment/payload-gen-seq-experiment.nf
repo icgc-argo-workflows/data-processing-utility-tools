@@ -22,34 +22,38 @@
  */
 
 nextflow.enable.dsl=2
-version = '0.1.3.0'
+version = '0.2.0.0'
 
-params.user_submit_metadata = ""
-params.wf_name = ""
-params.wf_short_name = ""
-params.wf_version = ""
+params.metadata_json = "NO_FILE1"
+params.experiment_info_tsv = "NO_FILE2"
+params.read_group_info_tsv = "NO_FILE3"
+params.file_info_tsv = "NO_FILE4"
+
 params.container_version = ''
 
 process payloadGenSeqExperiment {
   container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.${params.container_version ?: version}"
 
   input:
-    path user_submit_metadata
-    val wf_name
-    val wf_short_name
-    val wf_version
-    val seq_valid
+    path metadata_json
+    path experiment_info_tsv
+    path read_group_info_tsv
+    path file_info_tsv
 
   output:
     path "*.sequencing_experiment.payload.json", emit: payload
 
   script:
-    args_wf_short_name = wf_short_name.length() > 0 ? "-c ${wf_short_name}" : ""
+    args_metadata_json = !metadata_json.name.startsWith("NO_FILE") ? "-m ${metadata_json}" : ""
+    args_experiment_info_tsv = !experiment_info_tsv.name.startsWith("NO_FILE") ? "-x ${experiment_info_tsv}" : ""
+    args_read_group_info_tsv = !read_group_info_tsv.name.startsWith("NO_FILE") ? "-r ${read_group_info_tsv}" : ""
+    args_file_info_tsv = !file_info_tsv.name.startsWith("NO_FILE") ? "-f ${file_info_tsv}" : ""
+
     """
     payload-gen-seq-experiment.py \
-         -m ${user_submit_metadata} \
-         -w ${wf_name} \
-         -r ${workflow.runName} \
-         -v ${wf_version} ${args_wf_short_name}
+         ${args_metadata_json} \
+         ${args_experiment_info_tsv} \
+         ${args_read_group_info_tsv} \
+         ${args_file_info_tsv}
     """
 }
