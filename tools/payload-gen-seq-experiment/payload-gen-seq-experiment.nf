@@ -22,7 +22,7 @@
  */
 
 nextflow.enable.dsl=2
-version = '0.2.0.0'
+version = '0.2.1'
 
 params.metadata_json = "NO_FILE1"
 params.experiment_info_tsv = "NO_FILE2"
@@ -30,9 +30,15 @@ params.read_group_info_tsv = "NO_FILE3"
 params.file_info_tsv = "NO_FILE4"
 
 params.container_version = ''
+params.cpus = 1
+params.mem = 1  // GB
+params.publish_dir = ""
 
 process payloadGenSeqExperiment {
   container "quay.io/icgc-argo/payload-gen-seq-experiment:payload-gen-seq-experiment.${params.container_version ?: version}"
+  cpus params.cpus
+  memory "${params.mem} GB"
+  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", mode: "copy", enabled: "${params.publish_dir ? true : ''}"
 
   input:
     path metadata_json
