@@ -1,3 +1,4 @@
 {
-  "metadata_json": "data/seq-exp.bam.metadata.json"
+  "metadata_json": "data/seq-exp.bam.metadata.json",
+  "publish_dir": "outdir"
 }
