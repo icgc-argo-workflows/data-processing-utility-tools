@@ -23,20 +23,19 @@
 
 nextflow.enable.dsl=2
 
-params.user_submit_metadata = ""
-params.wf_name = ""
-params.wf_short_name = ""
-params.wf_version = ""
+params.metadata_json = "NO_FILE1"
+params.experiment_info_tsv = "NO_FILE2"
+params.read_group_info_tsv = "NO_FILE3"
+params.file_info_tsv = "NO_FILE4"
 
 include {payloadGenSeqExperiment} from "../payload-gen-seq-experiment" params(params)
 
 workflow {
   main:
     payloadGenSeqExperiment(
-      file(params.user_submit_metadata),
-      params.wf_name,
-      params.wf_short_name,
-      params.wf_version,
-      'ok'
+      file(params.metadata_json),
+      file(params.experiment_info_tsv),
+      file(params.read_group_info_tsv),
+      file(params.file_info_tsv)
     )
 }

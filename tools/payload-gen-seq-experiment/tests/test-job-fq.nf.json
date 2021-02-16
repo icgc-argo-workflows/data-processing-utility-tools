@@ -1,6 +1,3 @@
 {
-  "user_submit_metadata": "data/seq-exp.fq.metadata.json",
-  "wf_name": "sequencing-data-submission",
-  "wf_short_name": "seq-submission",
-  "wf_version": "0.1.0.0"
+  "metadata_json": "data/seq-exp.fq.metadata.json"
 }
