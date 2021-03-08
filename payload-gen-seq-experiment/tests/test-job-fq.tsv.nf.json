@@ -1,0 +1,7 @@
+{
+  "experiment_info_tsv": "input/experiment-fq.v2.tsv",
+  "read_group_info_tsv": "input/read_group-fq.v2.tsv",
+  "file_info_tsv": "input/file-fq.v2.tsv",
+  "expected_output": "input/fc003ffc-f0cf-4ef6-b9bd-df5010acdbbb.sequencing_experiment.payload.json",
+  "publish_dir": "outdir"
+}
