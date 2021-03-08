@@ -1,0 +1,5 @@
+{
+  "metadata_json": "input/seq-exp.bam.metadata.json",
+  "expected_output": "input/dc51bfb0-c073-4abd-a0da-fb67aa73d58b.sequencing_experiment.payload.json",
+  "publish_dir": "outdir"
+}

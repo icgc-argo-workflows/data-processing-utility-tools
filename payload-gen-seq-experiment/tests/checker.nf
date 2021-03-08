@@ -43,14 +43,13 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
+params.metadata_json = "NO_FILE1"
+params.experiment_info_tsv = "NO_FILE2"
+params.read_group_info_tsv = "NO_FILE3"
+params.file_info_tsv = "NO_FILE4"
 params.expected_output = ""
 
 include { payloadGenSeqExperiment } from '../main'
-
-Channel
-  .fromPath(params.input_file, checkIfExists: true)
-  .set { input_file }
 
 
 process file_smart_diff {
@@ -78,16 +77,22 @@ process file_smart_diff {
 
 workflow checker {
   take:
-    input_file
+    metadata_json
+    experiment_info_tsv
+    read_group_info_tsv
+    file_info_tsv
     expected_output
 
   main:
     payloadGenSeqExperiment(
-      input_file
+      metadata_json,
+      experiment_info_tsv,
+      read_group_info_tsv,
+      file_info_tsv
     )
 
     file_smart_diff(
-      payloadGenSeqExperiment.out.output_file,
+      payloadGenSeqExperiment.out.payload,
       expected_output
     )
 }
@@ -95,7 +100,10 @@ workflow checker {
 
 workflow {
   checker(
-    file(params.input_file),
+    file(params.metadata_json),
+    file(params.experiment_info_tsv),
+    file(params.read_group_info_tsv),
+    file(params.file_info_tsv),
     file(params.expected_output)
   )
 }

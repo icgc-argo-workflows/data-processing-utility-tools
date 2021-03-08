@@ -17,6 +17,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   Authors:
+    Linda Xiang
     Junjun Zhang
 */
 
@@ -44,8 +45,10 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.output_pattern = "*"  // output file name pattern
+params.metadata_json = "NO_FILE1"
+params.experiment_info_tsv = "NO_FILE2"
+params.read_group_info_tsv = "NO_FILE3"
+params.file_info_tsv = "NO_FILE4"
 
 
 process payloadGenSeqExperiment {
@@ -55,22 +58,27 @@ process payloadGenSeqExperiment {
   cpus params.cpus
   memory "${params.mem} GB"
 
-  input:  // input, make update as needed
-    path input_file
+  input:
+    path metadata_json
+    path experiment_info_tsv
+    path read_group_info_tsv
+    path file_info_tsv
 
-  output:  // output, make update as needed
-    path "output_dir/${params.output_pattern}", emit: output_file
+  output:
+    path "*.sequencing_experiment.payload.json", emit: payload
 
   script:
-    // add and initialize variables here as needed
+    args_metadata_json = !metadata_json.name.startsWith("NO_FILE") ? "-m ${metadata_json}" : ""
+    args_experiment_info_tsv = !experiment_info_tsv.name.startsWith("NO_FILE") ? "-x ${experiment_info_tsv}" : ""
+    args_read_group_info_tsv = !read_group_info_tsv.name.startsWith("NO_FILE") ? "-r ${read_group_info_tsv}" : ""
+    args_file_info_tsv = !file_info_tsv.name.startsWith("NO_FILE") ? "-f ${file_info_tsv}" : ""
 
     """
-    mkdir -p output_dir
-
     main.py \
-      -i ${input_file} \
-      -o output_dir
-
+         ${args_metadata_json} \
+         ${args_experiment_info_tsv} \
+         ${args_read_group_info_tsv} \
+         ${args_file_info_tsv}
     """
 }
 
@@ -79,6 +87,9 @@ process payloadGenSeqExperiment {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   payloadGenSeqExperiment(
-    file(params.input_file)
+    file(params.metadata_json),
+    file(params.experiment_info_tsv),
+    file(params.read_group_info_tsv),
+    file(params.file_info_tsv)
   )
 }
