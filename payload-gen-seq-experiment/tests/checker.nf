@@ -29,7 +29,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.3.0'  // package version
+version = '0.4.0'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.payload-gen-seq-experiment'
@@ -43,10 +43,10 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.metadata_json = "NO_FILE1"
-params.experiment_info_tsv = "NO_FILE2"
-params.read_group_info_tsv = "NO_FILE3"
-params.file_info_tsv = "NO_FILE4"
+params.experiment_info_tsv = "NO_FILE1"
+params.read_group_info_tsv = "NO_FILE2"
+params.file_info_tsv = "NO_FILE3"
+params.extra_info_tsv = "NO_FILE4"
 params.expected_output = ""
 
 include { payloadGenSeqExperiment } from '../main'
@@ -77,18 +77,18 @@ process file_smart_diff {
 
 workflow checker {
   take:
-    metadata_json
     experiment_info_tsv
     read_group_info_tsv
     file_info_tsv
+    extra_info_tsv
     expected_output
 
   main:
     payloadGenSeqExperiment(
-      metadata_json,
       experiment_info_tsv,
       read_group_info_tsv,
-      file_info_tsv
+      file_info_tsv,
+      extra_info_tsv
     )
 
     file_smart_diff(
@@ -100,10 +100,10 @@ workflow checker {
 
 workflow {
   checker(
-    file(params.metadata_json),
     file(params.experiment_info_tsv),
     file(params.read_group_info_tsv),
     file(params.file_info_tsv),
+    file(params.extra_info_tsv),
     file(params.expected_output)
   )
 }

@@ -62,12 +62,17 @@
         "submitterSpecimenId": "HCC1143_BAM_INPUT",
         "tumourNormalDesignation": "Normal",
         "specimenTissueSource": "Blood derived",
-        "specimenType": "Cell line - derived from normal"
+        "specimenType": "Cell line - derived from normal",
+        "specimenId": "SP2222222222",
+        "donorId": "DO1111111111"
       },
       "donor": {
         "submitterDonorId": "HCC1143",
-        "gender": "Female"
-      }
+        "gender": "Female",
+        "donorId": "DO1111111111"
+      },
+      "sampleId": "SA3333333333",
+      "specimenId": "SP2222222222"
     }
   ],
   "files": [
