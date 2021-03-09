@@ -1,4 +1,0 @@
-{
-  "metadata_json": "input/seq-exp.fq.metadata.json",
-  "expected_output": "input/cab531fd-dc75-462f-8a73-fb7fcbf73185.sequencing_experiment.payload.json"
-}

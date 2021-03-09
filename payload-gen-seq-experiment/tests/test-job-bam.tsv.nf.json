@@ -2,6 +2,7 @@
   "experiment_info_tsv": "input/experiment.v2.tsv",
   "read_group_info_tsv": "input/read_group.v2.tsv",
   "file_info_tsv": "input/file.v2.tsv",
+  "extra_info_tsv": "input/extra_info.v2.tsv",
   "expected_output": "input/98690064-627e-4a2b-a0c2-60fc9ca8433c.sequencing_experiment.payload.json",
   "publish_dir": "outdir"
 }
