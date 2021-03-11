@@ -46,52 +46,74 @@ params.container = ""
 params.input_file = ""
 params.expected_output = ""
 
+params.cpus = 1
+params.mem = 1  // GB
+
 include { cleanupWorkdir } from '../main'
 
+include {
+    generateDummyFile as gFile1;
+    generateDummyFile as gFile2;
+} from './generate-dummy-file.nf'
 
-process file_smart_diff {
-  container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
+include {
+    filesExist as fExist1;
+    filesExist as fExist2;
+    filesExist as fExist3;
+    filesExist as fExist4;
+} from './files-exist.nf'
 
-  input:
-    path output_file
-    path expected_file
-
-  output:
-    stdout()
-
-  script:
-    """
-    # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
-    # remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
-    # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
-    diff <( cat ${output_file} | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
-         <( ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
-    && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
-    """
-}
-
-
-workflow checker {
-  take:
-    input_file
-    expected_output
-
-  main:
-    cleanupWorkdir(
-      input_file
-    )
-
-    file_smart_diff(
-      cleanupWorkdir.out.output_file,
-      expected_output
-    )
-}
+Channel.from(params.file_name).set{ file_name_ch }
 
 
 workflow {
-  checker(
-    file(params.input_file),
-    file(params.expected_output)
-  )
+    // generate the file
+    gFile1(
+        file_name_ch.flatten(),
+        params.file_size
+    )
+
+    // generate the same file again
+    gFile2(
+        file_name_ch.flatten(),
+        params.file_size
+    )
+
+    // test file exists
+    fExist1(
+        params.file_name,
+        'exist',
+        gFile1.out.file.collect(),
+        true  // no need to wait
+    )
+
+    // test file exist
+    fExist2(
+        params.file_name,
+        'exist',
+        gFile2.out.file.collect(),
+        true  // no need to wait
+    )
+
+    // perform cleanup in gFile1 workdir
+    cleanupWorkdir(
+        gFile1.out.collect(),
+        gFile2.out.file.collect()  // flag enables waiting for gFile2 before cleaning up gFile1 workdir
+    )
+
+    // test cleaned up workdir from gFile1 indeed does not have previous files
+    fExist3(
+        gFile1.out.collect(),
+        'not_exist',
+        gFile1.out.collect(),
+        cleanupWorkdir.out  // wait for cleanup is done
+    )
+
+    // test not cleaned up workdir from gFile2 indeed still have the exptected files
+    fExist4(
+        gFile2.out.collect(),
+        'exist',
+        gFile2.out.collect(),
+        cleanupWorkdir.out  // wait for cleanup is done
+    )
 }
