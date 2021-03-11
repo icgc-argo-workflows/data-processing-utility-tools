@@ -25,60 +25,35 @@
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
 version = '1.0.0'  // package version
-
-container = [
-    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.helper-functions'
-]
-default_container_registry = 'ghcr.io'
 /********************************************************************/
 
 
-// universal params go here
-params.container_registry = ""
-params.container_version = ""
-params.container = ""
+// this is kind of like CWL's secondary files
+def getSecondaryFiles(main_file, exts){
+  if (!(main_file instanceof String)) {
+    exit 1, "[getSecondaryFiles] param: main_file must be a string"
+  }
 
-params.cpus = 1
-params.mem = 1  // GB
-params.publish_dir = ""  // set to empty string will disable publishDir
+  if (!(exts instanceof List)) {
+    exit 1, "[getSecondaryFiles] param: exts must be a list of strings"
+  }
 
-
-// tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.output_pattern = "*"  // output file name pattern
-
-
-process helperFunctions {
-  container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
-  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", mode: "copy", enabled: params.publish_dir
-
-  cpus params.cpus
-  memory "${params.mem} GB"
-
-  input:  // input, make update as needed
-    path input_file
-
-  output:  // output, make update as needed
-    path "output_dir/${params.output_pattern}", emit: output_file
-
-  script:
-    // add and initialize variables here as needed
-
-    """
-    mkdir -p output_dir
-
-    main.py \
-      -i ${input_file} \
-      -o output_dir
-
-    """
+  def secondaryFiles = []
+  for (ext in exts) {
+    if (ext.startsWith("^")) {
+      ext = ext.replace("^", "")
+      parts = main_file.split("\\.").toList()
+      parts.removeLast()
+      secondaryFiles.add((parts + [ext]).join("."))
+    } else {
+      secondaryFiles.add(main_file + '.' + ext)
+    }
+  }
+  return secondaryFiles
 }
 
 
-// this provides an entry point for this main script, so it can be run directly without clone the repo
-// using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
-workflow {
-  helperFunctions(
-    file(params.input_file)
-  )
+// get specific secondary files for BWA alignment, ensure none is missing
+def getBwaSecondaryFiles(main_file){
+  return getSecondaryFiles(main_file, ['fai', 'sa', 'bwt', 'ann', 'amb', 'pac', 'alt'])
 }

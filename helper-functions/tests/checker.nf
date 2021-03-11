@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 /*
-  Copyright (C) 2021,  Ontario Institute for Cancer Research
+  Copyright (c) 2019-2021, Ontario Institute for Cancer Research (OICR).
 
   This program is free software: you can redistribute it and/or modify
   it under the terms of the GNU Affero General Public License as published by
@@ -42,56 +42,57 @@ params.container_registry = ""
 params.container_version = ""
 params.container = ""
 
-// tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.expected_output = ""
+bwaSecondaryExts = ['fai', 'sa', 'bwt', 'ann', 'amb', 'pac', 'alt']
 
-include { helperFunctions } from '../main'
+params.file_name = null
+params.file_size = null
 
+include {
+    getSecondaryFiles;
+    getBwaSecondaryFiles
+} from '../main.nf'
 
-process file_smart_diff {
-  container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
+include {
+    generateDummyFile as gFile1;
+    generateDummyFile as gFile2;
+} from './generate-dummy-file.nf'
 
-  input:
-    path output_file
-    path expected_file
+include {
+    filesExist as fExist1;
+    filesExist as fExist2;
+} from './files-exist.nf'
 
-  output:
-    stdout()
-
-  script:
-    """
-    # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
-    # remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
-    # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
-    diff <( cat ${output_file} | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
-         <( ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
-    && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
-    """
-}
-
-
-workflow checker {
-  take:
-    input_file
-    expected_output
-
-  main:
-    helperFunctions(
-      input_file
-    )
-
-    file_smart_diff(
-      helperFunctions.out.output_file,
-      expected_output
-    )
-}
+Channel.from(params.file_name).set{ file_name_ch }
+Channel.from(bwaSecondaryExts).set{ bwa_ext_ch }
 
 
 workflow {
-  checker(
-    file(params.input_file),
-    file(params.expected_output)
-  )
+    // generate the main file
+    gFile1(
+        file_name_ch.flatten(),
+        params.file_size
+    )
+
+    // generate the BWA secondary files
+    gFile2(
+        file_name_ch.combine(bwa_ext_ch),
+        params.file_size
+    )
+
+    // test 'getSecondaryFiles' for expected 'fai' file exists
+    fExist1(
+        getSecondaryFiles(params.file_name, ['fai']),
+        'exist',
+        gFile2.out.file.collect(),
+        true  // no need to wait
+    )
+
+    // test 'getBwaSecondaryFiles' for all expected bwa secondary files exist
+    fExist2(
+        getBwaSecondaryFiles(params.file_name).collect(),
+        'exist',
+        gFile2.out.file.collect(),
+        true  // no need to wait
+    )
+
 }
