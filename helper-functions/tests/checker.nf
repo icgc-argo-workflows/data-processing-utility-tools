@@ -20,22 +20,7 @@
     Junjun Zhang
 */
 
-/*
- This is an auto-generated checker workflow to test the generated main template workflow, it's
- meant to illustrate how testing works. Please update to suit your own needs.
-*/
-
-/********************************************************************/
-/* this block is auto-generated based on info from pkg.json where   */
-/* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '1.0.0'  // package version
-
-container = [
-    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.helper-functions'
-]
-default_container_registry = 'ghcr.io'
-/********************************************************************/
 
 // universal params
 params.container_registry = ""
