@@ -29,7 +29,7 @@ nextflow.enable.dsl = 2
 version = '1.0.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.helper-functions'
+    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.cleanup-workdir'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
@@ -49,23 +49,29 @@ process filesExist {
         path files
         val dependency_flag  // any output from process(es) you'd like to make this process depend on
 
+    output:
+        stdout()
+
     script:
         file_name_arg = file_names instanceof List ? file_names.join(" ") : file_names
         """
         if [[ "${expect}" = "exist"  ]]; then
             for f in \$(echo "${file_name_arg}"); do
                 if [[ ! -f \$f ]]; then
-                    exit "Expected \$f not exists."
+                    echo "Expected \$f not exists."
+                    exit 1
                 fi
             done
         elif [[ "${expect}" = "not_exist"  ]]; then
             for f in \$(echo "${file_name_arg}"); do
                 if [[ -f \$f ]]; then
-                    exit "Unexpected \$f exists."
+                    echo "Unexpected \$f exists."
+                    exit 1
                 fi
             done
         else
-            exit "Second argument must be either 'exist' or 'not_exist'. '${expect}' is supplied."
+            echo "Second argument must be either 'exist' or 'not_exist'. '${expect}' is supplied."
+            exit 1
         fi
         """
 }
