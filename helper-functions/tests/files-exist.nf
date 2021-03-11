@@ -22,10 +22,32 @@
  *   Junjun Zhang <junjun.zhang@oicr.on.ca>
  */
 
+/********************************************************************/
+/* this block is auto-generated based on info from pkg.json where   */
+/* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
+version = '1.0.0'  // package version
 
+container = [
+    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.helper-functions'
+]
+default_container_registry = 'ghcr.io'
+/********************************************************************/
+
+// universal params
+params.container_registry = ""
+params.container_version = ""
+params.container = ""
+
+params.cpus = 1
+params.mem = 1  // GB
 
 process filesExist {
+    container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
+
+    cpus params.cpus
+    memory "${params.mem} GB"
+
     input:
         val file_names  // file name shall not have spaces
         val expect  // 'exist' for files expected to exist; 'not_exist' for files expected not exist
