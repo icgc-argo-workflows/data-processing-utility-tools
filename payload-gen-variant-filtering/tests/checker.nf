@@ -17,7 +17,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   Authors:
-    lindaxiang
+    Linda Xiang (linda.xiang@oicr.on.ca)
 */
 
 /*
@@ -43,15 +43,14 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
+params.analysis = ""
+params.files_to_upload = []
+params.wf_name = ""
+params.wf_short_name = ""
+params.wf_version = ""
 params.expected_output = ""
 
 include { payloadGenVariantFiltering } from '../main'
-
-Channel
-  .fromPath(params.input_file, checkIfExists: true)
-  .set { input_file }
-
 
 process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -65,12 +64,8 @@ process file_smart_diff {
 
   script:
     """
-    # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
-    # remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
-    # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
-    diff <( cat ${output_file} | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
-         <( ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
+    diff <( cat ${output_file} |sort | sed '/\"run_id\"/d' | sed '/\"session_id\"/d' ) \
+         <( cat ${expected_file} |sort | sed '/\"run_id\"/d' | sed '/\"session_id\"/d' ) \
     && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
     """
 }
@@ -78,16 +73,24 @@ process file_smart_diff {
 
 workflow checker {
   take:
-    input_file
+    analysis
+    files_to_upload
+    wf_name
+    wf_short_name
+    wf_version
     expected_output
 
   main:
     payloadGenVariantFiltering(
-      input_file
+      analysis,
+      files_to_upload,
+      wf_name,
+      wf_short_name,
+      wf_version
     )
 
     file_smart_diff(
-      payloadGenVariantFiltering.out.output_file,
+      payloadGenVariantFiltering.out.payload,
       expected_output
     )
 }
@@ -95,7 +98,11 @@ workflow checker {
 
 workflow {
   checker(
-    file(params.input_file),
+    file(params.analysis),
+    Channel.fromPath(params.files_to_upload).collect(),
+    params.wf_name,
+    params.wf_short_name,
+    params.wf_version,
     file(params.expected_output)
   )
 }

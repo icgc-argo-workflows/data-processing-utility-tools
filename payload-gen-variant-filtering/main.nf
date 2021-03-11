@@ -17,7 +17,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   Authors:
-    lindaxiang
+    Linda Xiang (linda.xiang@oicr.on.ca)
 */
 
 /********************************************************************/
@@ -44,8 +44,11 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.output_pattern = "*"  // output file name pattern
+params.analysis = ""
+params.files_to_upload = []
+params.wf_name = ""
+params.wf_short_name = ""
+params.wf_version = ""
 
 
 process payloadGenVariantFiltering {
@@ -56,10 +59,14 @@ process payloadGenVariantFiltering {
   memory "${params.mem} GB"
 
   input:  // input, make update as needed
-    path input_file
+    path analysis
+    path files_to_upload
+    val wf_name
+    val wf_short_name
+    val wf_version
 
   output:  // output, make update as needed
-    path "output_dir/${params.output_pattern}", emit: output_file
+    path "*.payload.json", emit: payload
 
   script:
     // add and initialize variables here as needed
@@ -68,8 +75,13 @@ process payloadGenVariantFiltering {
     mkdir -p output_dir
 
     main.py \
-      -i ${input_file} \
-      -o output_dir
+      -a ${analysis} \
+      -f ${files_to_upload} \
+      -w ${wf_name} \
+      -s ${wf_short_name} \
+      -v ${wf_version} \
+      -r ${workflow.runName} \
+      -j ${workflow.sessionId}
 
     """
 }
@@ -79,6 +91,10 @@ process payloadGenVariantFiltering {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   payloadGenVariantFiltering(
-    file(params.input_file)
+    file(params.analysis),
+    Channel.fromPath(params.files_to_upload).collect(),
+    params.wf_name,
+    params.wf_short_name,
+    params.wf_version
   )
 }
