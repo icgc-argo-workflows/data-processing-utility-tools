@@ -42,10 +42,9 @@ params.cpus = 1
 params.mem = 1  // GB
 params.publish_dir = ""  // set to empty string will disable publishDir
 
-
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.output_pattern = "*"  // output file name pattern
+params.files_to_delete = "NO_FILE"
+params.virtual_dep_flag = true  // default to true, ie, dep is always satisfied
 
 
 process cleanupWorkdir {
@@ -55,22 +54,31 @@ process cleanupWorkdir {
   cpus params.cpus
   memory "${params.mem} GB"
 
-  input:  // input, make update as needed
-    path input_file
+  input:
+    path files_to_delete  // more accurately, other non-hidden files in the same folder will be deleted as well
+    val virtual_dep_flag  // for specifying steps do not produce output files but produce values, set those values here
 
-  output:  // output, make update as needed
-    path "output_dir/${params.output_pattern}", emit: output_file
+  output:
+    stdout
 
   script:
-    // add and initialize variables here as needed
-
     """
-    mkdir -p output_dir
+    set -euxo pipefail
 
-    main.py \
-      -i ${input_file} \
-      -o output_dir
+    IFS=" "
+    read -a files <<< "${files_to_delete}"
+    for f in "\${files[@]}"
+    do
+        dir_to_rm=\$(dirname \$(readlink -f \$f))
 
+        if [[ \$dir_to_rm != ${workflow.workDir}/* ]]; then  # skip dir not under workdir, like from input file dir
+            echo "Not delete: \$dir_to_rm/*\"
+            continue
+        fi
+
+        rm -fr \$dir_to_rm/*  # delete all files and subdirs but not hidden ones
+        echo "Deleted: \$dir_to_rm/*"
+    done
     """
 }
 
@@ -79,6 +87,7 @@ process cleanupWorkdir {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   cleanupWorkdir(
-    file(params.input_file)
+    file(params.files_to_delete),
+    params.virtual_dep_flag
   )
 }
