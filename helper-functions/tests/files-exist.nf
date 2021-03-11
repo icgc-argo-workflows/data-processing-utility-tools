@@ -60,17 +60,20 @@ process filesExist {
         if [[ "${expect}" = "exist"  ]]; then
             for f in \$(echo "${file_name_arg}"); do
                 if [[ ! -f \$f ]]; then
-                    exit "Expected \$f not exists."
+                    echo "Expected \$f not exists."
+                    exit 1
                 fi
             done
         elif [[ "${expect}" = "not_exist"  ]]; then
             for f in \$(echo "${file_name_arg}"); do
                 if [[ -f \$f ]]; then
-                    exit "Unexpected \$f exists."
+                    echo "Unexpected \$f exists."
+                    exit 1
                 fi
             done
         else
-            exit "Second argument must be either 'exist' or 'not_exist'. '${expect}' is supplied."
+            echo "Second argument must be either 'exist' or 'not_exist'. '${expect}' is supplied."
+            exit 1
         fi
         """
 }
