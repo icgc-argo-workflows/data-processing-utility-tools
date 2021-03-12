@@ -48,7 +48,7 @@ def calculate_md5(file_path):
 def get_files_info(file_to_upload):
     basename = os.path.basename(file_to_upload)
     input_wf = basename.split(".")[5]
-    variant_type = basename.split(".")[8]
+    variant_type = basename.split(".")[7]
     file_info = {
         'fileName': basename,
         'fileType': 'VCF' if basename.endswith('.vcf.gz') else basename.split(".")[-1].upper(),
