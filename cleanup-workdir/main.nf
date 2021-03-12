@@ -87,7 +87,7 @@ process cleanupWorkdir {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   cleanupWorkdir(
-    file(params.files_to_delete),
+    Channel.fromPath(params.files_to_delete),
     params.virtual_dep_flag
   )
 }
