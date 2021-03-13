@@ -104,10 +104,11 @@ def main():
     with open(args.analysis, 'r') as f:
         analysis = json.load(f)
 
-    analysis_type = analysis.get('analysisType').get('name')
+    input_analysis_type = analysis.get('analysisType').get('name')
+    output_analysis_type = "variant_filtering"
     payload = {
         'analysisType': {
-            'name': analysis_type
+            'name': output_analysis_type
         },
         'studyId': analysis.get('studyId'),  
         'experiment': analysis.get('experiment'),
@@ -122,7 +123,7 @@ def main():
             'inputs': [
                 {
                     'input_analysis_id': analysis.get('analysisId'),
-                    'analysis_type': analysis_type
+                    'analysis_type': input_analysis_type
                 }
             ],
             'genome_build': 'GRCh38_hla_decoy_ebv'
@@ -134,7 +135,7 @@ def main():
         file_info = get_files_info(f)
         payload['files'].append(file_info)
 
-    with open("%s.%s.payload.json" % (str(uuid.uuid4()), analysis_type), 'w') as f:
+    with open("%s.%s.payload.json" % (str(uuid.uuid4()), output_analysis_type), 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
 

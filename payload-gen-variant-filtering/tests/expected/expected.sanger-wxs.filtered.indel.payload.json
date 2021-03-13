@@ -1,6 +1,6 @@
 {
   "analysisType": {
-    "name": "variant_calling"
+    "name": "variant_filtering"
   },
   "studyId": "TEST-PR",
   "experiment": {
