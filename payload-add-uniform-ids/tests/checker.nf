@@ -43,7 +43,8 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
+params.payload_json = ""
+params.id_mapping_tsv = ""
 params.expected_output = ""
 
 include { payloadAddUniformIds } from '../main'
@@ -61,12 +62,7 @@ process file_smart_diff {
 
   script:
     """
-    # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
-    # remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
-    # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
-    diff <( cat ${output_file} | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
-         <( ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
+    diff ${output_file} ${expected_file} \
     && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
     """
 }
@@ -74,16 +70,18 @@ process file_smart_diff {
 
 workflow checker {
   take:
-    input_file
+    payload_json
+    id_mapping_tsv
     expected_output
 
   main:
     payloadAddUniformIds(
-      input_file
+      payload_json,
+      id_mapping_tsv
     )
 
     file_smart_diff(
-      payloadAddUniformIds.out.output_file,
+      payloadAddUniformIds.out.payload,
       expected_output
     )
 }
@@ -91,7 +89,8 @@ workflow checker {
 
 workflow {
   checker(
-    file(params.input_file),
+    file(params.payload_json),
+    file(params.id_mapping_tsv),
     file(params.expected_output)
   )
 }

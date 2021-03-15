@@ -44,8 +44,8 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.output_pattern = "*"  // output file name pattern
+params.payload_json = ""
+params.id_mapping_tsv = ""
 
 
 process payloadAddUniformIds {
@@ -56,10 +56,11 @@ process payloadAddUniformIds {
   memory "${params.mem} GB"
 
   input:  // input, make update as needed
-    path input_file
+    path payload_json
+    path id_mapping_tsv
 
   output:  // output, make update as needed
-    path "output_dir/${params.output_pattern}", emit: output_file
+    path "output_dir/*.json", emit: payload
 
   script:
     // add and initialize variables here as needed
@@ -68,7 +69,8 @@ process payloadAddUniformIds {
     mkdir -p output_dir
 
     main.py \
-      -i ${input_file} \
+      -p ${payload_json} \
+      -i ${id_mapping_tsv} \
       -o output_dir
 
     """
@@ -79,6 +81,7 @@ process payloadAddUniformIds {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   payloadAddUniformIds(
-    file(params.input_file)
+    file(params.payload_json),
+    file(params.id_mapping_tsv)
   )
 }

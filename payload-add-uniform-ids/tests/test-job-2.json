@@ -1,6 +1,7 @@
 {
-    "input_file": "input/test_rg_3.bam",
-    "expected_output": "expected/expected.test_rg_3.bam",
+    "payload_json": "input/dc51bfb0-c073-4abd-a0da-fb67aa73d58b.sequencing_experiment.payload.json",
+    "id_mapping_tsv": "input/dc51bfb0-c073-4abd-a0da-fb67aa73d58b.id_mapping.tsv",
+    "expected_output": "input/expected.dc51bfb0-c073-4abd-a0da-fb67aa73d58b.sequencing_experiment.payload.uniform_id_added.json",
     "publish_dir": "outdir",
     "container_registry": "ghcr.io",
     "cpus": 1,
