@@ -49,12 +49,13 @@ process metadataParser {
 
   script:
     """
-    set -euxo pipefail
+    set -uxo pipefail
     STUDY_ID=`cat ${metadata_analysis} | jq -er '.studyId' | tr -d '\\n'`
     DONOR_ID=`cat ${metadata_analysis} | jq -er '.samples[0].donor.donorId' | tr -d '\\n'`
-    EXP=`cat ${metadata_analysis} | jq -er '.experiment | if (.experimental_strategy | length)>0 then .experimental_strategy else .library_strategy end' | tr -d '\\n'`
-    PAIRED=`cat ${metadata_analysis} | jq -er '[.read_groups[]? | .is_paired_end] | all | tostring' | tr -d '\\n'`
-    VARIABLE=`cat ${metadata_analysis} | jq -er '[.files[] | .info? | .analysis_tools[]?] | unique | join(",")' | tr -d '\\n'`
-    ANALYSIS_TOOLS=\${VARIABLE:-'null'}
+    EXP=`cat ${metadata_analysis} | jq -er '.experiment | .experimental_strategy?  // .library_strategy' | tr -d '\\n'`
+    VARIABLE1=`cat ${metadata_analysis} | jq -er 'if ([.read_groups[]?] | length) >0 then [.read_groups[]? | .is_paired_end] | all | tostring else "" end' | tr -d '\\n'`
+    PAIRED=\${VARIABLE1:-'null'}
+    VARIABLE2=`cat ${metadata_analysis} | jq -er '[.files[] | .info? | .analysis_tools[]?] | unique | join(",")' | tr -d '\\n'`
+    ANALYSIS_TOOLS=\${VARIABLE2:-'null'}
     """
 }
