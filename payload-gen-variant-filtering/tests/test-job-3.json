@@ -6,7 +6,7 @@
     ],
     "expected_output": "expected/expected.sanger-wxs.filtered.indel.payload.json",
     "wf_name": "open-access-variant-filtering",
-    "wf_short_name": "variant-filtering",
+    "wf_short_name": "open-filter",
     "wf_version": "0.1.0",
     "publish_dir": "outdir",
     "cpus": 1,

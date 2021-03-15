@@ -49,6 +49,7 @@ params.files_to_upload = []
 params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
+params.controlled = false
 
 
 process payloadGenVariantFiltering {
@@ -64,16 +65,16 @@ process payloadGenVariantFiltering {
     val wf_name
     val wf_short_name
     val wf_version
+    val controlled
 
   output:  // output, make update as needed
     path "*.payload.json", emit: payload
 
   script:
     // add and initialize variables here as needed
+    arg_controlled = controlled ? "-c" : ""
 
-    """
-    mkdir -p output_dir
-
+    """   
     main.py \
       -a ${analysis} \
       -f ${files_to_upload} \
@@ -81,7 +82,8 @@ process payloadGenVariantFiltering {
       -s ${wf_short_name} \
       -v ${wf_version} \
       -r ${workflow.runName} \
-      -j ${workflow.sessionId}
+      -j ${workflow.sessionId} \
+      ${arg_controlled}
 
     """
 }
@@ -95,6 +97,7 @@ workflow {
     Channel.fromPath(params.files_to_upload).collect(),
     params.wf_name,
     params.wf_short_name,
-    params.wf_version
+    params.wf_version,
+    params.controlled
   )
 }

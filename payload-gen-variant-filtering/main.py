@@ -33,6 +33,10 @@ variant_type_to_data_type_etc = {
     'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel', 'bcftools'], ['GATK-Mutect2', 'bcftools']]
 }
 
+workflow_full_name = {
+    'open-access-variant-filtering': 'Open Access Variant Filtering'
+}
+
 def calculate_size(file_path):
     return os.stat(file_path).st_size
 
@@ -45,16 +49,15 @@ def calculate_md5(file_path):
     return md5.hexdigest()
 
 
-def get_files_info(file_to_upload):
-    basename = os.path.basename(file_to_upload)
-    input_wf = basename.split(".")[5]
-    variant_type = basename.split(".")[7]
+def get_files_info(file_to_upload, args, input_wf, variant_type):
+    basename = os.path.basename(file_to_upload).replace("filtered", args.wf_short_name)
+    
     file_info = {
         'fileName': basename,
         'fileType': 'VCF' if basename.endswith('.vcf.gz') else basename.split(".")[-1].upper(),
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
-        'fileAccess': 'open',
+        'fileAccess': 'open' if not args.controlled else 'controlled',
         'info': {
             'data_category': variant_type_to_data_type_etc[variant_type][0]
         }
@@ -84,6 +87,16 @@ def get_sample_info(sample_list):
 
     return samples
 
+def get_variant_type(analysis):
+    for f in analysis.get('files'):
+        if f.get('dataType') == "VCF Index": continue
+        if f.get('dataType') == "Raw SNV Calls":
+            variant_type = 'snv'
+        elif f.get('dataType') == "Raw InDel Calls":
+            variant_type = 'indel'
+    
+    return variant_type
+
 def main():
     """
     Python implementation of tool: payload-gen-variant-filtering
@@ -98,6 +111,7 @@ def main():
     parser.add_argument("-v", dest="wf_version", type=str, required=True, help="workflow version")
     parser.add_argument("-r", dest="wf_run", type=str, required=True, help="workflow run ID")
     parser.add_argument("-j", dest="wf_session", type=str, required=True, help="workflow session ID")
+    parser.add_argument("-c", dest="controlled", action='store_true', help="set file to be controlled access")
     args = parser.parse_args()
 
     analysis = {}
@@ -105,6 +119,9 @@ def main():
         analysis = json.load(f)
 
     input_analysis_type = analysis.get('analysisType').get('name')
+    input_wf = analysis.get('workflow', {}).get('workflow_short_name')
+    variant_type = get_variant_type(analysis)
+
     output_analysis_type = "variant_filtering"
     payload = {
         'analysisType': {
@@ -115,7 +132,7 @@ def main():
         'samples': get_sample_info(analysis.get('samples')),
         'files': [],
         'workflow': {
-            'workflow_name': 'Open Access Variant Filtering',
+            'workflow_name': workflow_full_name.get(args.wf_name),
             'workflow_short_name': args.wf_short_name,
             'workflow_version': args.wf_version,
             'run_id': args.wf_run,
@@ -132,7 +149,7 @@ def main():
     }
 
     for f in args.files_to_upload:
-        file_info = get_files_info(f)
+        file_info = get_files_info(f, args, input_wf, variant_type)
         payload['files'].append(file_info)
 
     with open("%s.%s.payload.json" % (str(uuid.uuid4()), output_analysis_type), 'w') as f:

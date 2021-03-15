@@ -48,6 +48,7 @@ params.files_to_upload = []
 params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
+params.controlled = false
 params.expected_output = ""
 
 include { payloadGenVariantFiltering } from '../main'
@@ -78,6 +79,7 @@ workflow checker {
     wf_name
     wf_short_name
     wf_version
+    controlled
     expected_output
 
   main:
@@ -86,7 +88,8 @@ workflow checker {
       files_to_upload,
       wf_name,
       wf_short_name,
-      wf_version
+      wf_version,
+      controlled
     )
 
     file_smart_diff(
@@ -103,6 +106,7 @@ workflow {
     params.wf_name,
     params.wf_short_name,
     params.wf_version,
+    params.controlled,
     file(params.expected_output)
   )
 }
