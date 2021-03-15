@@ -1,0 +1,7 @@
+{
+    "payload_json": "input/cab531fd-dc75-462f-8a73-fb7fcbf73185.sequencing_experiment.payload.json",
+    "id_mapping_tsv": "input/cab531fd-dc75-462f-8a73-fb7fcbf73185.id_mapping.tsv",
+    "expected_output": "input/expected.cab531fd-dc75-462f-8a73-fb7fcbf73185.sequencing_experiment.payload.uniform_id_added.json",
+    "cpus": 1,
+    "mem": 0.5
+}
