@@ -36,17 +36,17 @@ def get_id_mapping(id_mapping_tsv):
             submitter_id = row['submitter_id']
             uniform_id = row['uniform_id']
             if type in id_mapping:
-                sys.exit(f"Values in 'type' field duplicated. Offending value: {type}, in file: {args.id_mapping_tsv}")
+                sys.exit(f"Values in 'type' field duplicated. Offending value: {type}, in file: {id_mapping_tsv}")
             else:
                 id_mapping[type] = dict()
 
             if submitter_id in id_mapping[type]:
-                sys.exit(f"Values in 'submitter_id' field duplicated. Offending value: {submitter_id}, for type: {type}, in file: {args.id_mapping_tsv}" )
+                sys.exit(f"Values in 'submitter_id' field duplicated. Offending value: {submitter_id}, for type: {type}, in file: {id_mapping_tsv}" )
             else:
                 id_mapping[type][submitter_id] = uniform_id
 
     if 'donor' not in id_mapping or 'specimen' not in id_mapping or 'sample' not in id_mapping:
-        sys.exit(f"Provided id_mapping_tsv file '{args.id_mapping_tsv}' is required to have ID mappings for 'donor', 'specimen' and 'sample'")
+        sys.exit(f"Provided id_mapping_tsv file '{id_mapping_tsv}' is required to have ID mappings for 'donor', 'specimen' and 'sample'")
 
     return id_mapping
 
