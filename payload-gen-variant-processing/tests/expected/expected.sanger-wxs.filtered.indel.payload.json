@@ -1,0 +1,74 @@
+{
+  "analysisType": {
+    "name": "variant_processing"
+  },
+  "studyId": "TEST-PR",
+  "experiment": {
+    "platform": "ILLUMINA",
+    "experimental_strategy": "WXS"
+  },
+  "samples": [
+    {
+      "submitterSampleId": "COLO-829",
+      "matchedNormalSubmitterSampleId": "COLO-829-BL",
+      "sampleType": "Total DNA",
+      "specimen": {
+        "submitterSpecimenId": "COLO-829",
+        "tumourNormalDesignation": "Tumour",
+        "specimenTissueSource": "Blood derived",
+        "specimenType": "Cell line - derived from tumour"
+      },
+      "donor": {
+        "gender": "Female",
+        "submitterDonorId": "COLO-829"
+      }
+    }
+  ],
+  "files": [
+    {
+      "fileName": "TEST-PR.DO250183.SA610229.wxs.20200911.sanger-wxs.somatic.indel.open-filter.vcf.gz",
+      "fileType": "VCF",
+      "fileSize": 23947,
+      "fileMd5sum": "1ebce71c8231aeb7ac6c06c92adfd5db",
+      "fileAccess": "open",
+      "info": {
+        "data_category": "Simple Nucleotide Variation",
+        "analysis_tools": [
+          "Pindel",
+          "bcftools"
+        ]
+      },
+      "dataType": "Raw InDel Calls"
+    },
+    {
+      "fileName": "TEST-PR.DO250183.SA610229.wxs.20200911.sanger-wxs.somatic.indel.open-filter.vcf.gz.tbi",
+      "fileType": "TBI",
+      "fileSize": 185,
+      "fileMd5sum": "7a8482dc43849a4ee8bdd4c9c77fae0c",
+      "fileAccess": "open",
+      "info": {
+        "data_category": "Simple Nucleotide Variation",
+        "analysis_tools": [
+          "Pindel",
+          "bcftools"
+        ]
+      },
+      "dataType": "VCF Index"
+    }
+  ],
+  "workflow": {
+    "workflow_name": "Open Access Variant Filtering",
+    "workflow_short_name": "open-filter",
+    "workflow_version": "0.1.0",
+    "run_id": "adoring_mercator",
+    "session_id": "cd1fcd50-3231-4ce6-9dec-722ed044d970",
+    "inputs": [
+      {
+        "input_analysis_id": "775eeab5-9cbf-4443-9eea-b59cbf144389",
+        "analysis_type": "variant_calling"
+      }
+    ],
+    "genome_build": "GRCh38_hla_decoy_ebv"
+  },
+  "variant_class": "Somatic"
+}
