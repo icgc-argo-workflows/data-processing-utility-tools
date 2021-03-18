@@ -8,9 +8,6 @@
     "wf_name": "open-access-variant-filtering",
     "wf_short_name": "open-filter",
     "wf_version": "0.1.0",
-    "controlled": true,
-    "process_name": "annotation",
-    "analysis_type": "variant_annotating",
     "publish_dir": "outdir",
     "cpus": 1,
     "mem": 0.5

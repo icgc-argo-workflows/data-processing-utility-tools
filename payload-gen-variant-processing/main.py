@@ -53,14 +53,14 @@ def get_files_info(file_to_upload, args):
     fname = os.path.basename(file_to_upload).split(".")
     input_wf = fname[5]
     variant_type = fname[7]
-    process_name = args.process_name if args.process_name else args.wf_short_name
+    process_name = args.wf_short_name
     new_fname = ".".join(fname[0:8]+[process_name, 'vcf.gz']+(['tbi'] if file_to_upload.endswith('.tbi') else []))
     file_info = {
         'fileName': new_fname,
         'fileType': 'VCF' if new_fname.endswith('.vcf.gz') else new_fname.split(".")[-1].upper(),
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
-        'fileAccess': 'open' if not args.controlled else 'controlled',
+        'fileAccess': 'open' if args.open else 'controlled',
         'info': {
             'data_category': variant_type_to_data_type_etc[variant_type][0]
         }
@@ -85,7 +85,6 @@ def get_files_info(file_to_upload, args):
         pass
 
     dst = os.path.join(os.getcwd(), new_dir, new_fname)
-    print(dst)
     os.symlink(os.path.abspath(file_to_upload), dst)
 
     return file_info
@@ -114,9 +113,7 @@ def main():
     parser.add_argument("-v", dest="wf_version", type=str, required=True, help="workflow version")
     parser.add_argument("-r", dest="wf_run", type=str, required=True, help="workflow run ID")
     parser.add_argument("-j", dest="wf_session", type=str, required=True, help="workflow session ID")
-    parser.add_argument("-c", dest="controlled", action='store_true', help="set file to be controlled access")
-    parser.add_argument("-p", dest="process_name", type=str, help="variant process name")
-    parser.add_argument("-t", dest="analysis_type", type=str, default="variant_processing", help="specify output song analysis type")
+    parser.add_argument("-o", dest="open", action='store_true', help="set file to be open access")
     args = parser.parse_args()
 
     analysis = {}
@@ -124,10 +121,10 @@ def main():
         analysis = json.load(f)
 
     input_analysis_type = analysis.get('analysisType').get('name')
-    
+    analysis_type = "variant_processing"
     payload = {
         'analysisType': {
-            'name': args.analysis_type
+            'name': analysis_type
         },
         'studyId': analysis.get('studyId'),  
         'experiment': analysis.get('experiment'),
@@ -154,7 +151,7 @@ def main():
         file_info = get_files_info(f, args)
         payload['files'].append(file_info)
 
-    with open("%s.%s.payload.json" % (str(uuid.uuid4()), args.analysis_type), 'w') as f:
+    with open("%s.%s.payload.json" % (str(uuid.uuid4()), analysis_type), 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
 

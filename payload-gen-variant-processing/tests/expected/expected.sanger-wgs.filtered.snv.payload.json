@@ -1,6 +1,6 @@
 {
   "analysisType": {
-    "name": "variant_annotating"
+    "name": "variant_processing"
   },
   "studyId": "TEST-PR",
   "experiment": {
@@ -26,7 +26,7 @@
   ],
   "files": [
     {
-      "fileName": "TEST-PR.DO250183.SA610229.wgs.20200513.sanger-wgs.somatic.snv.annotation.vcf.gz",
+      "fileName": "TEST-PR.DO250183.SA610229.wgs.20200513.sanger-wgs.somatic.snv.open-filter.vcf.gz",
       "fileType": "VCF",
       "fileSize": 23947,
       "fileMd5sum": "1ebce71c8231aeb7ac6c06c92adfd5db",
@@ -41,7 +41,7 @@
       "dataType": "Raw SNV Calls"
     },
     {
-      "fileName": "TEST-PR.DO250183.SA610229.wgs.20200513.sanger-wgs.somatic.snv.annotation.vcf.gz.tbi",
+      "fileName": "TEST-PR.DO250183.SA610229.wgs.20200513.sanger-wgs.somatic.snv.open-filter.vcf.gz.tbi",
       "fileType": "TBI",
       "fileSize": 185,
       "fileMd5sum": "7a8482dc43849a4ee8bdd4c9c77fae0c",
@@ -60,8 +60,8 @@
     "workflow_name": "Open Access Variant Filtering",
     "workflow_short_name": "open-filter",
     "workflow_version": "0.1.0",
-    "run_id": "hopeful_wescoff",
-    "session_id": "6f1137f4-7e04-4758-bf15-53936d76a1d3",
+    "run_id": "insane_rubens",
+    "session_id": "b5dbc2b3-f915-4f56-acbb-97d31df6c1f0",
     "inputs": [
       {
         "input_analysis_id": "3414534a-47a4-492d-9453-4a47a4192d6d",

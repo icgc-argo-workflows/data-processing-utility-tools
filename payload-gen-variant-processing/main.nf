@@ -49,9 +49,7 @@ params.files_to_upload = []
 params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
-params.controlled = false
-params.process_name = ""
-params.analysis_type = ""
+params.open = false
 
 
 process payloadGenVariantProcessing {
@@ -67,9 +65,7 @@ process payloadGenVariantProcessing {
     val wf_name
     val wf_short_name
     val wf_version
-    val controlled
-    val process_name
-    val analysis_type
+    val open
 
   output:  // output, make update as needed
     path "*.payload.json", emit: payload
@@ -77,9 +73,7 @@ process payloadGenVariantProcessing {
 
   script:
     // add and initialize variables here as needed
-    arg_controlled = controlled ? "-c" : ""
-    arg_process_name = process_name ? "-p ${process_name}" : ""
-    arg_analysis_type = analysis_type ? "-t ${analysis_type}" : ""
+    arg_open = open ? "-o" : ""
 
     """   
     main.py \
@@ -90,7 +84,7 @@ process payloadGenVariantProcessing {
       -v ${wf_version} \
       -r ${workflow.runName} \
       -j ${workflow.sessionId} \
-      ${arg_controlled} ${arg_process_name} ${arg_analysis_type}
+      ${arg_open}
 
     """
 }
@@ -105,8 +99,6 @@ workflow {
     params.wf_name,
     params.wf_short_name,
     params.wf_version,
-    params.controlled,
-    params.process_name,
-    params.analysis_type
+    params.open
   )
 }

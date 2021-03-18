@@ -48,9 +48,7 @@ params.files_to_upload = []
 params.wf_name = ""
 params.wf_short_name = ""
 params.wf_version = ""
-params.controlled = false
-params.process_name = ""
-params.analysis_type = ""
+params.open = false
 params.expected_output = ""
 
 include { payloadGenVariantProcessing } from '../main'
@@ -67,8 +65,8 @@ process file_smart_diff {
 
   script:
     """
-    diff <( cat ${output_file} |sort | sed '/\"run_id\"/d' | sed '/\"session_id\"/d' ) \
-         <( cat ${expected_file} |sort | sed '/\"run_id\"/d' | sed '/\"session_id\"/d' ) \
+    diff <( cat ${output_file} | jq -S . | sed '/\"run_id\"/d' | sed '/\"session_id\"/d' ) \
+         <( cat ${expected_file} | jq -S . | sed '/\"run_id\"/d' | sed '/\"session_id\"/d' ) \
     && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
     """
 }
@@ -81,9 +79,7 @@ workflow checker {
     wf_name
     wf_short_name
     wf_version
-    controlled
-    process_name
-    analysis_type
+    open
     expected_output
 
   main:
@@ -93,9 +89,7 @@ workflow checker {
       wf_name,
       wf_short_name,
       wf_version,
-      controlled,
-      process_name,
-      analysis_type
+      open
     )
 
     file_smart_diff(
@@ -112,9 +106,7 @@ workflow {
     params.wf_name,
     params.wf_short_name,
     params.wf_version,
-    params.controlled,
-    params.process_name,
-    params.analysis_type,
+    params.open,
     file(params.expected_output)
   )
 }
