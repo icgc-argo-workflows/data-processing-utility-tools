@@ -54,7 +54,7 @@ params.process_name = ""
 params.analysis_type = ""
 
 
-process payloadGenVariantFiltering {
+process payloadGenVariantProcessing {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
   publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", mode: "copy", enabled: params.publish_dir
 
@@ -99,7 +99,7 @@ process payloadGenVariantFiltering {
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
-  payloadGenVariantFiltering(
+  payloadGenVariantProcessing(
     file(params.analysis),
     Channel.fromPath(params.files_to_upload).collect(),
     params.wf_name,

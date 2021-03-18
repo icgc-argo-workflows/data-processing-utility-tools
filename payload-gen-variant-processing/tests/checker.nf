@@ -53,7 +53,7 @@ params.process_name = ""
 params.analysis_type = ""
 params.expected_output = ""
 
-include { payloadGenVariantFiltering } from '../main'
+include { payloadGenVariantProcessing } from '../main'
 
 process file_smart_diff {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -87,7 +87,7 @@ workflow checker {
     expected_output
 
   main:
-    payloadGenVariantFiltering(
+    payloadGenVariantProcessing(
       analysis,
       files_to_upload,
       wf_name,
@@ -99,7 +99,7 @@ workflow checker {
     )
 
     file_smart_diff(
-      payloadGenVariantFiltering.out.payload,
+      payloadGenVariantProcessing.out.payload,
       expected_output
     )
 }
