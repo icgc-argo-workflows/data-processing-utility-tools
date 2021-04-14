@@ -1,0 +1,76 @@
+{
+  "analysisType": {
+    "name": "variant_calling"
+  },
+  "studyId": "TEST-PR",
+  "experiment": {
+    "experimental_strategy": "WGS",
+    "platform": "ILLUMINA"
+  },
+  "samples": [
+    {
+      "submitterSampleId": "HCC1143_FASTQ_INPUT",
+      "matchedNormalSubmitterSampleId": "HCC1143_BAM_INPUT",
+      "sampleType": "Total DNA",
+      "specimen": {
+        "submitterSpecimenId": "HCC1143_FASTQ_INPUT",
+        "tumourNormalDesignation": "Tumour",
+        "specimenTissueSource": "Solid tissue",
+        "specimenType": "Primary tumour"
+      },
+      "donor": {
+        "gender": "Female",
+        "submitterDonorId": "HCC1143"
+      }
+    }
+  ],
+  "files": [
+    {
+      "fileType": "VCF",
+      "fileSize": 0,
+      "fileMd5sum": "d41d8cd98f00b204e9800998ecf8427e",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Simple Nucleotide Variation",
+        "analysis_tools": [
+          "GATK-Mutect2"
+        ]
+      },
+      "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.gatk-mutect2.somatic.snv.vcf.gz",
+      "dataType": "Raw SNV Calls"
+    },
+    {
+      "fileType": "TBI",
+      "fileSize": 0,
+      "fileMd5sum": "d41d8cd98f00b204e9800998ecf8427e",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Simple Nucleotide Variation",
+        "analysis_tools": [
+          "GATK-Mutect2"
+        ]
+      },
+      "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.gatk-mutect2.somatic.snv.vcf.gz.tbi",
+      "dataType": "VCF Index"
+    }
+  ],
+  "workflow": {
+    "workflow_name": "GATK Mutect2 Variant Calling",
+    "workflow_short_name": "gatk-mutect2",
+    "workflow_version": "0.1.0",
+    "run_id": "mad_jennings",
+    "session_id": "6ad1f869-0e92-4622-b99f-975d12e5b0ab",
+    "inputs": [
+      {
+        "tumour_analysis_id": "f64ae545-11c1-46f7-8ae5-4511c156f7be",
+        "analysis_type": "sequencing_alignment"
+      },
+      {
+        "normal_analysis_id": "7ad90309-21df-4345-9903-0921df73456b",
+        "analysis_type": "sequencing_alignment"
+      }
+    ],
+    "genome_build": "GRCh38_hla_decoy_ebv"
+  },
+  "variant_class": "Somatic"
+}
