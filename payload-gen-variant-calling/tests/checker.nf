@@ -37,7 +37,7 @@ nextflow.enable.dsl = 2
 version = '0.4.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo/github-repo.payload-gen-variant-calling'
+    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.payload-gen-variant-calling'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
