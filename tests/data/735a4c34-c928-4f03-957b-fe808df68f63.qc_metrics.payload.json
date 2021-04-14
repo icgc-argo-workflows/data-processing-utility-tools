@@ -32,8 +32,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
+        "data_subtype": "Cross Sample Contamination",
         "analysis_tools": [
-          "GATK-CalculateContamination"
+          "GATK:CalculateContamination"
         ],
         "description": "Cross sample contamination estimated by GATK CalculateContamination tool",
         "files_in_tgz": [
@@ -48,7 +49,7 @@
         }
       },
       "fileName": "TEST-PR.DO250122.SA610149.wgs.20210414.gatk-mutect2.somatic.contamination_metrics.tgz",
-      "dataType": "Cross Sample Contamination"
+      "dataType": "Analysis QC"
     },
     {
       "fileType": "TGZ",
@@ -57,8 +58,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
+        "data_subtype": "Cross Sample Contamination",
         "analysis_tools": [
-          "GATK-CalculateContamination"
+          "GATK:CalculateContamination"
         ],
         "description": "Cross sample contamination estimated by GATK CalculateContamination tool",
         "files_in_tgz": [
@@ -73,7 +75,7 @@
         }
       },
       "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.gatk-mutect2.somatic.contamination_metrics.tgz",
-      "dataType": "Cross Sample Contamination"
+      "dataType": "Analysis QC"
     },
     {
       "fileType": "TGZ",
@@ -82,8 +84,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
+        "data_subtype": "Variant Filtering Stats",
         "analysis_tools": [
-          "GATK-FilterMutectCalls"
+          "GATK:FilterMutectCalls"
         ],
         "description": "Information on the probability threshold chosen to optimize the F score and the number of false positives and false negatives from each filter to be expected from this choice.",
         "files_in_tgz": [
@@ -147,7 +150,7 @@
         }
       },
       "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.gatk-mutect2.somatic.mutect_filtering_metrics.tgz",
-      "dataType": "Mutect2 Filtering Stats"
+      "dataType": "Analysis QC"
     },
     {
       "fileType": "TGZ",
@@ -156,8 +159,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
+        "data_subtype": "Variant Callable Stats",
         "analysis_tools": [
-          "GATK-Mutect2"
+          "GATK:Mutect2"
         ],
         "description": "Number of sites that are considered callable for Mutect stats with read depth equals or is higher than callable-depth which we set to default 10",
         "files_in_tgz": [
@@ -169,7 +173,7 @@
         }
       },
       "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.gatk-mutect2.somatic.mutect_callable_metrics.tgz",
-      "dataType": "Mutect2 Callable Stats"
+      "dataType": "Analysis QC"
     }
   ],
   "workflow": {

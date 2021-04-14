@@ -33,21 +33,21 @@ from argparse import ArgumentParser
 
 
 variant_type_to_data_type_etc = {
-    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan'], ['GATK-Mutect2']],   # dataCategory, dataType, analysis_tools
-    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel'], ['GATK-Mutect2']],
-    'cnv': ['Copy Number Variation', 'Raw CNV Calls', ['ASCAT']],
-    'sv': ['Structural Variation', 'Raw SV Calls', ['BRASS']],
-    'caveman-supplement': ['Simple Nucleotide Variation', 'Variant Calling Supplement', ['CaVEMan']],
-    'pindel-supplement': ['Simple Nucleotide Variation', 'Variant Calling Supplement', ['Pindel']],
-    'ascat-supplement': ['Copy Number Variation', 'Variant Calling Supplement', ['ASCAT']],
-    'brass-supplement': ['Structural Variation', 'Variant Calling Supplement', ['BRASS']],
-    'timings-supplement': [None, 'Variant Calling Supplement', ['CaVEMan', 'Pindel', 'ASCAT', 'BRASS']],
-    'bas_metrics': ['Quality Control Metrics', 'Alignment QC', ['bas_stats']],
-    'contamination_metrics': ['Quality Control Metrics', 'Cross Sample Contamination', ['verifyBamHomChk'], ['GATK-CalculateContamination']],
-    'ascat_metrics': ['Quality Control Metrics', 'Ploidy and Purity Estimation', ['ASCAT']],
-    'genotyped_gender_metrics': ['Quality Control Metrics', 'Genotyping Inferred Gender', ['compareBamGenotypes']],
-    'mutect_filtering_metrics': ['Quality Control Metrics', 'Mutect2 Filtering Stats', [], ['GATK-FilterMutectCalls']],
-    'mutect_callable_metrics': ['Quality Control Metrics', 'Mutect2 Callable Stats', [], ['GATK-Mutect2']],
+    'snv': ['Simple Nucleotide Variation', ['Raw SNV Calls', None], ['CaVEMan'], ['GATK:Mutect2']],   # dataCategory, [dataType, data_subtype], analysis_tools
+    'indel': ['Simple Nucleotide Variation', ['Raw InDel Calls', None], ['Pindel'], ['GATK:Mutect2']],
+    'cnv': ['Copy Number Variation', ['Raw CNV Calls', None], ['ASCAT']],
+    'sv': ['Structural Variation', ['Raw SV Calls', None], ['BRASS']],
+    'caveman-supplement': ['Simple Nucleotide Variation', ['Variant Calling Supplement', 'SNV Supplement'], ['CaVEMan']],
+    'pindel-supplement': ['Simple Nucleotide Variation', ['Variant Calling Supplement', 'InDel Supplement'], ['Pindel']],
+    'ascat-supplement': ['Copy Number Variation', ['Variant Calling Supplement', 'CNV Supplement'], ['ASCAT']],
+    'brass-supplement': ['Structural Variation', ['Variant Calling Supplement', 'SV Supplement'], ['BRASS']],
+    'timings-supplement': ['Quality Control Metrics', ['Analysis QC', 'Runtime Stats'], None, None],
+    'bas_metrics': ['Quality Control Metrics', ['Aligned Reads QC', 'Alignment Metrics'], ['Sanger:bam_stats']],
+    'contamination_metrics': ['Quality Control Metrics', ['Analysis QC', 'Cross Sample Contamination'], ['Sanger:verifyBamHomChk'], ['GATK:CalculateContamination']],
+    'ascat_metrics': ['Quality Control Metrics', ['Analysis QC', 'Ploidy and Purity Estimation'], ['ASCAT']],
+    'genotyped_gender_metrics': ['Quality Control Metrics', ['Analysis QC', 'Genotyping Stats'], ['Sanger:compareBamGenotypes']],
+    'mutect_filtering_metrics': ['Quality Control Metrics', ['Analysis QC', 'Variant Filtering Stats'], [], ['GATK:FilterMutectCalls']],
+    'mutect_callable_metrics': ['Quality Control Metrics', ['Analysis QC', 'Variant Callable Stats'], [], ['GATK:Mutect2']],
 }
 
 workflow_full_name = {
@@ -55,6 +55,7 @@ workflow_full_name = {
     'sanger-wxs-variant-calling': 'Sanger WXS Variant Calling',
     'gatk-mutect2-variant-calling': 'GATK Mutect2 Variant Calling'
 }
+
 
 def calculate_size(file_path):
     return os.stat(file_path).st_size
@@ -107,12 +108,6 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
-        if wf_short_name == 'sanger-wxs':
-            if 'ASCAT' in variant_type_to_data_type_etc['timings-supplement'][2]:
-                variant_type_to_data_type_etc['timings-supplement'][2].remove('ASCAT')
-            if 'BRASS' in variant_type_to_data_type_etc['timings-supplement'][2]:
-                variant_type_to_data_type_etc['timings-supplement'][2].remove('BRASS')
-
     elif wf_short_name in (['gatk-mutect2']):
         fname_sample_part = metadata['samples'][0]['sampleId']
         if file_to_upload.endswith('mutect2-snv.vcf.gz') or file_to_upload.endswith('mutect2-snv.vcf.gz.tbi'):
@@ -153,16 +148,25 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
                         ] + (['tbi'] if file_to_upload.endswith('.tbi') else []))
 
     file_info['fileName'] = new_fname
+
+    file_info['info'] = {
+        'data_category': variant_type_to_data_type_etc[variant_type][0],
+        'data_subtype': None
+    }
+
     extra_info = {}
     if new_fname.endswith('.vcf.gz'):
-        file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1]
+        file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1][0]
+        file_info['info']['data_subtype'] = variant_type_to_data_type_etc[variant_type][1][1]
     elif new_fname.endswith('.vcf.gz.tbi'):
         file_info['dataType'] = 'VCF Index'
     elif new_fname.endswith('.tgz'):
         if new_fname.endswith('-supplement.tgz'):
-            file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1]
+            file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1][0]
+            file_info['info']['data_subtype'] = variant_type_to_data_type_etc[variant_type][1][1]
         elif new_fname.endswith('_metrics.tgz'):
-            file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1]
+            file_info['dataType'] = variant_type_to_data_type_etc[variant_type][1][0]
+            file_info['info']['data_subtype'] = variant_type_to_data_type_etc[variant_type][1][1]
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
@@ -174,10 +178,6 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
                 break
     else:
         sys.exit('Error: unknown file type "%s"' % file_to_upload)
-
-    file_info['info'] = {
-        'data_category': variant_type_to_data_type_etc[variant_type][0]
-    }
 
     if wf_short_name in (['sanger-wgs', 'sanger-wxs']):
         file_info['info']['analysis_tools'] = variant_type_to_data_type_etc[variant_type][2]

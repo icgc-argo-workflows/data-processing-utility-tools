@@ -32,6 +32,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
+        "data_subtype": null,
         "analysis_tools": [
           "CaVEMan"
         ]
@@ -46,6 +47,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
+        "data_subtype": null,
         "analysis_tools": [
           "CaVEMan"
         ]

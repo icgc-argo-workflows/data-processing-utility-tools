@@ -31,11 +31,9 @@
       "fileMd5sum": "36de1a4788a5ca24eddaaf0bac7c42c2",
       "fileAccess": "controlled",
       "info": {
-        "data_category": null,
-        "analysis_tools": [
-          "CaVEMan",
-          "Pindel"
-        ],
+        "data_category": "Quality Control Metrics",
+        "data_subtype": "Runtime Stats",
+        "analysis_tools": null,
         "description": "Files contain timing information for different processing steps",
         "files": [
           "WGS_SA610228.time.verify_WT",
@@ -56,7 +54,7 @@
         ]
       },
       "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.sanger-wxs.somatic.timings-supplement.tgz",
-      "dataType": "Variant Calling Supplement"
+      "dataType": "Analysis QC"
     },
     {
       "fileType": "TGZ",
@@ -65,6 +63,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
+        "data_subtype": "SNV Supplement",
         "analysis_tools": [
           "CaVEMan"
         ],
@@ -96,6 +95,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
+        "data_subtype": "InDel Supplement",
         "analysis_tools": [
           "Pindel"
         ],

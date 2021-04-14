@@ -32,8 +32,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
+        "data_subtype": null,
         "analysis_tools": [
-          "GATK-Mutect2"
+          "GATK:Mutect2"
         ]
       },
       "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.gatk-mutect2.somatic.snv.vcf.gz",
@@ -46,8 +47,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
+        "data_subtype": null,
         "analysis_tools": [
-          "GATK-Mutect2"
+          "GATK:Mutect2"
         ]
       },
       "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.gatk-mutect2.somatic.snv.vcf.gz.tbi",
