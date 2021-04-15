@@ -66,7 +66,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
-        "data_subtype": "SNV Supplement",
+        "data_subtype": null,
         "analysis_tools": [
           "CaVEMan"
         ],
@@ -89,7 +89,7 @@
         ]
       },
       "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.sanger-wxs.somatic.caveman-supplement.tgz",
-      "dataType": "Variant Calling Supplement"
+      "dataType": "SNV Supplement"
     },
     {
       "fileType": "TGZ",
@@ -98,7 +98,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
-        "data_subtype": "InDel Supplement",
+        "data_subtype": null,
         "analysis_tools": [
           "Pindel"
         ],
@@ -118,7 +118,7 @@
         ]
       },
       "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.sanger-wxs.somatic.pindel-supplement.tgz",
-      "dataType": "Variant Calling Supplement"
+      "dataType": "InDel Supplement"
     }
   ],
   "workflow": {
