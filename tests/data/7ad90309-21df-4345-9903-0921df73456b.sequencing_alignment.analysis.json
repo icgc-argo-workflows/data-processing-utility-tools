@@ -1,4 +1,7 @@
 {
+  "info": {
+    "origin": "ICGC-25K"
+  },
   "analysisId": "7ad90309-21df-4345-9903-0921df73456b",
   "studyId": "TEST-PR",
   "analysisState": "PUBLISHED",

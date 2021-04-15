@@ -212,13 +212,31 @@ def get_sample_info(sample_list):
 
 def main(args):
     normal_analysis = {}
+    normal_origin = None
     with open(args.normal_analysis, 'r') as f:
         normal_analysis = json.load(f)
+        if 'info' in normal_analysis and 'origin' in normal_analysis['info']:
+            normal_origin = normal_analysis['info']['origin']
 
     tumour_analysis = {}
+    tumour_origin = None
     if args.tumour_analysis:
         with open(args.tumour_analysis, 'r') as f:
             tumour_analysis = json.load(f)
+            if 'info' in tumour_analysis and 'origin' in tumour_analysis['info']:
+                tumour_origin = tumour_analysis['info']['origin']
+
+    if normal_origin is not None and tumour_origin is not None:
+        if normal_origin == tumour_origin:
+            analysis_origin = normal_origin
+        else:
+            sys.exit(f'Origins of normal and tumour analyses differ, normal: {normal_origin}, tumour: {tumour_origin}')
+    elif normal_origin is not None:
+        analysis_origin = normal_origin
+    elif tumour_origin is not None:
+        analysis_origin = tumour_origin
+    else:
+        analysis_origin = None
 
     somatic_or_germline = 'Somatic'   # default
     if args.wf_short_name in ['sanger-wgs', 'sanger-wxs', 'gatk-mutect2']:
@@ -232,6 +250,9 @@ def main(args):
     payload = {
         'analysisType': {
             'name': None
+        },
+        'info': {
+            'origin': analysis_origin  # adding this here, so the info field will maintain it's position
         },
         'studyId': normal_analysis.get('studyId'),  # normal/tumour analysis should always from the same study
         'experiment': {},
@@ -247,6 +268,9 @@ def main(args):
             'genome_build': 'GRCh38_hla_decoy_ebv'
         }
     }
+
+    if analysis_origin is None:  # if origin is None, remove the info field
+        payload.pop('info')
 
     # get sample of the payload
     if somatic_or_germline == 'Somatic':  # somatic variants

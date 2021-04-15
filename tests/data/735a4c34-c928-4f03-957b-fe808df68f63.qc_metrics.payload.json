@@ -2,6 +2,9 @@
   "analysisType": {
     "name": "qc_metrics"
   },
+  "info": {
+    "origin": "ICGC-25K"
+  },
   "studyId": "TEST-PR",
   "experiment": {
     "experimental_strategy": "WGS",
