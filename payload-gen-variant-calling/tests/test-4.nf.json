@@ -1,0 +1,12 @@
+{
+  "normal_analysis": "input/7ad90309-21df-4345-9903-0921df73456b.sequencing_alignment.analysis.json",
+  "tumour_analysis": "input/f64ae545-11c1-46f7-8ae5-4511c156f7be.sequencing_alignment.analysis.json",
+  "files_to_upload": [
+    "input/mutect2-snv.vcf.gz",
+    "input/mutect2-snv.vcf.gz.tbi"
+  ],
+  "expected_output": "expected/f7ca0bd4-53a7-4663-b7b6-1b3d414e0018.variant_calling.payload.json",
+  "wf_name": "gatk-mutect2-variant-calling",
+  "wf_short_name": "gatk-mutect2",
+  "wf_version": "0.1.0"
+}

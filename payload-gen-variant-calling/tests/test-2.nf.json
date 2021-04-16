@@ -1,0 +1,14 @@
+{
+  "normal_analysis": "input/7ad90309-21df-4345-9903-0921df73456b.sequencing_alignment.analysis.json",
+  "tumour_analysis": "input/f64ae545-11c1-46f7-8ae5-4511c156f7be.sequencing_alignment.analysis.json",
+  "files_to_upload": [
+    "input/WXS_SA610229_vs_SA610228.timings-supplement.tgz",
+    "input/WXS_SA610229_vs_SA610228.caveman-supplement.tgz",
+    "input/WXS_SA610229_vs_SA610228.pindel-supplement.tgz"
+  ],
+  "wf_name": "sanger-wxs-variant-calling",
+  "wf_short_name": "sanger-wxs",
+  "wf_version": "0.1.0",
+  "expected_output": "expected/66f84b1e-dad1-4981-916e-07e62ff53410.variant_calling_supplement.payload.json",
+  "container_registry": "ghcr.io"
+}

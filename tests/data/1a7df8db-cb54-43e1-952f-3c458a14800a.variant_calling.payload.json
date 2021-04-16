@@ -1,0 +1,81 @@
+{
+  "analysisType": {
+    "name": "variant_calling"
+  },
+  "info": {
+    "origin": "ICGC-25K"
+  },
+  "studyId": "TEST-PR",
+  "experiment": {
+    "experimental_strategy": "WGS",
+    "platform": "ILLUMINA"
+  },
+  "samples": [
+    {
+      "submitterSampleId": "HCC1143_FASTQ_INPUT",
+      "matchedNormalSubmitterSampleId": "HCC1143_BAM_INPUT",
+      "sampleType": "Total DNA",
+      "specimen": {
+        "submitterSpecimenId": "HCC1143_FASTQ_INPUT",
+        "tumourNormalDesignation": "Tumour",
+        "specimenTissueSource": "Solid tissue",
+        "specimenType": "Primary tumour"
+      },
+      "donor": {
+        "gender": "Female",
+        "submitterDonorId": "HCC1143"
+      }
+    }
+  ],
+  "files": [
+    {
+      "fileType": "VCF",
+      "fileSize": 0,
+      "fileMd5sum": "d41d8cd98f00b204e9800998ecf8427e",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Simple Nucleotide Variation",
+        "data_subtype": null,
+        "analysis_tools": [
+          "CaVEMan"
+        ]
+      },
+      "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.sanger-wgs.somatic.snv.vcf.gz",
+      "dataType": "Raw SNV Calls"
+    },
+    {
+      "fileType": "TBI",
+      "fileSize": 0,
+      "fileMd5sum": "d41d8cd98f00b204e9800998ecf8427e",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Simple Nucleotide Variation",
+        "data_subtype": null,
+        "analysis_tools": [
+          "CaVEMan"
+        ]
+      },
+      "fileName": "TEST-PR.DO250122.SA610148.wgs.20210414.sanger-wgs.somatic.snv.vcf.gz.tbi",
+      "dataType": "VCF Index"
+    }
+  ],
+  "workflow": {
+    "workflow_name": "Sanger WGS Variant Calling",
+    "workflow_short_name": "sanger-wgs",
+    "workflow_version": "0.1.0",
+    "run_id": "ecstatic_keller",
+    "session_id": "e6f915e6-3d7c-4d4a-932d-9f72fe2b92a3",
+    "inputs": [
+      {
+        "tumour_analysis_id": "f64ae545-11c1-46f7-8ae5-4511c156f7be",
+        "analysis_type": "sequencing_alignment"
+      },
+      {
+        "normal_analysis_id": "7ad90309-21df-4345-9903-0921df73456b",
+        "analysis_type": "sequencing_alignment"
+      }
+    ],
+    "genome_build": "GRCh38_hla_decoy_ebv"
+  },
+  "variant_class": "Somatic"
+}
