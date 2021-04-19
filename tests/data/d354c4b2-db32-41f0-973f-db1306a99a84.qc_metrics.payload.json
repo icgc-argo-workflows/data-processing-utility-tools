@@ -32,7 +32,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Cross Sample Contamination",
+        "data_subtypes": [
+          "Cross Sample Contamination"
+        ],
         "analysis_tools": [
           "Sanger:verifyBamHomChk"
         ],
@@ -64,7 +66,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Cross Sample Contamination",
+        "data_subtypes": [
+          "Cross Sample Contamination"
+        ],
         "analysis_tools": [
           "Sanger:verifyBamHomChk"
         ],
@@ -96,7 +100,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Alignment Metrics",
+        "data_subtypes": [
+          "Alignment Metrics"
+        ],
         "analysis_tools": [
           "Sanger:bam_stats"
         ],
@@ -115,7 +121,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Alignment Metrics",
+        "data_subtypes": [
+          "Alignment Metrics"
+        ],
         "analysis_tools": [
           "Sanger:bam_stats"
         ],
@@ -134,7 +142,10 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Ploidy and Purity Estimation",
+        "data_subtypes": [
+          "Ploidy",
+          "Tumour Purity"
+        ],
         "analysis_tools": [
           "ASCAT"
         ],
@@ -162,7 +173,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Genotyping Stats",
+        "data_subtypes": [
+          "Genotyping Stats"
+        ],
         "analysis_tools": [
           "Sanger:compareBamGenotypes"
         ],

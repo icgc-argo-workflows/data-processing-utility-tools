@@ -35,7 +35,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Runtime Stats",
+        "data_subtypes": [
+          "Runtime Stats"
+        ],
         "analysis_tools": null,
         "description": "Files contain timing information for different processing steps",
         "files": [
@@ -66,7 +68,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
-        "data_subtype": null,
+        "data_subtypes": null,
         "analysis_tools": [
           "CaVEMan"
         ],
@@ -98,7 +100,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
-        "data_subtype": null,
+        "data_subtypes": null,
         "analysis_tools": [
           "Pindel"
         ],

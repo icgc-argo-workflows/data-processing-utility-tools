@@ -35,7 +35,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
-        "data_subtype": null,
+        "data_subtypes": null,
         "analysis_tools": [
           "GATK:Mutect2"
         ]
@@ -50,7 +50,7 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Simple Nucleotide Variation",
-        "data_subtype": null,
+        "data_subtypes": null,
         "analysis_tools": [
           "GATK:Mutect2"
         ]

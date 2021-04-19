@@ -35,7 +35,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Cross Sample Contamination",
+        "data_subtypes": [
+          "Cross Sample Contamination"
+        ],
         "analysis_tools": [
           "GATK:CalculateContamination"
         ],
@@ -61,7 +63,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Cross Sample Contamination",
+        "data_subtypes": [
+          "Cross Sample Contamination"
+        ],
         "analysis_tools": [
           "GATK:CalculateContamination"
         ],
@@ -87,7 +91,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Variant Filtering Stats",
+        "data_subtypes": [
+          "Variant Filtering Stats"
+        ],
         "analysis_tools": [
           "GATK:FilterMutectCalls"
         ],
@@ -162,7 +168,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
-        "data_subtype": "Variant Callable Stats",
+        "data_subtypes": [
+          "Variant Callable Stats"
+        ],
         "analysis_tools": [
           "GATK:Mutect2"
         ],
