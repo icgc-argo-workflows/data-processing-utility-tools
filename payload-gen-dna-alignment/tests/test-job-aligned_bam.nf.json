@@ -1,0 +1,15 @@
+{
+  "seq_experiment_analysis": "input/0ae2c59b-2976-485c-a2c5-9b2976085cbf.fq.sequencing_experiment.song-analysis.json",
+  "read_group_ubam_analysis": [
+    "input/a2705220-ebca-4ccc-b052-20ebca2cccc1.read_group_ubam.song-analysis.json",
+    "input/f22f067e-5b8c-4672-af06-7e5b8c96721b.read_group_ubam.song-analysis.json",
+    "input/b4a1bab1-9ecd-4976-a1ba-b19ecd59762b.read_group_ubam.song-analysis.json"
+  ],
+  "files_to_upload": [
+    "input/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
+    "input/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam.bai"
+  ],
+  "expected_output": "expected/ebf6a3ab-05d5-4a19-bc36-5fd4abac58ff.dna_alignment.payload.json",
+  "wf_name": "dna-seq-alignment",
+  "wf_version": "0.4.0"
+}
