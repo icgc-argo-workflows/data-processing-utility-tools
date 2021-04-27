@@ -242,7 +242,7 @@ def main(args):
     aligned_seq_basename = get_aligned_seq_basename(args.qc_files)
 
     # get file of the payload
-    for f in args.qc_files:
+    for f in sorted(args.qc_files):
         # renmame duplicates_metrics file to have the same base name as the aligned seq
         if re.match(r'.+\.duplicates_metrics\.tgz$', f):
             new_name = '%s.duplicates_metrics.tgz' % aligned_seq_basename
