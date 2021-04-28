@@ -38,6 +38,7 @@
       "dataType": "Aligned Reads",
       "info": {
         "data_category": "Sequencing Reads",
+        "data_subtypes": null,
         "analysis_tools": [
           "BWA-MEM",
           "biobambam2:bammarkduplicates2"
@@ -53,6 +54,7 @@
       "dataType": "Aligned Reads Index",
       "info": {
         "data_category": "Sequencing Reads",
+        "data_subtypes": null,
         "analysis_tools": [
           "BWA-MEM",
           "biobambam2:bammarkduplicates2"

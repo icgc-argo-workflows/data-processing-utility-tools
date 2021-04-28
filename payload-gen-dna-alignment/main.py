@@ -109,6 +109,7 @@ def get_files_info(file_to_upload):
         'dataType': 'Aligned Reads' if file_to_upload.split(".")[-1] in ('bam', 'cram') else 'Aligned Reads Index',
         'info': {
             'data_category': 'Sequencing Reads',
+            'data_subtypes': None,
             'analysis_tools': ["BWA-MEM", "biobambam2:bammarkduplicates2"]
         }
     }
