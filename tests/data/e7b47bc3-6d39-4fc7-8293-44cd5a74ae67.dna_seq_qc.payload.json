@@ -25,6 +25,9 @@
       "fileAccess": "controlled",
       "info": {
         "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "OxoG Metrics"
+        ],
         "files_in_tgz": [
           "SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.txt"
         ],
@@ -37,7 +40,7 @@
           "context": "CCG"
         }
       },
-      "dataType": "OxoG Metrics"
+      "dataType": "Aligned Reads QC"
     }
   ],
   "experiment": {
