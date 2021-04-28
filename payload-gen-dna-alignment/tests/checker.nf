@@ -74,13 +74,13 @@ process file_smart_diff {
     cat ${output_file} \
       | sed -e 's/"run_id": ".*"/"run_id": "run_id"/' \
       | sed -e 's/"session_id": ".*"/"session_id": "session_id"/' \
-      | sed -e 's/"fileName": ".*.DO.*.SA.*.*"/"fileName": "_study_.DO_id_.SA_id_._normalized_file_name_"/' \
+      | sed -e 's/"fileName": ".*"/"fileName": "_normalized_file_name_"/' \
       > normalized_output
 
     ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
       | sed -e 's/"run_id": ".*"/"run_id": "run_id"/' \
       | sed -e 's/"session_id": ".*"/"session_id": "session_id"/' \
-      | sed -e 's/"fileName": ".*.DO.*.SA.*.*"/"fileName": "_study_.DO_id_.SA_id_._normalized_file_name_"/' \
+      | sed -e 's/"fileName": ".*"/"fileName": "_normalized_file_name_"/' \
       > normalized_expected
 
     diff normalized_output normalized_expected \

@@ -135,6 +135,7 @@ def main(args):
             'name': 'sequencing_alignment'
         },
         'studyId': seq_experiment_analysis_dict.get('studyId'),
+        'info': {},
         'workflow': {
             'workflow_name': workflow_full_name.get(args.wf_name, args.wf_name),
             'workflow_version': args.wf_version,
@@ -154,6 +155,12 @@ def main(args):
         'read_group_count': seq_experiment_analysis_dict.get('read_group_count'),
         'read_groups': seq_experiment_analysis_dict.get('read_groups')
     }
+
+    # pass `info` dict from seq_experiment payload to new payload
+    if 'info' in seq_experiment_analysis_dict and isinstance(seq_experiment_analysis_dict['info'], dict):
+        payload['info'] = seq_experiment_analysis_dict['info']
+    else:
+        payload.pop('info')
 
     payload['experiment'].update(seq_experiment_analysis_dict.get('experiment', {}))
 
