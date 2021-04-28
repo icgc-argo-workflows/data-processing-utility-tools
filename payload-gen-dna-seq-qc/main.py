@@ -216,6 +216,7 @@ def main(args):
             'name': 'qc_metrics'
         },
         'studyId': seq_experiment_analysis_dict.get('studyId'),
+        'info': {},
         'workflow': {
             'workflow_name': workflow_full_name.get(args.wf_name, args.wf_name),
             'workflow_version': args.wf_version,
@@ -233,6 +234,12 @@ def main(args):
         'experiment': seq_experiment_analysis_dict.get('experiment'),
         'samples': get_sample_info(seq_experiment_analysis_dict.get('samples'))
     }
+
+    # pass `info` dict from seq_experiment payload to new payload
+    if 'info' in seq_experiment_analysis_dict and isinstance(seq_experiment_analysis_dict['info'], dict):
+        payload['info'] = seq_experiment_analysis_dict['info']
+    else:
+        payload.pop('info')
 
     if 'library_strategy' in payload['experiment']:
         experimental_strategy = payload['experiment'].pop('library_strategy')

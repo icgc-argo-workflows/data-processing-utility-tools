@@ -3,6 +3,9 @@
     "name": "qc_metrics"
   },
   "studyId": "TEST-PRO",
+  "info": {
+    "origin": "ICGC_25K"
+  },
   "workflow": {
     "workflow_name": "DNA Seq Alignment",
     "workflow_version": "0.5.0-dev",
