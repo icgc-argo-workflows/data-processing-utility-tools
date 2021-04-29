@@ -1,6 +1,9 @@
 {
   "analysisId": "0ae2c59b-2976-485c-a2c5-9b2976085cbf",
   "studyId": "TEST-PRO",
+  "info": {
+    "anything": "any value"
+  },
   "analysisState": "PUBLISHED",
   "samples": [
     {
