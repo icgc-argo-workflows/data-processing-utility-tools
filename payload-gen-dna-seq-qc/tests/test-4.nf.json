@@ -1,0 +1,10 @@
+{
+  "seq_experiment_analysis": "input/89176bbc-ffca-4d73-984a-4a92ed931a98.sequencing_experiment.4.analysis.json",
+  "qc_files": [
+                "input/SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.tgz"
+              ],
+  "expected_output": "expected/e7b47bc3-6d39-4fc7-8293-44cd5a74ae67.dna_seq_qc.payload.json",
+  "publish_dir": "outdir",
+  "cpus": 1,
+  "mem": 0.5
+}
