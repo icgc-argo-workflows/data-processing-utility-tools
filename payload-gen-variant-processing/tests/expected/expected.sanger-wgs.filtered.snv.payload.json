@@ -35,7 +35,7 @@
         "data_category": "Simple Nucleotide Variation",
         "analysis_tools": [
           "CaVEMan",
-          "bcftools"
+          "Bcftools:view"
         ]
       },
       "dataType": "Raw SNV Calls"
@@ -50,7 +50,7 @@
         "data_category": "Simple Nucleotide Variation",
         "analysis_tools": [
           "CaVEMan",
-          "bcftools"
+          "Bcftools:view"
         ]
       },
       "dataType": "VCF Index"

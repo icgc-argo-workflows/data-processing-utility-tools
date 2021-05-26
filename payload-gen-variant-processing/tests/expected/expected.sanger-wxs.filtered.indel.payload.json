@@ -35,7 +35,7 @@
         "data_category": "Simple Nucleotide Variation",
         "analysis_tools": [
           "Pindel",
-          "bcftools"
+          "Bcftools:view"
         ]
       },
       "dataType": "Raw InDel Calls"
@@ -50,7 +50,7 @@
         "data_category": "Simple Nucleotide Variation",
         "analysis_tools": [
           "Pindel",
-          "bcftools"
+          "Bcftools:view"
         ]
       },
       "dataType": "VCF Index"
