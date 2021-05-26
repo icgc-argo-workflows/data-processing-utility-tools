@@ -70,5 +70,8 @@
     ],
     "genome_build": "GRCh38_hla_decoy_ebv"
   },
+  "info": {
+    "origin": "ICGC-25K"
+  },
   "variant_class": "Somatic"
 }

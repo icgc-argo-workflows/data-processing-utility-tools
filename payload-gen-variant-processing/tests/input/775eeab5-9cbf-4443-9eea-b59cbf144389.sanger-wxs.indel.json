@@ -98,5 +98,8 @@
     "platform": "ILLUMINA",
     "experimental_strategy": "WXS"
   },
+  "info": {
+    "origin": "ICGC-25K"
+  },
   "variant_class": "Somatic"
 }

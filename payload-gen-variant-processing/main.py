@@ -147,6 +147,9 @@ def main():
         'variant_class': analysis.get('variant_class')
     }
 
+    if 'info' in analysis:
+        payload['info'] = analysis['info']
+
     for f in args.files_to_upload:
         file_info = get_files_info(f, args)
         payload['files'].append(file_info)
