@@ -29,8 +29,8 @@ import hashlib
 import copy
 
 variant_type_to_data_type_etc = {
-    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan', 'bcftools'], ['GATK-Mutect2', 'bcftools']],   # dataCategory, dataType, analysis_tools
-    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel', 'bcftools'], ['GATK-Mutect2', 'bcftools']]
+    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan', 'Bcftools:view'], ['GATK:Mutect2', 'Bcftools:view']],   # dataCategory, dataType, analysis_tools
+    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel', 'Bcftools:view'], ['GATK:Mutect2', 'Bcftools:view']]
 }
 
 workflow_full_name = {
