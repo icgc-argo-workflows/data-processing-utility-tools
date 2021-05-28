@@ -34,8 +34,8 @@
       "info": {
         "data_category": "Simple Nucleotide Variation",
         "analysis_tools": [
-          "GATK-Mutect2",
-          "bcftools"
+          "GATK:Mutect2",
+          "Bcftools:view"
         ]
       },
       "dataType": "Raw SNV Calls"
@@ -49,8 +49,8 @@
       "info": {
         "data_category": "Simple Nucleotide Variation",
         "analysis_tools": [
-          "GATK-Mutect2",
-          "bcftools"
+          "GATK:Mutect2",
+          "Bcftools:view"
         ]
       },
       "dataType": "VCF Index"
