@@ -80,7 +80,7 @@
       "file_r2": "test_rg_3.bam",
       "insert_size": 298,
       "library_name": "Pond-147580",
-      "is_paired_end": true,
+      "is_paired_end": false,
       "platform_unit": "74_8c",
       "read_length_r1": 150,
       "read_length_r2": 150,

@@ -1,0 +1,13 @@
+{
+  "normal_analysis": "input/7ad90309-21df-4345-9903-0921df73456b.sequencing_alignment.analysis.json",
+  "tumour_analysis": "input/f64ae545-11c1-46f7-8ae5-4511c156f7be.sequencing_alignment.analysis.json",
+  "files_to_upload": [
+    "input/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz",
+    "input/PCSI_0115_Pa_P_vs_PCSI_0115_Ly_R.flagged.muts.vcf.gz.tbi"
+  ],
+  "wf_name": "sanger-wgs-variant-calling",
+  "wf_short_name": "sanger-wgs",
+  "wf_version": "0.1.0",
+  "expected_output": "expected/1a7df8db-cb54-43e1-952f-3c458a14800a.variant_calling.payload.json",
+  "publish_dir": "outdir"
+}
