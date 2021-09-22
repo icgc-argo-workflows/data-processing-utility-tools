@@ -1,6 +1,6 @@
 {
     "name": "payload-gen-dna-seq-qc",
-    "version": "0.6.0",
+    "version": "0.6.0.1",
     "description": "SONG payload generation tool for aligned seq QC",
     "main": "main.nf",
     "deprecated": false,
