@@ -34,10 +34,10 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.4.0'  // package version
+version = '0.6.0'  // package version, make sure this matches the version in main.nf
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.payload-gen-variant-calling'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/data-processing-utility-tools.payload-gen-variant-calling'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/

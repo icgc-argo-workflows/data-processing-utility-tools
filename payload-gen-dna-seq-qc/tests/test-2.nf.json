@@ -1,0 +1,13 @@
+{
+  "seq_experiment_analysis": "input/8bfe6a09-d8e5-4c84-8b40-d3bcecd54467.sequencing_experiment.4.analysis.json",
+  "qc_files": [
+                "input/*.lane.bam.ubam_qc_metrics.tgz",
+                "input/SA610149.3.20200211.wgs.grch38.cram.qc_metrics.tgz",
+                "input/grch38-aligned.merged.duplicates_metrics.tgz",
+                "input/SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.tgz"
+              ],
+  "expected_output": "expected/d6f55859-eff3-4a23-8637-1c199548c0c1.dna_seq_qc.payload.json",
+  "wf_name": "dna-seq-alignment",            
+  "cpus": 1,
+  "mem": 0.5
+}
