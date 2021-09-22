@@ -1,6 +1,6 @@
 {
     "name": "payload-gen-variant-processing",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Tool to generate song payload for analysisType of variant_processing",
     "main": "main.nf",
     "deprecated": false,
