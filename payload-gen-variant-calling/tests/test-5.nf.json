@@ -1,0 +1,14 @@
+{
+  "normal_analysis": "input/7ad90309-21df-4345-9903-0921df73456b.sequencing_alignment.analysis.json",
+  "tumour_analysis": "input/f64ae545-11c1-46f7-8ae5-4511c156f7be.sequencing_alignment.analysis.json",
+  "files_to_upload": [
+    "input/74fda0ca6f60168dbb34c00f0d93de07.normal.contamination_metrics.tgz",
+    "input/bcdc11ebe93861a0d447158a84d845ba.tumour.contamination_metrics.tgz",
+    "input/filter-mutect-calls.filtering-stats.filtering_metrics.tgz",
+    "input/merged-mutect-stats.stats.callable_metrics.tgz"
+  ],
+  "expected_output": "expected/735a4c34-c928-4f03-957b-fe808df68f63.qc_metrics.payload.json",
+  "wf_name": "gatk-mutect2-variant-calling",
+  "wf_short_name": "gatk-mutect2",
+  "wf_version": "0.1.0"
+}

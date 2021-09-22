@@ -24,16 +24,12 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '1.0.0'  // package version
+version = '1.0.1'
 /********************************************************************/
 
 
 // this is kind of like CWL's secondary files
 def getSecondaryFiles(main_file, exts){
-  if (!(main_file instanceof String)) {
-    exit 1, "[getSecondaryFiles] param: main_file must be a string"
-  }
-
   if (!(exts instanceof List)) {
     exit 1, "[getSecondaryFiles] param: exts must be a list of strings"
   }

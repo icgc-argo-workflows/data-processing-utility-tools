@@ -1,0 +1,10 @@
+{
+  "seq_experiment_analysis": "input/1898dfc1-9bea-4714-98df-c19bea97148c.sequencing_experiment.dev-song-analysis.json",
+  "files_to_upload": [
+    "input/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam",
+    "input/HCC1143_BAM_INPUT.3.20190812.wgs.grch38.bam.bai"
+  ],
+  "wf_name": "DNA Seq Alignment",
+  "wf_version": "0.4.0",
+  "expected_output": "expected/635bad16-25b7-4143-81a4-c4f6f3661e7d.dna_alignment.payload.json"
+}
