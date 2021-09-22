@@ -38,7 +38,7 @@
           "Bcftools:view"
         ]
       },
-      "dataType": "Raw InDel Calls"
+      "dataType": "Filtered InDel Calls"
     },
     {
       "fileName": "TEST-PR.DO250183.SA610229.wxs.20200911.sanger-wxs.somatic.indel.open-filter.vcf.gz.tbi",
@@ -59,19 +59,20 @@
   "workflow": {
     "workflow_name": "Open Access Variant Filtering",
     "workflow_short_name": "open-filter",
-    "workflow_version": "0.1.0",
-    "run_id": "adoring_mercator",
-    "session_id": "cd1fcd50-3231-4ce6-9dec-722ed044d970",
+    "workflow_version": "0.3.0",
+    "run_id": "sleepy_wiles",
+    "session_id": "036028b0-f350-433f-8f1b-085b8271f160",
     "inputs": [
       {
         "input_analysis_id": "775eeab5-9cbf-4443-9eea-b59cbf144389",
         "analysis_type": "variant_calling"
       }
     ],
-    "genome_build": "GRCh38_hla_decoy_ebv"
+    "genome_build": "GRCh38_hla_decoy_ebv",
+    "genome_annotation": "GENCODE v38"
   },
+  "variant_class": "Somatic",
   "info": {
     "origin": "ICGC-25K"
-  },
-  "variant_class": "Somatic"
+  }
 }

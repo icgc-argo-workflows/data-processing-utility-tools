@@ -27,7 +27,7 @@ nextflow.enable.dsl = 2
 version = '0.3.0'
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.payload-gen-variant-processing'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/data-processing-utility-tools.payload-gen-variant-processing'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
