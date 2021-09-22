@@ -35,10 +35,10 @@
         "data_category": "Simple Nucleotide Variation",
         "analysis_tools": [
           "CaVEMan",
-          "bcftools"
+          "Bcftools:view"
         ]
       },
-      "dataType": "Raw SNV Calls"
+      "dataType": "Filtered SNV Calls"
     },
     {
       "fileName": "TEST-PR.DO250183.SA610229.wgs.20200513.sanger-wgs.somatic.snv.open-filter.vcf.gz.tbi",
@@ -50,7 +50,7 @@
         "data_category": "Simple Nucleotide Variation",
         "analysis_tools": [
           "CaVEMan",
-          "bcftools"
+          "Bcftools:view"
         ]
       },
       "dataType": "VCF Index"
@@ -59,16 +59,20 @@
   "workflow": {
     "workflow_name": "Open Access Variant Filtering",
     "workflow_short_name": "open-filter",
-    "workflow_version": "0.1.0",
-    "run_id": "insane_rubens",
-    "session_id": "b5dbc2b3-f915-4f56-acbb-97d31df6c1f0",
+    "workflow_version": "0.3.0",
+    "run_id": "zen_rubens",
+    "session_id": "12b3e3ed-ce27-40f5-a5d3-8b41315b262e",
     "inputs": [
       {
         "input_analysis_id": "3414534a-47a4-492d-9453-4a47a4192d6d",
         "analysis_type": "variant_calling"
       }
     ],
-    "genome_build": "GRCh38_hla_decoy_ebv"
+    "genome_build": "GRCh38_hla_decoy_ebv",
+    "genome_annotation": "GENCODE v38"
   },
-  "variant_class": "Somatic"
+  "variant_class": "Somatic",
+  "info": {
+    "origin": "ICGC-25K"
+  }
 }

@@ -27,7 +27,7 @@ nextflow.enable.dsl = 2
 version = '1.0.0'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.cleanup-workdir'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/data-processing-utility-tools.cleanup-workdir'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
