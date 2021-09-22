@@ -29,8 +29,8 @@ import hashlib
 import copy
 
 variant_type_to_data_type_etc = {
-    'snv': ['Simple Nucleotide Variation', 'Raw SNV Calls', ['CaVEMan', 'bcftools'], ['GATK-Mutect2', 'bcftools']],   # dataCategory, dataType, analysis_tools
-    'indel': ['Simple Nucleotide Variation', 'Raw InDel Calls', ['Pindel', 'bcftools'], ['GATK-Mutect2', 'bcftools']]
+    'snv': ['Simple Nucleotide Variation', 'Filtered SNV Calls', ['CaVEMan', 'Bcftools:view'], ['GATK:Mutect2', 'Bcftools:view']],   # dataCategory, dataType, analysis_tools
+    'indel': ['Simple Nucleotide Variation', 'Filtered InDel Calls', ['Pindel', 'Bcftools:view'], ['GATK:Mutect2', 'Bcftools:view']]
 }
 
 workflow_full_name = {
@@ -142,10 +142,14 @@ def main():
                     'analysis_type': input_analysis_type
                 }
             ],
-            'genome_build': 'GRCh38_hla_decoy_ebv'
+            'genome_build': 'GRCh38_hla_decoy_ebv',
+            'genome_annotation': 'GENCODE v38'
         },
         'variant_class': analysis.get('variant_class')
     }
+
+    if 'info' in analysis:
+        payload['info'] = analysis['info']
 
     for f in args.files_to_upload:
         file_info = get_files_info(f, args)
