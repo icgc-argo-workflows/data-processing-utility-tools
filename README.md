@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/icgc-argo/data-processing-utility-tools.svg?branch=master)](https://travis-ci.org/icgc-argo/data-processing-utility-tools)
+[![Build Status](https://travis-ci.org/icgc-argo-workflows/data-processing-utility-tools.svg?branch=master)](https://travis-ci.org/icgc-argo/data-processing-utility-tools)
 # Data processing utility tools
 
 This repository keeps a collect of data processing utility tools for ARGO analytic pipelines. All tools are defined using Nextflow workflow language.
@@ -6,7 +6,7 @@ This repository keeps a collect of data processing utility tools for ARGO analyt
 Every tool is self-sufficient, can be independently developed, tested, released and used. This clean isolation allows maximum flexibility, maintainability and portability.
 
 These tools are building blocks to create multi-step data analysis workflows as needed, like the
-workflows here: https://github.com/icgc-argo/dna-seq-processing-wfs and here: https://github.com/icgc-argo/variant-calling-wfs
+workflows here: https://github.com/icgc-argo-workflows/dna-seq-processing-wfs and here: https://github.com/icgc-argo-workflows/variant-calling-wfs
 
 ## Development Process
 As tools are meant to be independent from each other, arguably a better choice is to
