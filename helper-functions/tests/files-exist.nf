@@ -29,7 +29,7 @@ nextflow.enable.dsl = 2
 version = '1.0.1'  // package version
 
 container = [
-    'ghcr.io': 'ghcr.io/icgc-argo/data-processing-utility-tools.helper-functions'
+    'ghcr.io': 'ghcr.io/icgc-argo-workflows/data-processing-utility-tools.helper-functions'
 ]
 default_container_registry = 'ghcr.io'
 /********************************************************************/
