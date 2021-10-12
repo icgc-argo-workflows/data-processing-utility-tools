@@ -1,0 +1,95 @@
+{
+  "analysisType": {
+    "name": "rna_sequencing_alignment"
+  },
+  "studyId": "TEST-PRO",
+  "workflow": {
+    "workflow_name": "RNA Seq Alignment",
+    "workflow_version": "0.1.0",
+    "genome_build": "GRCh38_hla_decoy_ebv",
+    "genome_annotation": "GENCODE v38",
+    "run_id": "gigantic_lumiere",
+    "session_id": "ab2a2657-1579-45a9-8f11-0786bb2d5841",
+    "inputs": [
+      {
+        "analysis_type": "rna_sequencing_experiment",
+        "input_analysis_id": null
+      }
+    ]
+  },
+  "files": [
+    {
+      "fileSize": 27975,
+      "fileMd5sum": "233f977f02b28ffcf46f37ec558e65d7",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Sequencing Reads",
+        "data_subtypes": [
+          "Genomic Alignment"
+        ],
+        "analysis_tools": [
+          "STAR"
+        ]
+      },
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211012.star.genomic_aln.cram",
+      "dataType": "Aligned Reads"
+    },
+    {
+      "fileSize": 52,
+      "fileMd5sum": "f02073d49192d284c80aca148c9e8037",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Sequencing Reads",
+        "data_subtypes": [
+          "Genomic Alignment"
+        ],
+        "analysis_tools": [
+          "STAR"
+        ]
+      },
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211012.star.genomic_aln.cram.crai",
+      "dataType": "Aligned Reads Index"
+    }
+  ],
+  "samples": [
+    {
+      "submitterSampleId": "donor1_sample1_id",
+      "matchedNormalSubmitterSampleId": "sample1_normal",
+      "sampleType": "RNA",
+      "specimen": {
+        "submitterSpecimenId": "donor1_sample1",
+        "tumourNormalDesignation": "tumor",
+        "specimenTissueSource": "simulated",
+        "specimenType": "simulated"
+      },
+      "donor": {
+        "submitterDonorId": "donor1",
+        "gender": "male"
+      }
+    }
+  ],
+  "experiment": {
+    "submitter_sequencing_experiment_id": "TEST_EXP",
+    "sequencing_center": "SIM",
+    "platform": "Simulation",
+    "platform_model": "Polyester",
+    "experimental_strategy": "RNA-Seq",
+    "sequencing_date": "2021-04-21"
+  },
+  "read_group_count": 1,
+  "read_groups": [
+    {
+      "submitter_read_group_id": "S01L1",
+      "read_group_id_in_bam": null,
+      "platform_unit": "sim01",
+      "is_paired_end": true,
+      "file_r1": "sample_01_L1_1.fastq.gz",
+      "file_r2": "sample_01_L1_2.fastq.gz",
+      "read_length_r1": 100,
+      "read_length_r2": 100,
+      "insert_size": 250,
+      "sample_barcode": null,
+      "library_name": "sim01"
+    }
+  ]
+}

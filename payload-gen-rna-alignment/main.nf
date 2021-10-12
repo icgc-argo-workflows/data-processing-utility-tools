@@ -44,8 +44,13 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.output_pattern = "*"  // output file name pattern
+params.files_to_upload = ""
+params.seq_experiment_analysis = ""
+params.wf_name = ""
+params.wf_version = ""
+params.aligner = ""
+params.genome_annotation = ""
+params.genome_build = ""
 
 
 process payloadGenRnaAlignment {
@@ -56,20 +61,38 @@ process payloadGenRnaAlignment {
   memory "${params.mem} GB"
 
   input:  // input, make update as needed
-    path input_file
+    path files_to_upload
+    path seq_experiment_analysis
+    val aligner
+    val analysis_type
+    val genome_annotation
+    val genome_build
+    val wf_name
+    val wf_version
 
   output:  // output, make update as needed
-    path "output_dir/${params.output_pattern}", emit: output_file
+    path "*.payload.json", emit: payload
+    path "out/*", emit: files_to_upload
+    path "out/*{.cram,.cram.crai}", emit: cram, optional: true
+    path "out/*{.bam,.bam.bai}", emit: bam, optional: true
+    path "out/*.splice_junctions.txt", emit: splice_junctions, optional: true
+    path "out/*.supplement.tgz", emit: supplement, optional: true
+    path "out/*{.fastqc.tgz,.collectrnaseqmetrics.tgz,.duplicates_metrics.tgz}", emit: qc_metrics, optional: true
 
   script:
     // add and initialize variables here as needed
-
     """
-    mkdir -p output_dir
-
     main.py \
-      -i ${input_file} \
-      -o output_dir
+      -f ${files_to_upload} \
+      -a ${seq_experiment_analysis} \
+      -l ${aligner} \
+      -t ${analysis_type} \
+      -g "${genome_annotation}" \
+      -b "${genome_build}" \
+      -w "${wf_name}" \
+      -r ${workflow.runName} \
+      -s ${workflow.sessionId} \
+      -v ${wf_version}
 
     """
 }
@@ -79,6 +102,14 @@ process payloadGenRnaAlignment {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   payloadGenRnaAlignment(
-    file(params.input_file)
+    Channel.fromPath(params.files_to_upload).collect(),
+    file(params.seq_experiment_analysis),
+    params.aligner,
+    params.analysis_type,
+    params.genome_annotation,
+    params.genome_build,
+    params.wf_name,
+    params.wf_version
   )
 }
+
