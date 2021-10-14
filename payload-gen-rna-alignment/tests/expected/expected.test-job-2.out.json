@@ -8,11 +8,11 @@
     "workflow_version": "0.1.0",
     "genome_build": "GRCh38_hla_decoy_ebv",
     "genome_annotation": "GENCODE v38",
-    "run_id": "nostalgic_hawking",
-    "session_id": "944e7be5-e39b-4b01-952b-f9f962dcd2ae",
+    "run_id": "amazing_keller",
+    "session_id": "e281fe1b-8b46-4b77-a1f1-349ad53b76e3",
     "inputs": [
       {
-        "analysis_type": "rna_sequencing_experiment",
+        "analysis_type": "sequencing_experiment",
         "input_analysis_id": null
       }
     ]
