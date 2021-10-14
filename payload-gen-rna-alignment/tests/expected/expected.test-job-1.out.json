@@ -1,6 +1,6 @@
 {
   "analysisType": {
-    "name": "rna_sequencing_alignment"
+    "name": "sequencing_alignment"
   },
   "studyId": "TEST-PRO",
   "workflow": {
@@ -8,8 +8,8 @@
     "workflow_version": "0.1.0",
     "genome_build": "GRCh38_hla_decoy_ebv",
     "genome_annotation": "GENCODE v38",
-    "run_id": "gigantic_lumiere",
-    "session_id": "ab2a2657-1579-45a9-8f11-0786bb2d5841",
+    "run_id": "silly_kalman",
+    "session_id": "4b869fdc-8b5d-4b2b-a165-240f0267fa53",
     "inputs": [
       {
         "analysis_type": "rna_sequencing_experiment",
@@ -25,13 +25,13 @@
       "info": {
         "data_category": "Sequencing Reads",
         "data_subtypes": [
-          "Genomic Alignment"
+          "Genome Alignment"
         ],
         "analysis_tools": [
           "STAR"
         ]
       },
-      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211012.star.genomic_aln.cram",
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211014.star.genome_aln.cram",
       "dataType": "Aligned Reads"
     },
     {
@@ -41,13 +41,13 @@
       "info": {
         "data_category": "Sequencing Reads",
         "data_subtypes": [
-          "Genomic Alignment"
+          "Genome Alignment"
         ],
         "analysis_tools": [
           "STAR"
         ]
       },
-      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211012.star.genomic_aln.cram.crai",
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211014.star.genome_aln.cram.crai",
       "dataType": "Aligned Reads Index"
     }
   ],
@@ -75,21 +75,5 @@
     "platform_model": "Polyester",
     "experimental_strategy": "RNA-Seq",
     "sequencing_date": "2021-04-21"
-  },
-  "read_group_count": 1,
-  "read_groups": [
-    {
-      "submitter_read_group_id": "S01L1",
-      "read_group_id_in_bam": null,
-      "platform_unit": "sim01",
-      "is_paired_end": true,
-      "file_r1": "sample_01_L1_1.fastq.gz",
-      "file_r2": "sample_01_L1_2.fastq.gz",
-      "read_length_r1": 100,
-      "read_length_r2": 100,
-      "insert_size": 250,
-      "sample_barcode": null,
-      "library_name": "sim01"
-    }
-  ]
+  }
 }

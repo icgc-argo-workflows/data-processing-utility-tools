@@ -43,14 +43,15 @@ analysis_tools = {
 }
 
 data_type_mapping = {
-  # [dataCategory, dataType, [data_subtypes], [star analysis_tools], [hisat2 analysis_tools]]
-  'genomic_aln': ['Sequencing Reads', 'Aligned Reads', ['Genomic Alignment'], ['STAR'], ['HiSAT2']],
-  'transcriptomic_aln': ['Sequencing Reads', 'Aligned Reads', ['Transcriptomic Alignment'], ['STAR'], ['HiSAT2']],
+  #file_type: [dataCategory, dataType, [data_subtypes], [star analysis_tools], [hisat2 analysis_tools]]
+  'genome_aln': ['Sequencing Reads', 'Aligned Reads', ['Genome Alignment'], ['STAR'], ['HiSAT2']],
+  'transcriptome_aln': ['Sequencing Reads', 'Aligned Reads', ['transcriptome Alignment'], ['STAR'], ['HiSAT2']],
   'chimeric_aln': ['Sequencing Reads', 'Aligned Reads', ['Chimeric Alignment'], ['STAR'], ['HiSAT2']],
   'splice_junctions': ['Transcriptome Profiling', 'Splice Junctions', None, ['STAR'], ['HiSAT2']],
   'fastqc': ['Quality Control Metrics', 'Sequencing QC', ['Read Group Metrics'], ['FastQC'], ['FastQC']],
   'collectrnaseqmetrics': ['Quality Control Metrics', 'Aligned Reads QC', ['Alignment Metrics'], ['Picard:CollectRnaSeqMetrics'], ['Picard:CollectRnaSeqMetrics']],
   'duplicates_metrics': ['Quality Control Metrics', 'Aligned Reads QC', ['Duplicates Metrics'], ['biobambam2:bammarkduplicates2'], ['biobambam2:bammarkduplicates2']],
+  'aln_metrics':  ['Quality Control Metrics', 'Aligned Reads QC', ['Alignment Metrics'], ['STAR'], ['HiSAT2']],
   'supplement': ['Supplement', 'Running Logs', None, ['STAR'], ['HiSAT2']]
 }
 
@@ -146,22 +147,23 @@ def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_di
     experimental_strategy = seq_experiment_analysis_dict['experiment']['experimental_strategy'].lower()
     fname_sample_part = seq_experiment_analysis_dict['samples'][0]['sampleId']
 
-    aln_status = aligner.lower()
+    aligner_or_rgid = aligner.lower()
     submitter_rg_id = None
-    if re.match(r'^genomic.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
-      file_type = 'genomic_aln'
-    elif re.match(r'^transcriptomic.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
-      file_type = 'transcriptomic_aln'
+    if re.match(r'^genome.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
+      file_type = 'genome_aln'
+    elif re.match(r'^transcriptome.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
+      file_type = 'transcriptome_aln'
     elif re.match(r'^chimeric.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
       file_type = 'chimeric_aln'
     elif re.match(r'.+?\.fastqc\.tgz$', file_to_upload):
       file_type = 'fastqc'
-      filename_friendly_rg_id, submitter_rg_id = get_rg_id_from_ubam_qc(file_to_upload, seq_experiment_analysis_dict)
-      aln_status = filename_friendly_rg_id
+      aligner_or_rgid, submitter_rg_id = get_rg_id_from_ubam_qc(file_to_upload, seq_experiment_analysis_dict)
     elif re.match(r'.+?\.collectrnaseqmetrics\.tgz$', file_to_upload):
       file_type = 'collectrnaseqmetrics'
     elif re.match(r'.+?\.duplicates_metrics\.tgz$', file_to_upload):
       file_type = 'duplicates_metrics'
+    elif re.match(r'.+?\.aln_metrics\.tgz$', file_to_upload):
+      file_type = 'aln_metrics'
     elif re.match(r'.+?_SJ\.out\.tab$', file_to_upload):
       file_type = 'splice_junctions'
     elif re.match(r'.+?splicesites\.txt$', file_to_upload):
@@ -171,9 +173,9 @@ def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_di
     else:
       sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
-    if file_type in ['fastqc', 'collectrnaseqmetrics', 'duplicates_metrics', 'supplement']:
+    if file_type in ['fastqc', 'collectrnaseqmetrics', 'duplicates_metrics', 'aln_metrics', 'supplement']:
         file_ext = 'tgz'
-    elif file_type in ['genomic_aln', 'transcriptomic_aln', 'chimeric_aln']:
+    elif file_type in ['genome_aln', 'transcriptome_aln', 'chimeric_aln']:
       if file_to_upload.endswith('.bam'):
         file_ext = 'bam'
       elif file_to_upload.endswith('.bam.bai'):
@@ -198,7 +200,7 @@ def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_di
                             fname_sample_part,
                             experimental_strategy,
                             date_str,
-                            aln_status,
+                            aligner_or_rgid,
                             file_type,
                             file_ext
                         ])    
@@ -304,7 +306,7 @@ def main():
             'session_id': args.wf_session,
             'inputs': [
                 {
-                    'analysis_type': 'rna_sequencing_experiment',
+                    'analysis_type': 'sequencing_experiment',
                     'input_analysis_id': seq_experiment_analysis_dict.get('analysisId')
                 }
             ]
