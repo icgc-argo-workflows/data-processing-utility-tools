@@ -47,12 +47,12 @@ data_type_mapping = {
   'genome_aln': ['Sequencing Reads', 'Aligned Reads', ['Genome Alignment'], ['STAR'], ['HiSAT2']],
   'transcriptome_aln': ['Sequencing Reads', 'Aligned Reads', ['transcriptome Alignment'], ['STAR'], ['HiSAT2']],
   'chimeric_aln': ['Sequencing Reads', 'Aligned Reads', ['Chimeric Alignment'], ['STAR'], ['HiSAT2']],
-  'splice_junctions': ['Transcriptome Profiling', 'Splice Junctions', None, ['STAR'], ['HiSAT2']],
+  'splice_junctions': ['Transcriptome Profiling', 'Splice Junctions', [None], ['STAR'], ['HiSAT2']],
   'fastqc': ['Quality Control Metrics', 'Sequencing QC', ['Read Group Metrics'], ['FastQC'], ['FastQC']],
   'collectrnaseqmetrics': ['Quality Control Metrics', 'Aligned Reads QC', ['Alignment Metrics'], ['Picard:CollectRnaSeqMetrics'], ['Picard:CollectRnaSeqMetrics']],
   'duplicates_metrics': ['Quality Control Metrics', 'Aligned Reads QC', ['Duplicates Metrics'], ['biobambam2:bammarkduplicates2'], ['biobambam2:bammarkduplicates2']],
   'aln_metrics':  ['Quality Control Metrics', 'Aligned Reads QC', ['Alignment Metrics'], ['STAR'], ['HiSAT2']],
-  'supplement': ['Supplement', 'Running Logs', None, ['STAR'], ['HiSAT2']]
+  'supplement': ['Supplement', 'Running Logs', [None], ['STAR'], ['HiSAT2']]
 }
 
 def calculate_size(file_path):
