@@ -168,7 +168,7 @@ def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_di
       file_type = 'splice_junctions'
     elif re.match(r'.+?splicesites\.txt$', file_to_upload):
       file_type = 'splice_junctions'
-    elif re.match(r'.+?supplement\.tgz$', file_to_upload):
+    elif re.match(r'.+?supplement\.tgz$', file_to_upload) or re.match(r'.+?supplement\.tar.gz$', file_to_upload):
       file_type = 'supplement'
     else:
       sys.exit('Error: unknown file type "%s"' % file_to_upload)
@@ -193,7 +193,7 @@ def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_di
 
     # file naming patterns:
     #   pattern:  <argo_study_id>.<argo_donor_id>.<argo_sample_id>.[rna-seq].<date>.<aligner|rg_id>.<file_type>.<file_ext>
-    #   example: TEST-PR.DO250183.SA610229.wxs.20200319.sanger-wxs.somatic.snv.vcf.gz
+    #   example: TEST-PR.DO250183.SA610229.rna-seq.20200319.star.genome_aln.cram
     new_fname = '.'.join([
                             seq_experiment_analysis_dict['studyId'],
                             seq_experiment_analysis_dict['samples'][0]['donor']['donorId'],
@@ -316,7 +316,7 @@ def main():
         'experiment': seq_experiment_analysis_dict.get('experiment')
     }
 
-    if args.analysis_type == "rna_sequencing_alignment":
+    if "sequencing_alignment" in args.analysis_type:
       payload['read_group_count'] = seq_experiment_analysis_dict.get('read_group_count')
       payload['read_groups'] = copy.deepcopy(seq_experiment_analysis_dict.get('read_groups'))
 
