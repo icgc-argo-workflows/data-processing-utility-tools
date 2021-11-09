@@ -8,8 +8,8 @@
     "workflow_version": "0.1.0",
     "genome_build": "GRCh38_hla_decoy_ebv",
     "genome_annotation": "GENCODE v38",
-    "run_id": "exotic_darwin",
-    "session_id": "1c2b7b63-3b5f-40e2-a6b2-3dcd9d71217c",
+    "run_id": "insane_hugle",
+    "session_id": "67ccf9ba-915e-4dda-ac5c-975fd1ff0509",
     "inputs": [
       {
         "analysis_type": "sequencing_experiment",
@@ -71,7 +71,7 @@
   "experiment": {
     "submitter_sequencing_experiment_id": "TEST_EXP",
     "sequencing_center": "SIM",
-    "platform": "Simulation",
+    "platform": "ILLUMINA",
     "platform_model": "Polyester",
     "experimental_strategy": "RNA-Seq",
     "sequencing_date": "2021-04-21"

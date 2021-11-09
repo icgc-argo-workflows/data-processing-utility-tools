@@ -45,7 +45,7 @@ analysis_tools = {
 data_type_mapping = {
   #file_type: [dataCategory, dataType, [data_subtypes], [star analysis_tools], [hisat2 analysis_tools]]
   'genome_aln': ['Sequencing Reads', 'Aligned Reads', ['Genome Alignment'], ['STAR'], ['HiSAT2']],
-  'transcriptome_aln': ['Sequencing Reads', 'Aligned Reads', ['transcriptome Alignment'], ['STAR'], ['HiSAT2']],
+  'transcriptome_aln': ['Sequencing Reads', 'Aligned Reads', ['Transcriptome Alignment'], ['STAR'], ['HiSAT2']],
   'chimeric_aln': ['Sequencing Reads', 'Aligned Reads', ['Chimeric Alignment'], ['STAR'], ['HiSAT2']],
   'splice_junctions': ['Transcriptome Profiling', 'Splice Junctions', [None], ['STAR'], ['HiSAT2']],
   'fastqc': ['Quality Control Metrics', 'Sequencing QC', ['Read Group Metrics'], ['FastQC'], ['FastQC']],
@@ -285,8 +285,8 @@ def main():
     parser.add_argument("-b", "--genome_build", dest="genome_build", default="GRCh38_hla_decoy_ebv", help="RNA-Seq alignment genome build")
     parser.add_argument("-w", "--wf_name", dest="wf_name", required=True, help="Workflow name")
     parser.add_argument("-v", "--wf_version", dest="wf_version", required=True, help="Workflow version")
-    parser.add_argument("-r", "--wf_run", dest="wf_run", required=True, help="workflow run ID")
-    parser.add_argument("-s", "--wf_session", dest="wf_session", required=True, help="workflow session ID")
+    parser.add_argument("-r", "--wf_run", dest="wf_run", required=True, help="Workflow run ID")
+    parser.add_argument("-s", "--wf_session", dest="wf_session", required=True, help="Workflow session ID")
     args = parser.parse_args()
 
     with open(args.seq_experiment_analysis, 'r') as f:
