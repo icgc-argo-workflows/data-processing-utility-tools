@@ -51,7 +51,6 @@ data_type_mapping = {
   'fastqc': ['Quality Control Metrics', 'Sequencing QC', ['Read Group Metrics'], ['FastQC'], ['FastQC']],
   'collectrnaseqmetrics': ['Quality Control Metrics', 'Aligned Reads QC', ['Alignment Metrics'], ['Picard:CollectRnaSeqMetrics'], ['Picard:CollectRnaSeqMetrics']],
   'duplicates_metrics': ['Quality Control Metrics', 'Aligned Reads QC', ['Duplicates Metrics'], ['biobambam2:bammarkduplicates2'], ['biobambam2:bammarkduplicates2']],
-  'aln_metrics':  ['Quality Control Metrics', 'Aligned Reads QC', ['Alignment Metrics'], ['STAR'], ['HiSAT2']],
   'supplement': ['Supplement', 'Running Logs', [None], ['STAR'], ['HiSAT2']]
 }
 
@@ -136,7 +135,7 @@ def get_dupmetrics(file_to_upload):
                         library.append(metric)      
     return library
 
-def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_dict):
+def get_files_info(file_to_upload, date_str, seq_experiment_analysis_dict, aligner=None):
     file_info = {
         'fileSize': calculate_size(file_to_upload),
         'fileMd5sum': calculate_md5(file_to_upload),
@@ -147,7 +146,7 @@ def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_di
     experimental_strategy = seq_experiment_analysis_dict['experiment']['experimental_strategy'].lower()
     fname_sample_part = seq_experiment_analysis_dict['samples'][0]['sampleId']
 
-    aligner_or_rgid = aligner.lower()
+    aligner_or_rgid = aligner.lower() if aligner else None
     submitter_rg_id = None
     if re.match(r'^genome.merged.+?(cram|cram\.crai|bam|bam\.bai)$', file_to_upload): 
       file_type = 'genome_aln'
@@ -162,8 +161,6 @@ def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_di
       file_type = 'collectrnaseqmetrics'
     elif re.match(r'.+?\.duplicates_metrics\.tgz$', file_to_upload):
       file_type = 'duplicates_metrics'
-    elif re.match(r'.+?\.aln_metrics\.tgz$', file_to_upload):
-      file_type = 'aln_metrics'
     elif re.match(r'.+?_SJ\.out\.tab$', file_to_upload):
       file_type = 'splice_junctions'
     elif re.match(r'.+?splicesites\.txt$', file_to_upload):
@@ -212,10 +209,13 @@ def get_files_info(file_to_upload, aligner, date_str, seq_experiment_analysis_di
         'data_subtypes': data_type_mapping[file_type][2]
     }
 
-    if aligner.lower() == 'star':
-        file_info['info']['analysis_tools'] = data_type_mapping[file_type][3]
+    if not aligner:
+      file_info['info']['analysis_tools'] = "FastQC"
+    elif aligner.lower() == 'star':
+      file_info['info']['analysis_tools'] = data_type_mapping[file_type][3]
     elif aligner.lower() == 'hisat2':
-        file_info['info']['analysis_tools'] = data_type_mapping[file_type][4]
+      file_info['info']['analysis_tools'] = data_type_mapping[file_type][4]
+      
 
     if new_fname.endswith('.bai') or new_fname.endswith('.crai'):
       file_info['dataType'] = 'Aligned Reads Index'
@@ -280,7 +280,7 @@ def main():
     parser.add_argument("-a", "--seq_experiment_analysis", dest="seq_experiment_analysis", required=True,
                         help="Input analysis for sequencing experiment", type=str)
     parser.add_argument("-t", "--analysis_type", dest="analysis_type", required=True, help="Specify analysis_type")
-    parser.add_argument("-l", "--aligner", dest="aligner", required=True, help="RNA-Seq aligner name")
+    parser.add_argument("-l", "--aligner", dest="aligner", default=None, help="Provide RNA-Seq aligner if files_to_upload are generated from alignment results. Default=None")
     parser.add_argument("-g", "--genome_annotation", dest="genome_annotation", default="GENCODE v38", help="RNA-Seq alignment genome annotation")
     parser.add_argument("-b", "--genome_build", dest="genome_build", default="GRCh38_hla_decoy_ebv", help="RNA-Seq alignment genome build")
     parser.add_argument("-w", "--wf_name", dest="wf_name", required=True, help="Workflow name")
@@ -333,7 +333,7 @@ def main():
     # get file of the payload
     date_str = date.today().strftime("%Y%m%d")
     for f in args.files_to_upload:
-      file_info = get_files_info(f, args.aligner, date_str, seq_experiment_analysis_dict)
+      file_info = get_files_info(f, date_str, seq_experiment_analysis_dict, args.aligner)
       payload['files'].append(file_info)
     
 
