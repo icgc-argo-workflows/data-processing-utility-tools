@@ -24,9 +24,15 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '1.0.1.1'
+version = '1.0.2'
 /********************************************************************/
 
+import groovy.json.JsonSlurper
+
+def parseJsonFile(json_file){
+  records = new JsonSlurper().parse(json_file)
+  return records
+}
 
 // this is kind of like CWL's secondary files
 def getSecondaryFiles(main_file, exts){
@@ -53,3 +59,5 @@ def getSecondaryFiles(main_file, exts){
 def getBwaSecondaryFiles(main_file){
   return getSecondaryFiles(main_file, ['fai', 'sa', 'bwt', 'ann', 'amb', 'pac', 'alt'])
 }
+
+
