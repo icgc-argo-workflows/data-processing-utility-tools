@@ -27,6 +27,12 @@ nextflow.enable.dsl = 2
 version = '1.0.2'
 /********************************************************************/
 
+import groovy.json.JsonSlurper
+
+def parseJsonFile(json_file){
+  records = new JsonSlurper().parse(json_file)
+  return records
+}
 
 // this is kind of like CWL's secondary files
 def getSecondaryFiles(main_file, exts){
@@ -53,3 +59,5 @@ def getSecondaryFiles(main_file, exts){
 def getBwaSecondaryFiles(main_file){
   return getSecondaryFiles(main_file, ['fai', 'sa', 'bwt', 'ann', 'amb', 'pac', 'alt'])
 }
+
+
