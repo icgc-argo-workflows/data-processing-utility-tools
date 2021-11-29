@@ -1,0 +1,17 @@
+{
+  "seq_experiment_analysis": "input/s3.881fe6cf-8c80-4c7b-9f4d-b8dac9601d01.sequencing_experiment.payload.json",
+  "files_to_upload": [
+    "input/genome.merged.sample_01_L1.grch38-aligned.merged.cram",
+    "input/genome.merged.sample_01_L1.grch38-aligned.merged.cram.crai"
+  ],
+  "expected_output": "expected/expected.test-job-1.out.json",
+  "aligner": "STAR",
+  "analysis_type": "sequencing_alignment",
+  "genome_annotation": "GENCODE v38",
+  "genome_build": "GRCh38_hla_decoy_ebv",
+  "wf_name": "rna-seq-alignment",
+  "wf_version": "0.1.0",
+  "publish_dir": "outdir",
+  "cpus": 1,
+  "mem": 0.5
+}

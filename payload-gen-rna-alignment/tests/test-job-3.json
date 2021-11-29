@@ -1,0 +1,16 @@
+{
+  "seq_experiment_analysis": "input/s3.881fe6cf-8c80-4c7b-9f4d-b8dac9601d01.sequencing_experiment.payload.json",
+  "files_to_upload": [
+    "input/TEST-PRO.DO001.SA001.S01L1.e9ea873df5dffc992be7cd3f8c6ee564.lane.bam.fastqc.tgz"
+  ],
+  "expected_output": "expected/expected.test-job-3.out.json",
+  "aligner": "",
+  "analysis_type": "qc_metrics",
+  "genome_annotation": "GENCODE v38",
+  "genome_build": "GRCh38_hla_decoy_ebv",
+  "wf_name": "rna-seq-alignment",
+  "wf_version": "0.1.0",
+  "publish_dir": "outdir",
+  "cpus": 1,
+  "mem": 0.5
+}
