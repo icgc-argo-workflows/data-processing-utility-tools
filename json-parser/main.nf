@@ -44,8 +44,7 @@ params.publish_dir = ""  // set to empty string will disable publishDir
 
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
-params.output_pattern = "*"  // output file name pattern
+params.metadata_analysis = ""
 
 
 process jsonParser {
@@ -55,22 +54,29 @@ process jsonParser {
   cpus params.cpus
   memory "${params.mem} GB"
 
-  input:  // input, make update as needed
-    path input_file
+  input:
+    path metadata_analysis
 
-  output:  // output, make update as needed
-    path "output_dir/${params.output_pattern}", emit: output_file
+  output:
+    env STUDY_ID, emit: study_id
+    env DONOR_ID, emit: donor_id
+    env EXP, emit: experimental_strategy
+    env PAIRED, emit: paired
+    env ANALYSIS_TOOLS, emit: analysis_tools
+    env STRAND, emit: library_strandedness
 
   script:
-    // add and initialize variables here as needed
-
     """
-    mkdir -p output_dir
-
-    main.py \
-      -i ${input_file} \
-      -o output_dir
-
+    set -euxo pipefail
+    VARIABLE1=`cat ${metadata_analysis} | jq -r 'if ([.read_groups[]?] | length) >0 then [.read_groups[] | .is_paired_end] | all | tostring else null end' | tr -d '\\n'`
+    PAIRED=\${VARIABLE1:-'null'}
+    VARIABLE2=`cat ${metadata_analysis} | jq -r '[.files[] | .info? | .analysis_tools[]?] | unique | join(",")' | tr -d '\\n'`
+    ANALYSIS_TOOLS=\${VARIABLE2:-'null'}
+    VARIABLE3=`cat ${metadata_analysis} | jq -r '.experiment | .library_strandedness?' | tr -d '\\n'`
+    STRAND=\${VARIABLE3:-'null'}
+    STUDY_ID=`cat ${metadata_analysis} | jq -er '.studyId' | tr -d '\\n'`
+    DONOR_ID=`cat ${metadata_analysis} | jq -er '.samples[0].donor.donorId' | tr -d '\\n'`
+    EXP=`cat ${metadata_analysis} | jq -er '.experiment | .experimental_strategy?  // .library_strategy' | tr -d '\\n'`
     """
 }
 
@@ -79,6 +85,6 @@ process jsonParser {
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
 workflow {
   jsonParser(
-    file(params.input_file)
+    file(params.metadata_analysis)
   )
 }

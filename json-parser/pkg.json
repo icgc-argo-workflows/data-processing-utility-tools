@@ -1,11 +1,12 @@
 {
     "name": "json-parser",
     "version": "0.1.0",
-    "description": "python:3.7.5-slim-buster",
+    "description": "tool to parse JSON metadata",
     "main": "main.nf",
     "deprecated": false,
     "keywords": [
-        "tool to parse metadata"
+        "metadata",
+        "JSON"
     ],
     "repository": {
         "type": "git",

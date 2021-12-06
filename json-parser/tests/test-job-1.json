@@ -1,7 +1,5 @@
 {
-    "input_file": "input/test_rg_3.bam",
-    "expected_output": "expected/expected.test_rg_3.bam",
-    "publish_dir": "outdir",
-    "cpus": 1,
-    "mem": 0.5
+  "metadata_analysis": "data/40054341-119d-492e-8543-41119dc92ea1.sequencing_experiment.4.analysis.json",         
+  "cpus": 1,
+  "mem": 0.5
 }

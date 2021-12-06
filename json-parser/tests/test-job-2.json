@@ -1,8 +1,5 @@
 {
-    "input_file": "input/test_rg_3.bam",
-    "expected_output": "expected/expected.test_rg_3.bam",
-    "publish_dir": "outdir",
-    "container_registry": "ghcr.io",
-    "cpus": 1,
-    "mem": 0.5
+  "metadata_analysis": "data/89176bbc-ffca-4d73-984a-4a92ed931a98.sequencing_experiment.4.analysis.json",
+  "cpus": 1,
+  "mem": 0.5
 }
