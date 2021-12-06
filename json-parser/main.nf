@@ -68,12 +68,12 @@ process jsonParser {
   script:
     """
     set -euxo pipefail
-    VARIABLE1=`cat ${metadata_analysis} | jq -r 'if ([.read_groups[]?] | length) >0 then [.read_groups[] | .is_paired_end] | all | tostring else null end' | tr -d '\\n'`
-    PAIRED=\${VARIABLE1:-'null'}
+    VARIABLE1=`cat ${metadata_analysis} | jq -r 'if ([.read_groups[]?] | length) >0 then [.read_groups[] | .is_paired_end] | all | tostring else "NULL" end' | tr -d '\\n'`
+    PAIRED=\${VARIABLE1:-'NULL'}
     VARIABLE2=`cat ${metadata_analysis} | jq -r '[.files[] | .info? | .analysis_tools[]?] | unique | join(",")' | tr -d '\\n'`
-    ANALYSIS_TOOLS=\${VARIABLE2:-'null'}
-    VARIABLE3=`cat ${metadata_analysis} | jq -r '.experiment | .library_strandedness?' | tr -d '\\n'`
-    STRAND=\${VARIABLE3:-'null'}
+    ANALYSIS_TOOLS=\${VARIABLE2:-'NULL'}
+    VARIABLE3=`cat ${metadata_analysis} | jq -r 'if (.experiment | .library_strandedness?) then .experiment|.library_strandedness else "NULL" end' | tr -d '\\n'`
+    STRAND=\${VARIABLE3:-'NULL'}
     STUDY_ID=`cat ${metadata_analysis} | jq -er '.studyId' | tr -d '\\n'`
     DONOR_ID=`cat ${metadata_analysis} | jq -er '.samples[0].donor.donorId' | tr -d '\\n'`
     EXP=`cat ${metadata_analysis} | jq -er '.experiment | .experimental_strategy?  // .library_strategy' | tr -d '\\n'`
