@@ -203,6 +203,7 @@ def get_files_info(file_to_upload, date_str, seq_experiment_analysis_dict, align
                         ])    
     
     file_info['fileName'] = new_fname
+    file_info['fileType'] = new_fname.split('.')[-1].upper()
 
     file_info['info'] = {
         'data_category': data_type_mapping[file_type][0],
