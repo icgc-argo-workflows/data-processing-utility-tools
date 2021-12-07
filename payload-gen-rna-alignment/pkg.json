@@ -1,6 +1,6 @@
 {
     "name": "payload-gen-rna-alignment",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "payload-gen-rna-alignment",
     "main": "main.nf",
     "deprecated": false,
