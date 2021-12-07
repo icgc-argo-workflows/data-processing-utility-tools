@@ -8,8 +8,8 @@
     "workflow_version": "0.1.0",
     "genome_build": "GRCh38_hla_decoy_ebv",
     "genome_annotation": "GENCODE v38",
-    "run_id": "insane_hugle",
-    "session_id": "67ccf9ba-915e-4dda-ac5c-975fd1ff0509",
+    "run_id": "admiring_minsky",
+    "session_id": "1b279d9a-2ed3-49e7-8bff-1ee0255a1245",
     "inputs": [
       {
         "analysis_type": "sequencing_experiment",
@@ -31,7 +31,8 @@
           "STAR"
         ]
       },
-      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211109.star.genome_aln.cram",
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211207.star.genome_aln.cram",
+      "fileType": "CRAM",
       "dataType": "Aligned Reads"
     },
     {
@@ -47,7 +48,8 @@
           "STAR"
         ]
       },
-      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211109.star.genome_aln.cram.crai",
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211207.star.genome_aln.cram.crai",
+      "fileType": "CRAI",
       "dataType": "Aligned Reads Index"
     }
   ],

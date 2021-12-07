@@ -1,0 +1,16 @@
+{
+  "seq_experiment_analysis": "input/s3.881fe6cf-8c80-4c7b-9f4d-b8dac9601d01.sequencing_experiment.payload.json",
+  "files_to_upload": [
+    "input/SA001.hisat2.novel_splicesites.txt"
+  ],
+  "expected_output": "expected/expected.test-job-5.out.json",
+  "aligner": "hisat2",
+  "analysis_type": "splice_junctions",
+  "genome_annotation": "GENCODE v38",
+  "genome_build": "GRCh38_hla_decoy_ebv",
+  "wf_name": "rna-seq-alignment",
+  "wf_version": "0.1.0",
+  "publish_dir": "outdir",
+  "cpus": 1,
+  "mem": 0.5
+}

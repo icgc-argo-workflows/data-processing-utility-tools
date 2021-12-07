@@ -1,0 +1,64 @@
+{
+  "analysisType": {
+    "name": "splice_junctions"
+  },
+  "studyId": "TEST-PRO",
+  "workflow": {
+    "workflow_name": "RNA Seq Alignment",
+    "workflow_version": "0.1.0",
+    "genome_build": "GRCh38_hla_decoy_ebv",
+    "genome_annotation": "GENCODE v38",
+    "run_id": "hopeful_noyce",
+    "session_id": "2702543c-1cb1-47e5-b2c6-5f362f2ee269",
+    "inputs": [
+      {
+        "analysis_type": "sequencing_experiment",
+        "input_analysis_id": null
+      }
+    ]
+  },
+  "files": [
+    {
+      "fileSize": 371,
+      "fileMd5sum": "14bc8619e7463a4c01f957729dae174e",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Transcriptome Profiling",
+        "data_subtypes": [
+          null
+        ],
+        "analysis_tools": [
+          "HiSAT2"
+        ]
+      },
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211207.hisat2.splice_junctions.txt",
+      "fileType": "TXT",
+      "dataType": "Splice Junctions"
+    }
+  ],
+  "samples": [
+    {
+      "submitterSampleId": "donor1_sample1_id",
+      "matchedNormalSubmitterSampleId": "sample1_normal",
+      "sampleType": "RNA",
+      "specimen": {
+        "submitterSpecimenId": "donor1_sample1",
+        "tumourNormalDesignation": "tumor",
+        "specimenTissueSource": "simulated",
+        "specimenType": "simulated"
+      },
+      "donor": {
+        "submitterDonorId": "donor1",
+        "gender": "male"
+      }
+    }
+  ],
+  "experiment": {
+    "submitter_sequencing_experiment_id": "TEST_EXP",
+    "sequencing_center": "SIM",
+    "platform": "ILLUMINA",
+    "platform_model": "Polyester",
+    "experimental_strategy": "RNA-Seq",
+    "sequencing_date": "2021-04-21"
+  }
+}
