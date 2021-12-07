@@ -8,8 +8,8 @@
     "workflow_version": "0.1.0",
     "genome_build": "GRCh38_hla_decoy_ebv",
     "genome_annotation": "GENCODE v38",
-    "run_id": "deadly_ekeblad",
-    "session_id": "e63af1d0-0eaa-42c2-b122-ec6f0bbaa49b",
+    "run_id": "focused_shirley",
+    "session_id": "09c96e0c-b63f-450a-b5aa-97ba0a4aa4a6",
     "inputs": [
       {
         "analysis_type": "sequencing_experiment",
@@ -64,7 +64,8 @@
         },
         "description": "RNA alignment metrics for a SAM or BAM file."
       },
-      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211116.star.collectrnaseqmetrics.tgz",
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211207.star.collectrnaseqmetrics.tgz",
+      "fileType": "TGZ",
       "dataType": "Aligned Reads QC"
     },
     {
@@ -98,7 +99,8 @@
           ]
         }
       },
-      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211116.star.duplicates_metrics.tgz",
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211207.star.duplicates_metrics.tgz",
+      "fileType": "TGZ",
       "dataType": "Aligned Reads QC"
     }
   ],

@@ -1,0 +1,71 @@
+{
+  "analysisType": {
+    "name": "supplement"
+  },
+  "studyId": "TEST-PRO",
+  "workflow": {
+    "workflow_name": "RNA Seq Alignment",
+    "workflow_version": "0.1.0",
+    "genome_build": "GRCh38_hla_decoy_ebv",
+    "genome_annotation": "GENCODE v38",
+    "run_id": "peaceful_lamarr",
+    "session_id": "69bb68a1-8e00-4fca-8919-dd476f8deb53",
+    "inputs": [
+      {
+        "analysis_type": "sequencing_experiment",
+        "input_analysis_id": null
+      }
+    ]
+  },
+  "files": [
+    {
+      "fileSize": 1985,
+      "fileMd5sum": "ef7925492346751fe88557acbffef877",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Supplement",
+        "data_subtypes": [
+          null
+        ],
+        "analysis_tools": [
+          "HiSAT2"
+        ],
+        "files_in_tgz": [
+          "SA001_RG_S01L1_metrics.txt",
+          "SA001_RG_S01L2_metrics.txt",
+          "SA001_RG_S01L1_summary.txt",
+          "SA001_RG_S01L2_summary.txt",
+          "align.log"
+        ]
+      },
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211207.hisat2.supplement.tgz",
+      "fileType": "TGZ",
+      "dataType": "Running Logs"
+    }
+  ],
+  "samples": [
+    {
+      "submitterSampleId": "donor1_sample1_id",
+      "matchedNormalSubmitterSampleId": "sample1_normal",
+      "sampleType": "RNA",
+      "specimen": {
+        "submitterSpecimenId": "donor1_sample1",
+        "tumourNormalDesignation": "tumor",
+        "specimenTissueSource": "simulated",
+        "specimenType": "simulated"
+      },
+      "donor": {
+        "submitterDonorId": "donor1",
+        "gender": "male"
+      }
+    }
+  ],
+  "experiment": {
+    "submitter_sequencing_experiment_id": "TEST_EXP",
+    "sequencing_center": "SIM",
+    "platform": "ILLUMINA",
+    "platform_model": "Polyester",
+    "experimental_strategy": "RNA-Seq",
+    "sequencing_date": "2021-04-21"
+  }
+}
