@@ -49,7 +49,8 @@
     "sequencing_date": "2014-12-12",
     "library_strategy": "WGS",
     "sequencing_center": "EXT",
-    "submitter_sequencing_experiment_id": "TEST_EXP"
+    "submitter_sequencing_experiment_id": "TEST_EXP",
+    "library_strandedness": ""
   },
   "read_groups": [
     {
