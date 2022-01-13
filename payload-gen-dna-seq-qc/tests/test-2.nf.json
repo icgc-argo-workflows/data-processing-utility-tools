@@ -6,7 +6,7 @@
                 "input/grch38-aligned.merged.duplicates_metrics.tgz",
                 "input/SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.tgz"
               ],
-  "expected_output": "expected/d6f55859-eff3-4a23-8637-1c199548c0c1.dna_seq_qc.payload.json",
+  "expected_output": "expected/test-2.output.json",
   "wf_name": "dna-seq-alignment",            
   "cpus": 1,
   "mem": 0.5

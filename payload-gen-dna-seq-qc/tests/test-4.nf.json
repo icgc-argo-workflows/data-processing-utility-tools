@@ -3,7 +3,7 @@
   "qc_files": [
                 "input/SA610149.3.20200214.wgs.grch38.cram.oxog_metrics.tgz"
               ],
-  "expected_output": "expected/e7b47bc3-6d39-4fc7-8293-44cd5a74ae67.dna_seq_qc.payload.json",
+  "expected_output": "expected/test-4.output.json",
   "publish_dir": "outdir",
   "cpus": 1,
   "mem": 0.5
