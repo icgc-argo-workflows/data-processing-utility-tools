@@ -96,7 +96,7 @@ def insert_filename_friendly_rg_id(metadata):
 
 def get_rg_id_from_ubam_qc(tar, metadata):
     tar_basename = os.path.basename(tar)  # TEST-PR.DO250122.SA610149.D0RE2_1_.6cae87bf9f05cdfaa4a26f2da625f3b2.lane.bam.fastqc.tgz
-    md5sum_from_filename = tar_basename.split('.')[4]
+    md5sum_from_filename = tar_basename.split('.')[-5]
     if not re.match(r'^[a-f0-9]{32}$', md5sum_from_filename):
         sys.exit('Error: ubam naming not expected %s' % tar_basename)
 
