@@ -211,7 +211,7 @@ def get_files_info(file_to_upload, date_str, seq_experiment_analysis_dict, align
     }
 
     if not aligner:
-      file_info['info']['analysis_tools'] = "FastQC"
+      file_info['info']['analysis_tools'] = ["FastQC"]
     elif aligner.lower() == 'star':
       file_info['info']['analysis_tools'] = data_type_mapping[file_type][3]
     elif aligner.lower() == 'hisat2':
