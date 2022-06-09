@@ -1,7 +1,24 @@
 {
-    "input_file": "input/test_rg_3.bam",
-    "expected_output": "expected/expected.test_rg_3.bam",
-    "publish_dir": "outdir",
-    "cpus": 1,
-    "mem": 0.5
+  "metadata_analysis": "input/3e46fd12-a5fc-4d72-86fd-12a5fcbd7216.sequencing_experiment.json",
+  "files_to_upload": [
+    "input/C0HVY_2.c18a81968b79604ef549f7d05904f040.cutadapt.tgz",
+    "input/C0HVY_2_2.03b9c6b4b533cba577abaa7b57879cd9.cutadapt.tgz",
+    "input/D0RE2_1.b4bfaf68165cc125a7d8f64de910e4ab.cutadapt.tgz",
+    "input/D0RE2_1_2.768145761746613d5b058fdd23e0cf94.cutadapt.tgz",
+    "input/D0RH0_2.1243f8e870cc9d8ec77338f3baf19484.cutadapt.tgz",
+    "input/D0RH0_2_2.350a5d45b7a6846e4a111121eaba2266.cutadapt.tgz",
+    "input/C0HVY_2.c18a81968b79604ef549f7d05904f040.fastqc.tgz",
+    "input/C0HVY_2_2.03b9c6b4b533cba577abaa7b57879cd9.fastqc.tgz",
+    "input/D0RE2_1.b4bfaf68165cc125a7d8f64de910e4ab.fastqc.tgz",
+    "input/D0RE2_1_2.768145761746613d5b058fdd23e0cf94.fastqc.tgz",
+    "input/D0RH0_2.1243f8e870cc9d8ec77338f3baf19484.fastqc.tgz",
+    "input/D0RH0_2_2.350a5d45b7a6846e4a111121eaba2266.fastqc.tgz",
+    "input/multiqc.tgz"
+  ],
+  "expected_output": "expected/expected.test-job-1.out.json",
+  "wf_name": "pre-alignment-qc",
+  "wf_version": "0.1.0",
+  "publish_dir": "outdir",
+  "cpus": 1,
+  "mem": 0.5
 }

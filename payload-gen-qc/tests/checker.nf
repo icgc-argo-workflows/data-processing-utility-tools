@@ -43,7 +43,12 @@ params.container_version = ""
 params.container = ""
 
 // tool specific parmas go here, add / change as needed
-params.input_file = ""
+params.files_to_upload = ""
+params.metadata_analysis = ""
+params.wf_name = ""
+params.wf_version = ""
+params.genome_annotation = ""
+params.genome_build = ""
 params.expected_output = ""
 
 include { payloadGenQc } from '../main'
@@ -61,16 +66,16 @@ process file_smart_diff {
 
   script:
     """
-    # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
-    # in this example, we need to remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
-    # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
-    cat ${output_file[0]} \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_output
-
+    cat ${output_file} \
+      | sed -e 's/"run_id": ".*"/"run_id": "run_id"/' \
+      | sed -e 's/"session_id": ".*"/"session_id": "session_id"/' \
+      | sed -e 's/"fileName": ".*"/"fileName": "_normalized_file_name_"/' \
+      > normalized_output
     ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) \
-      | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' > normalized_expected
-
+      | sed -e 's/"run_id": ".*"/"run_id": "run_id"/' \
+      | sed -e 's/"session_id": ".*"/"session_id": "session_id"/' \
+      | sed -e 's/"fileName": ".*"/"fileName": "_normalized_file_name_"/' \
+      > normalized_expected
     diff normalized_output normalized_expected \
       && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
     """
@@ -79,24 +84,39 @@ process file_smart_diff {
 
 workflow checker {
   take:
-    input_file
+    files_to_upload
+    metadata_analysis
+    genome_annotation
+    genome_build
+    wf_name
+    wf_version
     expected_output
 
   main:
     payloadGenQc(
-      input_file
+      Channel.fromPath(files_to_upload).collect(),
+      file(metadata_analysis),
+      genome_annotation,
+      genome_build,
+      wf_name,
+      wf_version
     )
 
     file_smart_diff(
-      payloadGenQc.out.output_file,
-      expected_output
+      payloadGenQc.out.payload,
+      file(expected_output)
     )
 }
 
 
 workflow {
   checker(
-    file(params.input_file),
-    file(params.expected_output)
+    params.files_to_upload,
+    params.metadata_analysis,
+    params.genome_annotation,
+    params.genome_build,
+    params.wf_name,
+    params.wf_version,
+    params.expected_output
   )
 }
