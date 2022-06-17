@@ -1,0 +1,573 @@
+{
+  "analysisType": {
+    "name": "qc_metrics"
+  },
+  "studyId": "TEST-PR",
+  "workflow": {
+    "workflow_name": "Pre Alignment QC Workflow",
+    "workflow_version": "0.1.0",
+    "run_id": "peaceful_faggin",
+    "session_id": "3eb6b333-5225-4054-998f-593cd42775e5",
+    "inputs": [
+      {
+        "analysis_type": "sequencing_experiment",
+        "input_analysis_id": "3e46fd12-a5fc-4d72-86fd-12a5fcbd7216"
+      }
+    ]
+  },
+  "files": [
+    {
+      "fileSize": 1111,
+      "fileMd5sum": "4ad8e4153cf08507b02e893bdf09f2e8",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "tar_content.json",
+          "C0HVY_2.c18a81968b79604ef549f7d05904f040.cutadapt.log"
+        ],
+        "analysis_tools": [
+          "Cutadapt"
+        ],
+        "metrics": {
+          "read_group_id": "C0HVY_2"
+        },
+        "description": null
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.C0HVY_2.cutadapt.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 1105,
+      "fileMd5sum": "4411dbfb218b076f6547f8d43ceabbb8",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "tar_content.json",
+          "C0HVY_2_2.03b9c6b4b533cba577abaa7b57879cd9.cutadapt.log"
+        ],
+        "analysis_tools": [
+          "Cutadapt"
+        ],
+        "metrics": {
+          "read_group_id": "C0HVY_2_2"
+        },
+        "description": null
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.C0HVY_2_2.cutadapt.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 1103,
+      "fileMd5sum": "809c676e359276ad86201874f0e96bf3",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "tar_content.json",
+          "D0RE2_1.b4bfaf68165cc125a7d8f64de910e4ab.cutadapt.log"
+        ],
+        "analysis_tools": [
+          "Cutadapt"
+        ],
+        "metrics": {
+          "read_group_id": "D0RE2_1"
+        },
+        "description": null
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.D0RE2_1.cutadapt.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 1113,
+      "fileMd5sum": "cb56adee4cd845ef2893364ad6a37434",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "tar_content.json",
+          "D0RE2_1_2.768145761746613d5b058fdd23e0cf94.cutadapt.log"
+        ],
+        "analysis_tools": [
+          "Cutadapt"
+        ],
+        "metrics": {
+          "read_group_id": "D0RE2_1_2"
+        },
+        "description": null
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.D0RE2_1_2.cutadapt.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 1122,
+      "fileMd5sum": "90e40982d81d4d1f5fabb9dd3b856d2e",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "tar_content.json",
+          "D0RH0_2.1243f8e870cc9d8ec77338f3baf19484.cutadapt.log"
+        ],
+        "analysis_tools": [
+          "Cutadapt"
+        ],
+        "metrics": {
+          "read_group_id": "D0RH0_2"
+        },
+        "description": null
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.D0RH0_2.cutadapt.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 1130,
+      "fileMd5sum": "b425e5ce5fbbdd7776edd83cdd4935b0",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "tar_content.json",
+          "D0RH0_2_2.350a5d45b7a6846e4a111121eaba2266.cutadapt.log"
+        ],
+        "analysis_tools": [
+          "Cutadapt"
+        ],
+        "metrics": {
+          "read_group_id": "D0RH0_2_2"
+        },
+        "description": null
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.D0RH0_2_2.cutadapt.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 985503,
+      "fileMd5sum": "84b5a5c5df65f1510229eca9836f9004",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "TEST-PR.DO250122.SA610149.C0HVY.2.2adf885152f5f6d41d5193bd01164372_R1_fastqc.html",
+          "TEST-PR.DO250122.SA610149.C0HVY.2.2adf885152f5f6d41d5193bd01164372_R1_fastqc.zip",
+          "TEST-PR.DO250122.SA610149.C0HVY.2.2adf885152f5f6d41d5193bd01164372_R2_fastqc.html",
+          "TEST-PR.DO250122.SA610149.C0HVY.2.2adf885152f5f6d41d5193bd01164372_R2_fastqc.zip"
+        ],
+        "analysis_tools": [
+          "FastQC"
+        ],
+        "metrics": [
+          {
+            "Read Group ID": "C0HVY_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "WARN",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.C0HVY.2.2adf885152f5f6d41d5193bd01164372_R1.fq.gz",
+            "read_group_id": "C0HVY_2"
+          },
+          {
+            "Read Group ID": "C0HVY_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "WARN",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.C0HVY.2.2adf885152f5f6d41d5193bd01164372_R2.fq.gz",
+            "read_group_id": "C0HVY_2"
+          }
+        ],
+        "description": "High level sequencing reads QC metrics generated by FastQC."
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.C0HVY_2.fastqc.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 985462,
+      "fileMd5sum": "10902add765ec10cd362a051ef0f2a87",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "TEST-PR.DO250122.SA610149.C0HVY.2.fc3af6a726258f2676c587679628de2e_R1_fastqc.html",
+          "TEST-PR.DO250122.SA610149.C0HVY.2.fc3af6a726258f2676c587679628de2e_R1_fastqc.zip",
+          "TEST-PR.DO250122.SA610149.C0HVY.2.fc3af6a726258f2676c587679628de2e_R2_fastqc.html",
+          "TEST-PR.DO250122.SA610149.C0HVY.2.fc3af6a726258f2676c587679628de2e_R2_fastqc.zip"
+        ],
+        "analysis_tools": [
+          "FastQC"
+        ],
+        "metrics": [
+          {
+            "Read Group ID": "C0HVY_2_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "WARN",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.C0HVY.2.fc3af6a726258f2676c587679628de2e_R1.fq.gz",
+            "read_group_id": "C0HVY_2_2"
+          },
+          {
+            "Read Group ID": "C0HVY_2_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "WARN",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.C0HVY.2.fc3af6a726258f2676c587679628de2e_R2.fq.gz",
+            "read_group_id": "C0HVY_2_2"
+          }
+        ],
+        "description": "High level sequencing reads QC metrics generated by FastQC."
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.C0HVY_2_2.fastqc.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 988024,
+      "fileMd5sum": "62d2cbd2351dc99ef2152a3c015859dc",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "TEST-PR.DO250122.SA610149.D0RE2.1.d2ca4aa5eab62285dfc4c5afdb424064_R1_fastqc.html",
+          "TEST-PR.DO250122.SA610149.D0RE2.1.d2ca4aa5eab62285dfc4c5afdb424064_R1_fastqc.zip",
+          "TEST-PR.DO250122.SA610149.D0RE2.1.d2ca4aa5eab62285dfc4c5afdb424064_R2_fastqc.html",
+          "TEST-PR.DO250122.SA610149.D0RE2.1.d2ca4aa5eab62285dfc4c5afdb424064_R2_fastqc.zip"
+        ],
+        "analysis_tools": [
+          "FastQC"
+        ],
+        "metrics": [
+          {
+            "Read Group ID": "D0RE2_1",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "PASS",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.D0RE2.1.d2ca4aa5eab62285dfc4c5afdb424064_R1.fq.gz",
+            "read_group_id": "D0RE2_1"
+          },
+          {
+            "Read Group ID": "D0RE2_1",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "FAIL",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.D0RE2.1.d2ca4aa5eab62285dfc4c5afdb424064_R2.fq.gz",
+            "read_group_id": "D0RE2_1"
+          }
+        ],
+        "description": "High level sequencing reads QC metrics generated by FastQC."
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.D0RE2_1.fastqc.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 988046,
+      "fileMd5sum": "3d4c171b57bdf1fe6c1f010300fa5a06",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "TEST-PR.DO250122.SA610149.D0RE2.1.6430eba9995271feb660b1535a33bf34_R1_fastqc.html",
+          "TEST-PR.DO250122.SA610149.D0RE2.1.6430eba9995271feb660b1535a33bf34_R1_fastqc.zip",
+          "TEST-PR.DO250122.SA610149.D0RE2.1.6430eba9995271feb660b1535a33bf34_R2_fastqc.html",
+          "TEST-PR.DO250122.SA610149.D0RE2.1.6430eba9995271feb660b1535a33bf34_R2_fastqc.zip"
+        ],
+        "analysis_tools": [
+          "FastQC"
+        ],
+        "metrics": [
+          {
+            "Read Group ID": "D0RE2_1_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "PASS",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.D0RE2.1.6430eba9995271feb660b1535a33bf34_R1.fq.gz",
+            "read_group_id": "D0RE2_1_2"
+          },
+          {
+            "Read Group ID": "D0RE2_1_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "FAIL",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.D0RE2.1.6430eba9995271feb660b1535a33bf34_R2.fq.gz",
+            "read_group_id": "D0RE2_1_2"
+          }
+        ],
+        "description": "High level sequencing reads QC metrics generated by FastQC."
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.D0RE2_1_2.fastqc.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 1041383,
+      "fileMd5sum": "c16c68034cdbd478be907fc8e9fa7add",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "TEST-PR.DO250122.SA610149.D0RH0.2.88d85adb6e030fa000eb07de26bc2006_R1_fastqc.html",
+          "TEST-PR.DO250122.SA610149.D0RH0.2.88d85adb6e030fa000eb07de26bc2006_R1_fastqc.zip",
+          "TEST-PR.DO250122.SA610149.D0RH0.2.88d85adb6e030fa000eb07de26bc2006_R2_fastqc.html",
+          "TEST-PR.DO250122.SA610149.D0RH0.2.88d85adb6e030fa000eb07de26bc2006_R2_fastqc.zip"
+        ],
+        "analysis_tools": [
+          "FastQC"
+        ],
+        "metrics": [
+          {
+            "Read Group ID": "D0RH0_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "WARN",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.D0RH0.2.88d85adb6e030fa000eb07de26bc2006_R1.fq.gz",
+            "read_group_id": "D0RH0_2"
+          },
+          {
+            "Read Group ID": "D0RH0_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "WARN",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.D0RH0.2.88d85adb6e030fa000eb07de26bc2006_R2.fq.gz",
+            "read_group_id": "D0RH0_2"
+          }
+        ],
+        "description": "High level sequencing reads QC metrics generated by FastQC."
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.D0RH0_2.fastqc.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 1041659,
+      "fileMd5sum": "5bd637af54ce20f6673e440c4eaddbd5",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "TEST-PR.DO250122.SA610149.D0RH0.2.5df475c540022c3d091bcb816a547eea_R1_fastqc.html",
+          "TEST-PR.DO250122.SA610149.D0RH0.2.5df475c540022c3d091bcb816a547eea_R1_fastqc.zip",
+          "TEST-PR.DO250122.SA610149.D0RH0.2.5df475c540022c3d091bcb816a547eea_R2_fastqc.html",
+          "TEST-PR.DO250122.SA610149.D0RH0.2.5df475c540022c3d091bcb816a547eea_R2_fastqc.zip"
+        ],
+        "analysis_tools": [
+          "FastQC"
+        ],
+        "metrics": [
+          {
+            "Read Group ID": "D0RH0_2_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "WARN",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.D0RH0.2.5df475c540022c3d091bcb816a547eea_R1.fq.gz",
+            "read_group_id": "D0RH0_2_2"
+          },
+          {
+            "Read Group ID": "D0RH0_2_2",
+            "Basic Statistics": "PASS",
+            "Per base sequence quality": "PASS",
+            "Per tile sequence quality": "WARN",
+            "Per sequence quality scores": "PASS",
+            "Per base sequence content": "FAIL",
+            "Per sequence GC content": "FAIL",
+            "Per base N content": "PASS",
+            "Sequence Length Distribution": "PASS",
+            "Sequence Duplication Levels": "PASS",
+            "Overrepresented sequences": "FAIL",
+            "Adapter Content": "PASS",
+            "File Name": "TEST-PR.DO250122.SA610149.D0RH0.2.5df475c540022c3d091bcb816a547eea_R2.fq.gz",
+            "read_group_id": "D0RH0_2_2"
+          }
+        ],
+        "description": "High level sequencing reads QC metrics generated by FastQC."
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.D0RH0_2_2.fastqc.tgz",
+      "fileType": "TGZ"
+    },
+    {
+      "fileSize": 411232,
+      "fileMd5sum": "4d7c1e8612ca095348d98b9858ab1716",
+      "fileAccess": "controlled",
+      "info": {
+        "data_category": "Quality Control Metrics",
+        "data_subtypes": [
+          "Read Group Metrics"
+        ],
+        "files_in_tgz": [
+          "multiqc_data",
+          "multiqc.log",
+          "multiqc_citations.json",
+          "multiqc_cutadapt.json",
+          "multiqc_data.json",
+          "multiqc_fastqc.json",
+          "multiqc_general_stats.json",
+          "multiqc_sources.json",
+          "multiqc_report.html"
+        ],
+        "analysis_tools": [
+          "MultiQC"
+        ],
+        "metrics": null,
+        "description": "A single report contains aggregated results from bioinformatics analyses across many samples reported by MultiQC."
+      },
+      "dataType": "Sequencing QC",
+      "fileName": "TEST-PR.DO250122.SA610149.wgs.20220609.summary.multiqc.tgz",
+      "fileType": "TGZ"
+    }
+  ],
+  "experiment": {
+    "platform": "ILLUMINA",
+    "platform_model": "HiSeq 2000",
+    "sequencing_date": "2014-12-12",
+    "sequencing_center": "EXT",
+    "submitter_sequencing_experiment_id": "TEST_EXP",
+    "experimental_strategy": "WGS"
+  },
+  "samples": [
+    {
+      "submitterSampleId": "HCC1143_BAM_INPUT",
+      "matchedNormalSubmitterSampleId": null,
+      "sampleType": "Total DNA",
+      "specimen": {
+        "submitterSpecimenId": "HCC1143_BAM_INPUT",
+        "tumourNormalDesignation": "Normal",
+        "specimenTissueSource": "Blood derived",
+        "specimenType": "Cell line - derived from normal"
+      },
+      "donor": {
+        "gender": "Female",
+        "submitterDonorId": "HCC1143"
+      }
+    }
+  ]
+}
