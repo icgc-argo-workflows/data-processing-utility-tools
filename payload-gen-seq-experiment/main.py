@@ -197,25 +197,7 @@ def main(metadata, extra_info=dict()):
             'gender': metadata.get('gender')
         }
     }
-
-    if extra_info:
-        if extra_info['sample'].get(sample['submitterSampleId']):
-            sample['sampleId'] = extra_info['sample'][sample['submitterSampleId']]
-        else:
-            sys.exit(f"Provided extra_info_tsv misses mapping for submitter sample ID: {sample['submitterSampleId']}")
-
-        if extra_info['specimen'].get(sample['specimen']['submitterSpecimenId']):
-            sample['specimenId'] = extra_info['specimen'][sample['specimen']['submitterSpecimenId']]
-            sample['specimen']['specimenId'] = sample["specimenId"]
-        else:
-            sys.exit(f"Provided extra_info_tsv misses mapping for submitter specimen ID: {sample['specimen']['submitterSpecimenId']}")
-
-        if extra_info['donor'].get(sample['donor']['submitterDonorId']):
-            sample['donor']['donorId'] = extra_info['donor'][sample['donor']['submitterDonorId']]
-            sample['specimen']['donorId'] = sample['donor']['donorId']
-        else:
-            sys.exit(f"Provided extra_info_tsv misses mapping for submitter donor ID: {sample['donor']['submitterDonorId']}")
-
+    
     payload['samples'].append(sample)
 
     # get file of the payload
@@ -238,6 +220,39 @@ def main(metadata, extra_info=dict()):
         rg.pop('type')  # remove 'type' field
         rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
         payload['read_groups'].append(rg)
+
+    if extra_info:
+        for item,dict_to_update,submitter_id in zip(
+            ["sample","donor","specimen","experiment"],
+            [payload['samples'][0],payload['samples'][0]['donor'],payload['samples'][0]['specimen'],payload['experiment']],
+            ["submitterSampleId","submitterDonorId","submitterSpecimenId","submitter_sequencing_experiment_id"]
+        ):
+            if not item in extra_info:
+                continue
+            for key in extra_info[item][dict_to_update.get(submitter_id)].keys() :
+                if key in dict_to_update:
+                    sys.exit(f"Conflicting entries detected. Attempted altering of existing field {key} in {item}")
+            if extra_info[item][dict_to_update.get(submitter_id)]:
+                    dict_to_update.update(extra_info[item][dict_to_update.get(submitter_id)])
+
+        for item,list_to_parse,unique_ele_name in zip(
+            ["files","read_groups"],
+            [payload["files"],payload['read_groups']],
+            ["fileName","submitter_read_group_id"]
+        ):
+            if not item in extra_info:
+                continue
+            for ele_to_update in extra_info[item].keys():
+                for existing_ele in list_to_parse:
+                    if existing_ele[unique_ele_name]!=ele_to_update:
+                        continue
+                    for key in extra_info[item][ele_to_update].keys():
+                        if key in existing_ele:
+                            sys.exit(f"Conflicting entries detected. Attempted altering of existing field {key} in {existing_ele}")
+                    if item=='files':
+                        existing_ele['info'].update(extra_info[item][ele_to_update])
+                    else:
+                        existing_ele.update(extra_info[item][ele_to_update])
 
     with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
@@ -282,20 +297,24 @@ if __name__ == "__main__":
     if args.extra_info_tsv:
         with open(args.extra_info_tsv, 'r') as f:
             for row in csv.DictReader(f, delimiter='\t'):
-                type = row['type']
-                submitter_id = row['submitter_id']
-                uniform_id = row['uniform_id']
-                if type in extra_info:
-                    sys.exit(f"Values in 'type' field duplicated. Offending value: {type}, in file: {args.extra_info_tsv}")
-                else:
-                    extra_info[type] = dict()
+            
+                for row_type in ['type','submitter_id','submitter_field','field_value']:
+                    if row_type not in row.keys():
+                        sys.exit(f"Incorrect formatting of : {args.extra_info_tsv}. {row_type} is missing") 
 
-                if submitter_id in extra_info[type]:
-                    sys.exit(f"Values in 'submitter_id' field duplicated. Offending value: {submitter_id}, for type: {type}, in file: {args.extra_info_tsv}" )
-                else:
-                    extra_info[type][submitter_id] = uniform_id
-
-        if 'donor' not in extra_info or 'specimen' not in extra_info or 'sample' not in extra_info:
-            sys.exit(f"Provided extra_info_tsv file '{args.extra_info_tsv}' is required to have ID mappings for 'donor', 'specimen' and 'sample'")
+                row_type = row['type']
+                row_id= row['submitter_id']
+                row_field= row['submitter_field']
+                row_val= row['field_value']
+    
+                if (row_type!="sample") and (row_type!="donor") and (row_type!="specimen") and (row_type!="files") and (row_type!="experiment"):
+                    sys.exit(f"Incorrect identifier supplied. Must be on the following : 'sample','donor','specimen','files','experiments'. Offending value: {type}, in file: {args.extra_info_tsv}")
+        
+                if row_type not in extra_info:
+                    extra_info[row_type]=dict()
+                if row_id not in extra_info[row_type]:
+                    extra_info[row_type][row_id]=dict()
+                extra_info[row_type][row_id][row_field]=
+                
 
     main(metadata, extra_info)
