@@ -197,7 +197,7 @@ def main(metadata, extra_info=dict()):
             'gender': metadata.get('gender')
         }
     }
-    
+
     payload['samples'].append(sample)
 
     # get file of the payload
@@ -314,7 +314,7 @@ if __name__ == "__main__":
                     extra_info[row_type]=dict()
                 if row_id not in extra_info[row_type]:
                     extra_info[row_type][row_id]=dict()
-                extra_info[row_type][row_id][row_field]=
+                extra_info[row_type][row_id][row_field]=row_val
                 
 
     main(metadata, extra_info)
