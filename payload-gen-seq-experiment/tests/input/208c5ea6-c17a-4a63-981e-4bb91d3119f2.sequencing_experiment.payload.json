@@ -8,7 +8,7 @@
     "sequencing_center": "EXT",
     "platform": "ILLUMINA",
     "platform_model": "HiSeq 2000",
-    "experimental_strategy": "WGS",
+    "experimental_strategy": "RNA-Seq",
     "sequencing_date": "2014-12-12",
     "library_strandedness": "FIRST_READ_ANTISENSE_STRAND"
   },
@@ -58,7 +58,7 @@
     {
       "submitterSampleId": "HCC1143_BAM_INPUT",
       "matchedNormalSubmitterSampleId": null,
-      "sampleType": "DNA",
+      "sampleType": "RNA",
       "specimen": {
         "submitterSpecimenId": "HCC1143_BAM_INPUT",
         "tumourNormalDesignation": "Normal",
@@ -80,10 +80,9 @@
       "fileAccess": "controlled",
       "dataType": "Submitted Reads",
       "info": {
-        "data_category": "Sequencing Reads",
-        "EGAF": "EGAF0000002",
-        "EGAX": "EGAX0000002"
-      }
+        "data_category": "Sequencing Reads"
+      },
+      "EGAF": "EGAF000001"
     }
   ]
 }
