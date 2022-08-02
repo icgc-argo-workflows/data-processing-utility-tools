@@ -1,0 +1,7 @@
+{
+  "experiment_info_tsv": "input/experiment.correct.rnaseq.tsv",
+  "read_group_info_tsv": "input/read_group.v2.tsv",
+  "file_info_tsv": "input/file.v3.tsv",
+  "expected_output": "input/208c5ea6-c17a-4a63-981e-4bb91d3119f2.sequencing_experiment.payload.json",
+  "publish_dir": "outdir"
+}
