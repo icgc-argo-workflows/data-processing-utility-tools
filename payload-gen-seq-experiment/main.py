@@ -176,62 +176,74 @@ def validate_args(args):
             """
         ))
 
-def validationCheck(val,key,target):
+def validationCheck(val,key,target_dict):
+    target=target_dict[key]
     check_pass=True
     python_type_to_generic_dict={
         "NoneType":"null",
         "bool":"boolean",
         "str":"string",
-        "int":"integer"
+        "int":"integer",
     }
-    print()
-    print(val)
-    print("key:"+key)
-    print(target)
-    if key=='type':
-        return True if python_type_to_generic_dict[type(val).__name__] in target else False
+
+    if key=='type' and "integer" not in target and "number" not in target:
+        output_str=target if type(target).__name__=='str' else ",".join(target)
+        return (True,None) if python_type_to_generic_dict[type(val).__name__] in target else (False,"DataType received "+python_type_to_generic_dict[type(val).__name__]+" expected : "+output_str)
+    if key=='type' and ("integer" in target or "number" in target):
+        output_str=target if type(target).__name__=='str' else ",".join(target)
+        return (True,None) if python_type_to_generic_dict[type(int(val)).__name__] in target else (False,"DataType received "+python_type_to_generic_dict[type(val).__name__]+" expected : "+output_str)
     elif key=='pattern':
-        return True if re.findall(target,val) else False
+        return (True,None)if re.findall(target,val) else (False,"String received "+val+", does not adhere to regex: "+target_dict[key])
     elif key=='enum':
-        return True if val in target else False
+        return (True,None) if val in target else (False,"Value %s is not part of approved list : %s" % (val,",".join(target)))
     elif key=='minimum':
-        return True if val >= target else False
+        if "minimum" in target_dict and "maximum" in target_dict:
+            return (True,None) if (int(val) >= target_dict['minimum'] and int(val) <= target_dict['maximum']) else (False,"Value "+str(val)+" fails to meet both maximum and minimum requirements")
+        else:
+            return (True,None) if int(val) >= target else (False,str(val)+" fails to meet both minimum requirements")
     elif key=='maximum':
-        return True if val <= target else False
+        if "minimum" in target_dict and "maximum" in target_dict:
+            return (True,None) if (int(val) >= target_dict['minimum'] and int(val) <= target_dict['maximum']) else (False,"Value "+str(val)+" fails to meet both maximum and minimum requirements")
+        else:
+            return (True,None) if int(val) <= target else (False,str(val)+" fails to meet both maximum requirements")
     elif key=='minLength':
-        return True if len(val) >= target else False
+        return (True,None) if len(val) >= target else (False,"length of "+val+" fails to meet both minimum requirements")
     elif key=='anyOf':
-        any_array_check=[]
+        list_of_errors=[]
         for sub_dict in target:
-            any_of_bool=True
+            sublist_of_errors=[]
             for key_sub_dict in sub_dict.keys():
-                if not validationCheck(val,key_sub_dict,target[key_sub_dict]):
-                    any_of_bool=False
-            any_array_check.append(any_of_bool)
-        return True if sum(any_array_check)>0 else False
+                check_pass,fail_reason=validationCheck(val,key_sub_dict,sub_dict)
+                if not check_pass:
+                    sublist_of_errors.append(fail_reason)
+                    print(fail_reason)
+            if len(sublist_of_errors)>0:
+                list_of_errors.append(" and ".join(list(set(sublist_of_errors))))
+        return (True,None) if len(list_of_errors)<len(target) else (False,"Failure to adhere any of the following scenarios - "+";".join(list(set(list_of_errors))))
     elif key=='oneOf':
-        any_array_check=[]
+        list_of_errors=[]
         for sub_dict in target:
-            any_of_bool=True
+            sublist_of_errors=[]
             for key_sub_dict in sub_dict.keys():
-                if not validationCheck(val,key_sub_dict,sub_dict[key_sub_dict]):
-                    any_of_bool=False
-            any_array_check.append(any_of_bool)
-            print(any_array_check)
-        return True if sum(any_array_check)>=1 else False
+                check_pass,fail_reason=validationCheck(val,key_sub_dict,sub_dict)
+                if not check_pass:
+                    sublist_of_errors.append(fail_reason)
+                    print(fail_reason)
+            if len(sublist_of_errors)>0:
+                list_of_errors.append(" and ".join(list(set(sublist_of_errors))))
+        return (True,None) if len(list_of_errors)<len(target) else (False,"Failure to adhere any of the following scenarios - "+";".join(list(set(list_of_errors))))
     elif key=='format':
         dparser.parse(val)
         try:
             dparser.parse(val)
         except:
-            print("what")
-            return False
+            return (False,"Fails to meet appropriate 'date-time' or 'date' criteria")
         else:
-            return True
+            return (True,None)
     elif key=='example':
-        return True
+        return (True,None)
     else:
-        return False
+        return (False,"Bad")
 
 def validatePayload(payload):
     url="https://raw.githubusercontent.com/icgc-argo/argo-metadata-schemas/master/schemas/sequencing_experiment.json"
@@ -239,23 +251,25 @@ def validatePayload(payload):
 
     if not resp.status_code==200:
         sys.exit("Unable to retrieve schema\n")
-
-
     ###Experiment
     for required in resp.json()['schema']['properties']['experiment']['required']:
         if not required in payload.get('experiment').keys():
             sys.exit("Payload missing required field %s\n" % required)
         
     for cat in resp.json()['schema']['properties']['experiment']['propertyNames']['enum']:
-        if metadata.get(cat):
-            val=metadata.get(cat)
+        if payload.get(cat):
+            val=payload.get(cat)
             schema_dict=resp.json()['schema']['properties']['experiment']['allof'][0]['properties'][cat]
             
             for validation_key in schema_dict.keys():
-                if not validationCheck(val,validation_key,schema_dict[validation_key]):
-                    print(val,validation_key,schema_dict[validation_key])
-                    sys.exit("Payload violates Schema : Please check %s in %s\n" % (validation_key,cat))
+                print(cat)
+                print(type(val))
+                check_pass,fail_reason=validationCheck(val,validation_key,schema_dict)
+                #print(validation_key,check_pass)
+                if not check_pass:
+                    sys.exit("Payload violates Experiment Schema in field '%s', %s" % ( cat,fail_reason))
     ###Read groups
+
     for required in resp.json()['schema']['properties']['read_groups']['items']['required']:
         for rg in payload['read_groups']:
             if not required in rg.keys():
@@ -265,11 +279,11 @@ def validatePayload(payload):
             if rg.get(cat):
                 val=rg.get(cat)
                 schema_dict=resp.json()['schema']['properties']['read_groups']['items']['allOf'][0]['properties'][cat]
-                
+                print(cat)
                 for validation_key in schema_dict.keys():
-                    if not validationCheck(val,validation_key,schema_dict[validation_key]):
-                        print(val,validation_key,schema_dict[validation_key])
-                        sys.exit("Payload violates Schema : Please check %s in %s\n" % (validation_key,cat))
+                    check_pass,fail_reason=validationCheck(val,validation_key,schema_dict)
+                    if not check_pass:
+                        sys.exit("Payload violates Read group Schema in field '%s', %s" % ( cat,fail_reason))
         
 
 
@@ -296,14 +310,19 @@ def main(metadata, extra_info=dict()):
     }
 
     # optional experiment arguements
+    # Strings
     optional_experimental_fields=[
         "library_isolation_protocol","library_preparation_kit",
-        "library_strandedness","rin","dv200","spike_ins_included",
+        "library_strandedness","dv200","spike_ins_included",
         "spike_ins_fasta","spike_ins_concentration","sequencing_center"]
     for optional_experimental_field in optional_experimental_fields:
         if metadata.get(optional_experimental_field):
             payload['experiment'][optional_experimental_field]=metadata.get(optional_experimental_field)
-
+    # Int
+    optional_experimental_fields=["rin"]
+    for optional_experimental_field in optional_experimental_fields:
+        if metadata.get(optional_experimental_field):
+            payload['experiment'][optional_experimental_field]=int(metadata.get(optional_experimental_field))
 
     # RNA-seq library_Strandedness requirement check
     if metadata.get('experimental_strategy')=='RNA-Seq' and not metadata.get("library_strandedness"):
