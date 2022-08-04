@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y procps
 LABEL org.opencontainers.image.source https://github.com/icgc-argo-workflows/data-processing-utility-tools
 
 RUN pip install requests && \
-	pip install python-dateutil
+	pip install jsonschema
 
 RUN groupadd -g 1000 ubuntu &&\
     useradd -l -u 1000 -g ubuntu ubuntu &&\

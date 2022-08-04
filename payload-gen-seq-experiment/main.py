@@ -32,7 +32,8 @@ import textwrap
 import argparse
 import requests
 import re
-from dateutil import parser as dparser
+import jsonschema
+import traceback
 
 
 TSV_FIELDS = {}
@@ -176,114 +177,24 @@ def validate_args(args):
             """
         ))
 
-def validationCheck(val,key,target_dict):
-    target=target_dict[key]
-    check_pass=True
-    python_type_to_generic_dict={
-        "NoneType":"null",
-        "bool":"boolean",
-        "str":"string",
-        "int":"integer",
-    }
-
-    if key=='type' and "integer" not in target and "number" not in target:
-        output_str=target if type(target).__name__=='str' else ",".join(target)
-        return (True,None) if python_type_to_generic_dict[type(val).__name__] in target else (False,"DataType received "+python_type_to_generic_dict[type(val).__name__]+" expected : "+output_str)
-    if key=='type' and ("integer" in target or "number" in target):
-        output_str=target if type(target).__name__=='str' else ",".join(target)
-        return (True,None) if python_type_to_generic_dict[type(int(val)).__name__] in target else (False,"DataType received "+python_type_to_generic_dict[type(val).__name__]+" expected : "+output_str)
-    elif key=='pattern':
-        return (True,None)if re.findall(target,val) else (False,"String received "+val+", does not adhere to regex: "+target_dict[key])
-    elif key=='enum':
-        return (True,None) if val in target else (False,"Value %s is not part of approved list : %s" % (val,",".join(target)))
-    elif key=='minimum':
-        if "minimum" in target_dict and "maximum" in target_dict:
-            return (True,None) if (int(val) >= target_dict['minimum'] and int(val) <= target_dict['maximum']) else (False,"Value "+str(val)+" fails to meet both maximum and minimum requirements")
-        else:
-            return (True,None) if int(val) >= target else (False,str(val)+" fails to meet both minimum requirements")
-    elif key=='maximum':
-        if "minimum" in target_dict and "maximum" in target_dict:
-            return (True,None) if (int(val) >= target_dict['minimum'] and int(val) <= target_dict['maximum']) else (False,"Value "+str(val)+" fails to meet both maximum and minimum requirements")
-        else:
-            return (True,None) if int(val) <= target else (False,str(val)+" fails to meet both maximum requirements")
-    elif key=='minLength':
-        return (True,None) if len(val) >= target else (False,"length of "+val+" fails to meet both minimum requirements")
-    elif key=='anyOf':
-        list_of_errors=[]
-        for sub_dict in target:
-            sublist_of_errors=[]
-            for key_sub_dict in sub_dict.keys():
-                check_pass,fail_reason=validationCheck(val,key_sub_dict,sub_dict)
-                if not check_pass:
-                    sublist_of_errors.append(fail_reason)
-                    print(fail_reason)
-            if len(sublist_of_errors)>0:
-                list_of_errors.append(" and ".join(list(set(sublist_of_errors))))
-        return (True,None) if len(list_of_errors)<len(target) else (False,"Failure to adhere any of the following scenarios - "+";".join(list(set(list_of_errors))))
-    elif key=='oneOf':
-        list_of_errors=[]
-        for sub_dict in target:
-            sublist_of_errors=[]
-            for key_sub_dict in sub_dict.keys():
-                check_pass,fail_reason=validationCheck(val,key_sub_dict,sub_dict)
-                if not check_pass:
-                    sublist_of_errors.append(fail_reason)
-                    print(fail_reason)
-            if len(sublist_of_errors)>0:
-                list_of_errors.append(" and ".join(list(set(sublist_of_errors))))
-        return (True,None) if len(list_of_errors)<len(target) else (False,"Failure to adhere any of the following scenarios - "+";".join(list(set(list_of_errors))))
-    elif key=='format':
-        dparser.parse(val)
-        try:
-            dparser.parse(val)
-        except:
-            return (False,"Fails to meet appropriate 'date-time' or 'date' criteria")
-        else:
-            return (True,None)
-    elif key=='example':
-        return (True,None)
+def validatePayload(payload,args):
+    if args.schema_url:
+        url=args.schema_url
     else:
-        return (False,"Bad")
-
-def validatePayload(payload):
-    url="https://raw.githubusercontent.com/icgc-argo/argo-metadata-schemas/master/schemas/sequencing_experiment.json"
+        url="https://raw.githubusercontent.com/icgc-argo/argo-metadata-schemas/master/schemas/sequencing_experiment.json"
+    
     resp=requests.get(url)
-
     if not resp.status_code==200:
-        sys.exit("Unable to retrieve schema\n")
-    ###Experiment
-    for required in resp.json()['schema']['properties']['experiment']['required']:
-        if not required in payload.get('experiment').keys():
-            sys.exit("Payload missing required field %s\n" % required)
-        
-    for cat in resp.json()['schema']['properties']['experiment']['propertyNames']['enum']:
-        if payload.get(cat):
-            val=payload.get(cat)
-            schema_dict=resp.json()['schema']['properties']['experiment']['allof'][0]['properties'][cat]
-            
-            for validation_key in schema_dict.keys():
-                print(cat)
-                print(type(val))
-                check_pass,fail_reason=validationCheck(val,validation_key,schema_dict)
-                #print(validation_key,check_pass)
-                if not check_pass:
-                    sys.exit("Payload violates Experiment Schema in field '%s', %s" % ( cat,fail_reason))
-    ###Read groups
-
-    for required in resp.json()['schema']['properties']['read_groups']['items']['required']:
-        for rg in payload['read_groups']:
-            if not required in rg.keys():
-                sys.exit("Read Group %s in payload is missing required field %s\n" % (rg['submitter_read_group_id'],required))
-    for cat in resp.json()['schema']['properties']['read_groups']['items']['propertyNames']['enum']:
-        for rg in payload['read_groups']:
-            if rg.get(cat):
-                val=rg.get(cat)
-                schema_dict=resp.json()['schema']['properties']['read_groups']['items']['allOf'][0]['properties'][cat]
-                print(cat)
-                for validation_key in schema_dict.keys():
-                    check_pass,fail_reason=validationCheck(val,validation_key,schema_dict)
-                    if not check_pass:
-                        sys.exit("Payload violates Read group Schema in field '%s', %s" % ( cat,fail_reason))
+        sys.exit("Unable to retrieve schema. Please check URL\n")
+    #print(payload)
+    #print(resp.json()['schema'])
+    try:
+        jsonschema.validate(instance=payload,schema=resp.json()['schema'])
+    except jsonschema.exceptions.ValidationError as err:
+        print(err)
+        sys.exit("Payload failed to validate against schema\n")
+    else:
+        return True
         
 
 
@@ -407,7 +318,7 @@ def main(metadata, extra_info=dict()):
                     else:
                         existing_ele.update(extra_info[item][ele_to_update])
 
-    validatePayload(payload)
+    validatePayload(payload,args)
     with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
@@ -424,6 +335,8 @@ if __name__ == "__main__":
                         help="tsv file containing file information submitted from user")
     parser.add_argument("-e", "--extra-info-tsv",
                         help="tsv file containing file information submitted from user")
+    parser.add_argument("-s", "--schema-url",
+                        help="URL to validate schema against")
     args = parser.parse_args()
 
     validate_args(args)
