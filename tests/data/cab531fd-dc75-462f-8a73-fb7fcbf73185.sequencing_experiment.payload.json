@@ -54,7 +54,7 @@
     {
       "submitterSampleId": "HCC1143_FASTQ_INPUT",
       "matchedNormalSubmitterSampleId": "HCC1143_BAM_INPUT",
-      "sampleType": "DNA",
+      "sampleType": "Total DNA",
       "specimen": {
         "submitterSpecimenId": "HCC1143_FASTQ_INPUT",
         "tumourNormalDesignation": "Cell line - derived from tumour",

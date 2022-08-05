@@ -33,7 +33,6 @@ import argparse
 import requests
 import re
 import jsonschema
-import traceback
 
 
 TSV_FIELDS = {}
@@ -174,6 +173,7 @@ def validate_args(args):
             Usage:
                 When '-m' is provided, no other arguments can be used
                 When '-m' is not provided, please provide all of these arguments: -x, -r and -f
+                Optionally '-s' a schema URL can be provided, which the payload will be validated against
             """
         ))
 
@@ -181,13 +181,12 @@ def validatePayload(payload,args):
     if args.schema_url:
         url=args.schema_url
     else:
-        url="https://raw.githubusercontent.com/icgc-argo/argo-metadata-schemas/master/schemas/sequencing_experiment.json"
+        url="https://submission-song.rdpc.cancercollaboratory.org/schemas/sequencing_experiment"
     
     resp=requests.get(url)
     if not resp.status_code==200:
         sys.exit("Unable to retrieve schema. Please check URL\n")
-    #print(payload)
-    #print(resp.json()['schema'])
+
     try:
         jsonschema.validate(instance=payload,schema=resp.json()['schema'])
     except jsonschema.exceptions.ValidationError as err:

@@ -58,7 +58,7 @@
     {
       "submitterSampleId": "HCC1143_BAM_INPUT",
       "matchedNormalSubmitterSampleId": null,
-      "sampleType": "RNA",
+      "sampleType": "Total RNA",
       "specimen": {
         "submitterSpecimenId": "HCC1143_BAM_INPUT",
         "tumourNormalDesignation": "Normal",
