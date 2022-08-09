@@ -58,8 +58,9 @@ TSV_FIELDS['read_group']["conditional"]=[]
 
 TSV_FIELDS['file']={}
 TSV_FIELDS['file']["core"]=['type', 'name', 'size', 'md5sum', 'path', 'format']
-TSV_FIELDS['file']["conditional"]=["EGAS","EGAC","EGAP","EGAN","EGAR","EGAX","EGAZ","EGAD","EGAB","EGAF"]
-
+TSV_FIELDS['file']["conditional"]=[
+    "ega_file_id","ega_dataset_id","ega_experiment_id","ega_sample_id","ega_study_id",
+    "ega_run_id","ega_policy_id","ega_analysis_id","ega_submission_id","ega_dac_id"]
 
 
 
