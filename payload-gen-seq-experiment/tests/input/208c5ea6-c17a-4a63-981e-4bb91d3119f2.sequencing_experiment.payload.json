@@ -8,8 +8,9 @@
     "sequencing_center": "EXT",
     "platform": "ILLUMINA",
     "platform_model": "HiSeq 2000",
-    "experimental_strategy": "WGS",
-    "sequencing_date": "2014-12-12"
+    "experimental_strategy": "RNA-Seq",
+    "sequencing_date": "2014-12-12",
+    "library_strandedness": "FIRST_READ_ANTISENSE_STRAND"
   },
   "read_group_count": 3,
   "read_groups": [
@@ -57,22 +58,17 @@
     {
       "submitterSampleId": "HCC1143_BAM_INPUT",
       "matchedNormalSubmitterSampleId": null,
-      "sampleType": "Total DNA",
+      "sampleType": "Total RNA",
       "specimen": {
         "submitterSpecimenId": "HCC1143_BAM_INPUT",
         "tumourNormalDesignation": "Normal",
         "specimenTissueSource": "Blood derived",
-        "specimenType": "Cell line - derived from normal",
-        "specimenId": "SP2222222222",
-        "donorId": "DO1111111111"
+        "specimenType": "Cell line - derived from normal"
       },
       "donor": {
         "submitterDonorId": "HCC1143",
-        "gender": "Female",
-        "donorId": "DO1111111111"
-      },
-      "sampleId": "SA3333333333",
-      "specimenId": "SP2222222222"
+        "gender": "Female"
+      }
     }
   ],
   "files": [
@@ -85,7 +81,8 @@
       "dataType": "Submitted Reads",
       "info": {
         "data_category": "Sequencing Reads"
-      }
+      },
+      "EGAF": "EGAF000001"
     }
   ]
 }

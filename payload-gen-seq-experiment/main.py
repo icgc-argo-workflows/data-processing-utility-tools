@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+
 """
  Copyright (c) 2019-2021, Ontario Institute for Cancer Research (OICR).
 
@@ -19,6 +20,7 @@
  Authors:
    Linda Xiang <linda.xiang@oicr.on.ca>
    Junjun Zhang <junjun.zhang@oicr.on.ca>
+   Edmund Su <edmund.su@oicr.on.ca>
  """
 
 
@@ -27,24 +29,38 @@ import uuid
 import json
 import csv
 import textwrap
-from argparse import ArgumentParser
+import argparse
+import requests
+import re
+import jsonschema
 
 
-TSV_FIELDS = {
-    'experiment': [
-        'type', 'program_id', 'submitter_sequencing_experiment_id', 'submitter_donor_id', 'gender',
-        'submitter_specimen_id', 'tumour_normal_designation', 'specimen_type', 'specimen_tissue_source', 'submitter_sample_id',
-        'sample_type', 'submitter_matched_normal_sample_id', 'sequencing_center', 'platform', 'platform_model',
-        'experimental_strategy', 'sequencing_date', 'read_group_count'
-    ],
-    'read_group': [
-        'type', 'submitter_read_group_id', 'read_group_id_in_bam', 'submitter_sequencing_experiment_id', 'platform_unit',
-        'is_paired_end', 'file_r1', 'file_r2', 'read_length_r1', 'read_length_r2', 'insert_size', 'sample_barcode', 'library_name'
-    ],
-    'file': [
-        'type', 'name', 'size', 'md5sum', 'path', 'format'
+TSV_FIELDS = {}
+
+TSV_FIELDS['experiment'] = {}
+TSV_FIELDS['experiment']['core']=[
+    'type', 'program_id', 'submitter_sequencing_experiment_id', 'submitter_donor_id', 'gender',
+    'submitter_specimen_id', 'tumour_normal_designation', 'specimen_type', 'specimen_tissue_source',
+    'submitter_sample_id','sample_type', 'submitter_matched_normal_sample_id', 'sequencing_center', 
+    'platform', 'platform_model','experimental_strategy', 'sequencing_date', 'read_group_count']
+TSV_FIELDS['experiment']["conditional"]=[
+    "library_isolation_protocol","library_preparation_kit",
+    "library_strandedness","rin","dv200","spike_ins_included",
+    "spike_ins_fasta","spike_ins_concentration",
+    "target_capture_kit"]
+
+TSV_FIELDS['read_group']= {}
+TSV_FIELDS['read_group']["core"]=[
+    'type', 'submitter_read_group_id', 'read_group_id_in_bam', 'submitter_sequencing_experiment_id', 'platform_unit',
+    'is_paired_end', 'file_r1', 'file_r2', 'read_length_r1', 'read_length_r2', 'insert_size', 'sample_barcode', 'library_name'
     ]
-}
+TSV_FIELDS['read_group']["conditional"]=[]
+
+TSV_FIELDS['file']={}
+TSV_FIELDS['file']["core"]=['type', 'name', 'size', 'md5sum', 'path', 'format']
+TSV_FIELDS['file']["conditional"]=["EGAS","EGAC","EGAP","EGAN","EGAR","EGAX","EGAZ","EGAD","EGAB","EGAF"]
+
+
 
 
 def empty_str_to_null(metadata):
@@ -57,7 +73,9 @@ def empty_str_to_null(metadata):
 
 
 def tsv_confomity_check(ftype, tsv):
-    expected_fields = TSV_FIELDS[ftype]
+    core_fields = TSV_FIELDS[ftype]['core']
+    conditional_fields = TSV_FIELDS[ftype]['conditional']
+    expected_fields=core_fields+conditional_fields
 
     header_processed = False
     with open(tsv, 'r') as t:
@@ -69,7 +87,7 @@ def tsv_confomity_check(ftype, tsv):
                 if len(fields) != len(set(fields)):
                     sys.exit("Error found: Field duplicated in input TSV: %s, offending header: %s\n" % (tsv, l))
 
-                missed_fields = set(expected_fields) - set(fields)
+                missed_fields = set(core_fields) - set(fields)
                 if missed_fields:  # missing fields
                     sys.exit("Error found: Field missing in input TSV: %s, offending header: %s. Missed field(s): %s\n" % \
                         (tsv, l, ', '.join(missed_fields)))
@@ -85,7 +103,7 @@ def tsv_confomity_check(ftype, tsv):
                 # at this point we only check whether number of values matches number of expected fields and uniqueness check,
                 # later steps will perform more sophisticated content check
                 values = l.split('\t')
-                if len(expected_fields) != len(values):
+                if len(values) < len(core_fields):
                     sys.exit("Error found: number of fields: %s does not match expected: %s, offending data row: %s\n" % \
                         (len(values), len(expected_fields), l))
 
@@ -155,8 +173,28 @@ def validate_args(args):
             Usage:
                 When '-m' is provided, no other arguments can be used
                 When '-m' is not provided, please provide all of these arguments: -x, -r and -f
+                Optionally '-s' a schema URL can be provided, which the payload will be validated against
             """
         ))
+
+def validatePayload(payload,args):
+    if args.schema_url:
+        url=args.schema_url
+    else:
+        url="https://submission-song.rdpc.cancercollaboratory.org/schemas/sequencing_experiment"
+    
+    resp=requests.get(url)
+    if not resp.status_code==200:
+        sys.exit("Unable to retrieve schema. Please check URL\n")
+
+    try:
+        jsonschema.validate(instance=payload,schema=resp.json()['schema'])
+    except jsonschema.exceptions.ValidationError as err:
+        print(err)
+        sys.exit("Payload failed to validate against schema\n")
+    else:
+        return True
+        
 
 
 def main(metadata, extra_info=dict()):
@@ -181,6 +219,25 @@ def main(metadata, extra_info=dict()):
         'files': []
     }
 
+    # optional experiment arguements
+    # Strings
+    optional_experimental_fields=[
+        "library_isolation_protocol","library_preparation_kit",
+        "library_strandedness","dv200","spike_ins_included",
+        "spike_ins_fasta","spike_ins_concentration","sequencing_center"]
+    for optional_experimental_field in optional_experimental_fields:
+        if metadata.get(optional_experimental_field):
+            payload['experiment'][optional_experimental_field]=metadata.get(optional_experimental_field)
+    # Int
+    optional_experimental_fields=["rin"]
+    for optional_experimental_field in optional_experimental_fields:
+        if metadata.get(optional_experimental_field):
+            payload['experiment'][optional_experimental_field]=int(metadata.get(optional_experimental_field))
+
+    # RNA-seq library_Strandedness requirement check
+    if metadata.get('experimental_strategy')=='RNA-Seq' and not metadata.get("library_strandedness"):
+        sys.exit(f"'experimental_strategy' 'RNA-Seq' specified but 'library_strandedness' is missing. Resubmit with both values 'experimental_strategy' and 'library_strandedness'")
+
     # get sample of the payload
     sample = {
         'submitterSampleId': metadata.get('submitter_sample_id'),
@@ -198,27 +255,11 @@ def main(metadata, extra_info=dict()):
         }
     }
 
-    if extra_info:
-        if extra_info['sample'].get(sample['submitterSampleId']):
-            sample['sampleId'] = extra_info['sample'][sample['submitterSampleId']]
-        else:
-            sys.exit(f"Provided extra_info_tsv misses mapping for submitter sample ID: {sample['submitterSampleId']}")
-
-        if extra_info['specimen'].get(sample['specimen']['submitterSpecimenId']):
-            sample['specimenId'] = extra_info['specimen'][sample['specimen']['submitterSpecimenId']]
-            sample['specimen']['specimenId'] = sample["specimenId"]
-        else:
-            sys.exit(f"Provided extra_info_tsv misses mapping for submitter specimen ID: {sample['specimen']['submitterSpecimenId']}")
-
-        if extra_info['donor'].get(sample['donor']['submitterDonorId']):
-            sample['donor']['donorId'] = extra_info['donor'][sample['donor']['submitterDonorId']]
-            sample['specimen']['donorId'] = sample['donor']['donorId']
-        else:
-            sys.exit(f"Provided extra_info_tsv misses mapping for submitter donor ID: {sample['donor']['submitterDonorId']}")
-
     payload['samples'].append(sample)
 
     # get file of the payload
+
+    optional_file_fields=["EGAS","EGAC","EGAP","EGAN","EGAR","EGAX","EGAZ","EGAD","EGAB","EGAF"]
     for input_file in metadata.get("files"):
         payload['files'].append(
             {
@@ -233,18 +274,56 @@ def main(metadata, extra_info=dict()):
                 }
             }
         )
+        for optional_file_field in optional_file_fields:
+            if input_file.get(optional_file_field):
+                payload['files'][-1][optional_file_field]=input_file.get(optional_file_field)
 
     for rg in metadata.get("read_groups"):
         rg.pop('type')  # remove 'type' field
         rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
         payload['read_groups'].append(rg)
 
+
+    if extra_info:
+        for item,dict_to_update,submitter_id in zip(
+            ["sample","donor","specimen","experiment"],
+            [payload['samples'][0],payload['samples'][0]['donor'],payload['samples'][0]['specimen'],payload['experiment']],
+            ["submitterSampleId","submitterDonorId","submitterSpecimenId","submitter_sequencing_experiment_id"]
+        ):
+            if not item in extra_info:
+                continue
+            for key in extra_info[item][dict_to_update.get(submitter_id)].keys() :
+                if key in dict_to_update:
+                    sys.exit(f"Conflicting entries detected. Attempted altering of existing field {key} in {item}")
+            if extra_info[item][dict_to_update.get(submitter_id)]:
+                    dict_to_update.update(extra_info[item][dict_to_update.get(submitter_id)])
+
+        for item,list_to_parse,unique_ele_name in zip(
+            ["files","read_groups"],
+            [payload["files"],payload['read_groups']],
+            ["fileName","submitter_read_group_id"]
+        ):
+            if not item in extra_info:
+                continue
+            for ele_to_update in extra_info[item].keys():
+                for existing_ele in list_to_parse:
+                    if existing_ele[unique_ele_name]!=ele_to_update:
+                        continue
+                    for key in extra_info[item][ele_to_update].keys():
+                        if key in existing_ele:
+                            sys.exit(f"Conflicting entries detected. Attempted altering of existing field {key} in {existing_ele}")
+                    if item=='files':
+                        existing_ele['info'].update(extra_info[item][ele_to_update])
+                    else:
+                        existing_ele.update(extra_info[item][ele_to_update])
+
+    validatePayload(payload,args)
     with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
+    parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--metadata-json",
                         help="json file containing experiment, read_group and file information submitted from user")
     parser.add_argument("-x", "--experiment-info-tsv",
@@ -254,7 +333,9 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--file-info-tsv",
                         help="tsv file containing file information submitted from user")
     parser.add_argument("-e", "--extra-info-tsv",
-                        help="tsv file containing file information submitted from user")
+                        help="tsv file containing additional information pertaining to existing experiment, read_group, and file information submitted from user that does not fit within existing schemas")
+    parser.add_argument("-s", "--schema-url",
+                        help="URL to validate schema against")
     args = parser.parse_args()
 
     validate_args(args)
@@ -263,7 +344,7 @@ if __name__ == "__main__":
         with open(args.metadata_json, 'r') as f:
             metadata = json.load(f)
     else:
-        # fistly TSV format conformity check, if not well-formed no point to continue
+        # firstly TSV format conformity check, if not well-formed no point to continue
         tsv_confomity_check('experiment', args.experiment_info_tsv)
         tsv_confomity_check('read_group', args.read_group_info_tsv)
         tsv_confomity_check('file', args.file_info_tsv)
@@ -275,27 +356,28 @@ if __name__ == "__main__":
                             args.file_info_tsv
                         )
 
-        # all TSV are well-formed, let's load them
-        metadata = load_all_tsvs(args.experiment_info_tsv, args.read_group_info_tsv, args.file_info_tsv)
-
     extra_info = dict()
     if args.extra_info_tsv:
         with open(args.extra_info_tsv, 'r') as f:
             for row in csv.DictReader(f, delimiter='\t'):
-                type = row['type']
-                submitter_id = row['submitter_id']
-                uniform_id = row['uniform_id']
-                if type in extra_info:
-                    sys.exit(f"Values in 'type' field duplicated. Offending value: {type}, in file: {args.extra_info_tsv}")
-                else:
-                    extra_info[type] = dict()
+            
+                for row_type in ['type','submitter_id','submitter_field','field_value']:
+                    if row_type not in row.keys():
+                        sys.exit(f"Incorrect formatting of : {args.extra_info_tsv}. {row_type} is missing") 
 
-                if submitter_id in extra_info[type]:
-                    sys.exit(f"Values in 'submitter_id' field duplicated. Offending value: {submitter_id}, for type: {type}, in file: {args.extra_info_tsv}" )
-                else:
-                    extra_info[type][submitter_id] = uniform_id
-
-        if 'donor' not in extra_info or 'specimen' not in extra_info or 'sample' not in extra_info:
-            sys.exit(f"Provided extra_info_tsv file '{args.extra_info_tsv}' is required to have ID mappings for 'donor', 'specimen' and 'sample'")
+                row_type = row['type']
+                row_id= row['submitter_id']
+                row_field= row['submitter_field']
+                row_val= row['field_value']
+    
+                if (row_type!="sample") and (row_type!="donor") and (row_type!="specimen") and (row_type!="files") and (row_type!="experiment"):
+                    sys.exit(f"Incorrect identifier supplied. Must be on the following : 'sample','donor','specimen','files','experiments'. Offending value: {type}, in file: {args.extra_info_tsv}")
+        
+                if row_type not in extra_info:
+                    extra_info[row_type]=dict()
+                if row_id not in extra_info[row_type]:
+                    extra_info[row_type][row_id]=dict()
+                extra_info[row_type][row_id][row_field]=row_val
+                
 
     main(metadata, extra_info)

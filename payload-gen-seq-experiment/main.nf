@@ -25,7 +25,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.5.0.1'
+version = '0.6.0.1'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/data-processing-utility-tools.payload-gen-seq-experiment'
@@ -49,7 +49,7 @@ params.experiment_info_tsv = "NO_FILE1"
 params.read_group_info_tsv = "NO_FILE2"
 params.file_info_tsv = "NO_FILE3"
 params.extra_info_tsv = "NO_FILE4"
-
+params.schema_url="NO_FILE5"
 
 process payloadGenSeqExperiment {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -63,6 +63,7 @@ process payloadGenSeqExperiment {
     path read_group_info_tsv
     path file_info_tsv
     path extra_info_tsv
+    val schema_url
 
   output:
     path "*.sequencing_experiment.payload.json", emit: payload
@@ -72,13 +73,14 @@ process payloadGenSeqExperiment {
     args_read_group_info_tsv = !read_group_info_tsv.name.startsWith("NO_FILE") ? "-r ${read_group_info_tsv}" : ""
     args_file_info_tsv = !file_info_tsv.name.startsWith("NO_FILE") ? "-f ${file_info_tsv}" : ""
     args_extra_info_tsv = !extra_info_tsv.name.startsWith("NO_FILE") ? "-e ${extra_info_tsv}" : ""
-
+    args_schema_url = !schema_url.startsWith("NO_FILE")  ? "-s ${schema_url}" : ""
     """
     main.py \
          ${args_experiment_info_tsv} \
          ${args_read_group_info_tsv} \
          ${args_file_info_tsv} \
-         ${args_extra_info_tsv}
+         ${args_extra_info_tsv} \
+         ${args_schema_url}
     """
 }
 
@@ -90,6 +92,7 @@ workflow {
     file(params.experiment_info_tsv),
     file(params.read_group_info_tsv),
     file(params.file_info_tsv),
-    file(params.extra_info_tsv)
+    file(params.extra_info_tsv),
+    params.schema_url
   )
 }
