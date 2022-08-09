@@ -46,7 +46,7 @@ TSV_FIELDS['experiment']['core']=[
 TSV_FIELDS['experiment']["conditional"]=[
     "library_isolation_protocol","library_preparation_kit",
     "library_strandedness","rin","dv200","spike_ins_included",
-    "spike_ins_fasta","spike_ins_concentration","sequencing_center",
+    "spike_ins_fasta","spike_ins_concentration",
     "target_capture_kit"]
 
 TSV_FIELDS['read_group']= {}
