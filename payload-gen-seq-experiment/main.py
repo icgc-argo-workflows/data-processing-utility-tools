@@ -39,7 +39,7 @@ TSV_FIELDS = {}
 
 TSV_FIELDS['experiment'] = {}
 TSV_FIELDS['experiment']['core']=[
-    'type', 'study_id', 'submitter_sequencing_experiment_id', 'submitter_donor_id', 'gender',
+    'type', 'program_id', 'submitter_sequencing_experiment_id', 'submitter_donor_id', 'gender',
     'submitter_specimen_id', 'tumour_normal_designation', 'specimen_type', 'specimen_tissue_source',
     'submitter_sample_id','sample_type', 'submitter_matched_normal_sample_id', 'sequencing_center', 
     'platform', 'platform_model','experimental_strategy', 'sequencing_date', 'read_group_count']
@@ -204,7 +204,7 @@ def main(metadata, extra_info=dict()):
         'analysisType': {
             'name': 'sequencing_experiment'
         },
-        'studyId': metadata.get('study_id'),
+        'studyId': metadata.get('program_id'),
         'experiment': {
             'submitter_sequencing_experiment_id': metadata.get('submitter_sequencing_experiment_id'),
             'sequencing_center': metadata.get('sequencing_center'),
@@ -333,7 +333,7 @@ if __name__ == "__main__":
     parser.add_argument("-f", "--file-info-tsv",
                         help="tsv file containing file information submitted from user")
     parser.add_argument("-e", "--extra-info-tsv",
-                        help="tsv file containing file information submitted from user")
+                        help="tsv file containing additional information pertaining to existing experiment, read_group, and file information submitted from user that does not fit within existing schemas")
     parser.add_argument("-s", "--schema-url",
                         help="URL to validate schema against")
     args = parser.parse_args()
