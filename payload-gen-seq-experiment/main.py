@@ -344,7 +344,7 @@ if __name__ == "__main__":
         with open(args.metadata_json, 'r') as f:
             metadata = json.load(f)
     else:
-        # fistly TSV format conformity check, if not well-formed no point to continue
+        # firstly TSV format conformity check, if not well-formed no point to continue
         tsv_confomity_check('experiment', args.experiment_info_tsv)
         tsv_confomity_check('read_group', args.read_group_info_tsv)
         tsv_confomity_check('file', args.file_info_tsv)
