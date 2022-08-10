@@ -56,12 +56,22 @@ TSV_FIELDS['read_group']["core"]=[
     ]
 TSV_FIELDS['read_group']["conditional"]=[]
 
+EGA_FIELDS={
+    "ega_file_id":"EGAF",
+    "ega_dataset_id":"EGAD",
+    "ega_experiment_id":"EGAX",
+    "ega_sample_id":"EGAN",
+    "ega_study_id":"EGAS",
+    "ega_run_id":"EGAR",
+    "ega_policy_id":"EGAP",
+    "ega_analysis_id":"EGAZ",
+    "ega_submission_id":"EGAB",
+    "ega_dac_id":"EGAC"
+}
+
 TSV_FIELDS['file']={}
 TSV_FIELDS['file']["core"]=['type', 'name', 'size', 'md5sum', 'path', 'format']
-TSV_FIELDS['file']["conditional"]=[
-    "ega_file_id","ega_dataset_id","ega_experiment_id","ega_sample_id","ega_study_id",
-    "ega_run_id","ega_policy_id","ega_analysis_id","ega_submission_id","ega_dac_id"]
-
+TSV_FIELDS['file']["conditional"]=list(EGA_FIELDS.keys())
 
 
 def empty_str_to_null(metadata):
@@ -222,10 +232,9 @@ def main(metadata, extra_info=dict()):
 
     # optional experiment arguements
     # Strings
-    optional_experimental_fields=[
-        "library_isolation_protocol","library_preparation_kit",
-        "library_strandedness","dv200","spike_ins_included",
-        "spike_ins_fasta","spike_ins_concentration","sequencing_center"]
+    optional_experimental_fields=TSV_FIELDS['experiment']["conditional"]
+    optional_experimental_fields.remove("rin")
+
     for optional_experimental_field in optional_experimental_fields:
         if metadata.get(optional_experimental_field):
             payload['experiment'][optional_experimental_field]=metadata.get(optional_experimental_field)
@@ -259,12 +268,6 @@ def main(metadata, extra_info=dict()):
     payload['samples'].append(sample)
 
     # get file of the payload
-
-    optional_file_fields=[
-        "ega_file_id","ega_dataset_id","ega_experiment_id","ega_sample_id","ega_study_id",
-        "ega_run_id","ega_policy_id","ega_analysis_id","ega_submission_id","ega_dac_id"
-        ]
-        
     for input_file in metadata.get("files"):
         payload['files'].append(
             {
@@ -279,9 +282,12 @@ def main(metadata, extra_info=dict()):
                 }
             }
         )
-        for optional_file_field in optional_file_fields:
+        for optional_file_field in TSV_FIELDS['file']["conditional"]:
             if input_file.get(optional_file_field):
-                payload['files'][-1][optional_file_field]=input_file.get(optional_file_field)
+                if re.findall("^"+EGA_FIELDS[optional_file_field]+'[0-9]{1,32}$',input_file.get(optional_file_field)):
+                    payload['files'][-1]['info'][optional_file_field]=input_file.get(optional_file_field)
+                else:
+                    sys.exit(f"Field '%s' in file '%s' with value '%s' does not match expected regex pattern '^%s[0-9]{1,32}$'" % (optional_file_field,input_file.get('name'),input_file.get(optional_file_field),EGA_FIELDS[optional_file_field]))
 
     for rg in metadata.get("read_groups"):
         rg.pop('type')  # remove 'type' field
