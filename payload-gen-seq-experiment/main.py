@@ -260,7 +260,11 @@ def main(metadata, extra_info=dict()):
 
     # get file of the payload
 
-    optional_file_fields=["EGAS","EGAC","EGAP","EGAN","EGAR","EGAX","EGAZ","EGAD","EGAB","EGAF"]
+    optional_file_fields=[
+        "ega_file_id","ega_dataset_id","ega_experiment_id","ega_sample_id","ega_study_id",
+        "ega_run_id","ega_policy_id","ega_analysis_id","ega_submission_id","ega_dac_id"
+        ]
+        
     for input_file in metadata.get("files"):
         payload['files'].append(
             {
