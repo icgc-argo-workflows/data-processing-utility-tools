@@ -80,7 +80,8 @@
       "fileAccess": "controlled",
       "dataType": "Submitted Reads",
       "info": {
-        "data_category": "Sequencing Reads"
+        "data_category": "Sequencing Reads",
+        "ega_file_id": "EGAF000001"
       }
     }
   ]
