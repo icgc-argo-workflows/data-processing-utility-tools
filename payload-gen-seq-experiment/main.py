@@ -268,8 +268,6 @@ def main(metadata, extra_info=dict()):
     payload['samples'].append(sample)
 
     # get file of the payload
-
-
     for input_file in metadata.get("files"):
         payload['files'].append(
             {
