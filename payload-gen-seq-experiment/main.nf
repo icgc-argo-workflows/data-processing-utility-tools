@@ -19,6 +19,7 @@
   Authors:
     Linda Xiang
     Junjun Zhang
+    Edmund Su
 */
 
 /********************************************************************/
@@ -53,7 +54,7 @@ params.schema_url="NO_FILE5"
 
 process payloadGenSeqExperiment {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
-  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", mode: "copy", enabled: params.publish_dir
+  publishDir "${params.publish_dir}/${task.process.replaceAll(':', '_')}", mode: "copy", enabled: params.publish_dir ? true : false
 
   cpus params.cpus
   memory "${params.mem} GB"
