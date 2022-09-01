@@ -23,7 +23,6 @@
    Edmund Su <edmund.su@oicr.on.ca>
  """
 
-
 import sys
 import uuid
 import json
@@ -173,7 +172,7 @@ def load_all_tsvs(exp_tsv, rg_tsv, file_tsv):
 
 def validate_args(args):
     if args.metadata_json and \
-            not (args.experiment_info_tsv or args.read_group_info_tsv or args.file_info_tsv):
+            not (args.experiment_info_tsv and args.read_group_info_tsv and args.file_info_tsv):
         return True
     elif not args.metadata_json and \
             (args.experiment_info_tsv and args.read_group_info_tsv and args.file_info_tsv):
@@ -182,8 +181,8 @@ def validate_args(args):
         sys.exit(textwrap.dedent(
             """
             Usage:
-                When '-m' is provided, no other arguments can be used
-                When '-m' is not provided, please provide all of these arguments: -x, -r and -f
+                When '-m' is provided, '-x','-r' and '-f' are ignored arguments can be used
+                When '-m' is not provided, please provide all of these arguments: '-x', '-r' and '-f'
                 Optionally '-s' a schema URL can be provided, which the payload will be validated against
             """
         ))
@@ -290,8 +289,11 @@ def main(metadata, extra_info=dict()):
                     sys.exit(f"Field '%s' in file '%s' with value '%s' does not match expected regex pattern '^%s[0-9]{1,32}$'" % (optional_file_field,input_file.get('name'),input_file.get(optional_file_field),EGA_FIELDS[optional_file_field]))
 
     for rg in metadata.get("read_groups"):
-        rg.pop('type')  # remove 'type' field
-        rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
+        if "type" in rg:
+            print(rg)
+            rg.pop('type')  # remove 'type' field
+        if "submitter_sequencing_experiment_id" in rg:
+            rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
         payload['read_groups'].append(rg)
 
 
@@ -327,7 +329,7 @@ def main(metadata, extra_info=dict()):
                         existing_ele['info'].update(extra_info[item][ele_to_update])
                     else:
                         existing_ele.update(extra_info[item][ele_to_update])
-
+                         
     validatePayload(payload,args)
     with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))

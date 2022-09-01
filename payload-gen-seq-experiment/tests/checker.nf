@@ -17,7 +17,9 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
   Authors:
+    Linda Xiang
     Junjun Zhang
+    Edmund Su
 */
 
 /*
@@ -48,6 +50,8 @@ params.read_group_info_tsv = "NO_FILE2"
 params.file_info_tsv = "NO_FILE3"
 params.extra_info_tsv = "NO_FILE4"
 params.schema_url = "NO_FILE5"
+params.metadata_payload_json = "NO_FILE6"
+
 params.expected_output = ""
 
 include { payloadGenSeqExperiment } from '../main'
@@ -68,7 +72,6 @@ process file_smart_diff {
     # Note: this is only for demo purpose, please write your own 'diff' according to your own needs.
     # remove date field before comparison eg, <div id="header_filename">Tue 19 Jan 2021<br/>test_rg_3.bam</div>
     # sed -e 's#"header_filename">.*<br/>test_rg_3.bam#"header_filename"><br/>test_rg_3.bam</div>#'
-
     diff <( cat ${output_file} | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
          <( ([[ '${expected_file}' == *.gz ]] && gunzip -c ${expected_file} || cat ${expected_file}) | sed -e 's#"header_filename">.*<br/>#"header_filename"><br/>#' ) \
     && ( echo "Test PASSED" && exit 0 ) || ( echo "Test FAILED, output file mismatch." && exit 1 )
@@ -83,6 +86,7 @@ workflow checker {
     file_info_tsv
     extra_info_tsv
     expected_output
+    metadata_payload_json
     schema_url
 
   main:
@@ -91,6 +95,7 @@ workflow checker {
       read_group_info_tsv,
       file_info_tsv,
       extra_info_tsv,
+      metadata_payload_json,
       schema_url
     )
 
@@ -108,6 +113,7 @@ workflow {
     file(params.file_info_tsv),
     file(params.extra_info_tsv),
     file(params.expected_output),
+    file(params.metadata_payload_json),
     params.schema_url
   )
 }
