@@ -48,6 +48,8 @@ params.read_group_info_tsv = "NO_FILE2"
 params.file_info_tsv = "NO_FILE3"
 params.extra_info_tsv = "NO_FILE4"
 params.schema_url = "NO_FILE5"
+params.metadata_payload_json = "NO_FILE6"
+
 params.expected_output = ""
 
 include { payloadGenSeqExperiment } from '../main'
@@ -83,6 +85,7 @@ workflow checker {
     file_info_tsv
     extra_info_tsv
     expected_output
+    metadata_payload_json
     schema_url
 
   main:
@@ -91,6 +94,7 @@ workflow checker {
       read_group_info_tsv,
       file_info_tsv,
       extra_info_tsv,
+      metadata_payload_json,
       schema_url
     )
 
@@ -108,6 +112,7 @@ workflow {
     file(params.file_info_tsv),
     file(params.extra_info_tsv),
     file(params.expected_output),
+    file(params.metadata_payload_json),
     params.schema_url
   )
 }

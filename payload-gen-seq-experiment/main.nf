@@ -50,6 +50,7 @@ params.read_group_info_tsv = "NO_FILE2"
 params.file_info_tsv = "NO_FILE3"
 params.extra_info_tsv = "NO_FILE4"
 params.schema_url="NO_FILE5"
+params.metadata_payload_json="NO_FILE6"
 
 process payloadGenSeqExperiment {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -63,6 +64,7 @@ process payloadGenSeqExperiment {
     path read_group_info_tsv
     path file_info_tsv
     path extra_info_tsv
+    path metadata_payload_json
     val schema_url
 
   output:
@@ -73,6 +75,7 @@ process payloadGenSeqExperiment {
     args_read_group_info_tsv = !read_group_info_tsv.name.startsWith("NO_FILE") ? "-r ${read_group_info_tsv}" : ""
     args_file_info_tsv = !file_info_tsv.name.startsWith("NO_FILE") ? "-f ${file_info_tsv}" : ""
     args_extra_info_tsv = !extra_info_tsv.name.startsWith("NO_FILE") ? "-e ${extra_info_tsv}" : ""
+    args_metadata_payload_json= !metadata_payload_json.name.startsWith("NO_FILE") ? "-m ${metadata_payload_json}" : ""
     args_schema_url = !schema_url.startsWith("NO_FILE")  ? "-s ${schema_url}" : ""
     """
     main.py \
@@ -80,6 +83,7 @@ process payloadGenSeqExperiment {
          ${args_read_group_info_tsv} \
          ${args_file_info_tsv} \
          ${args_extra_info_tsv} \
+         ${args_metadata_payload_json} \
          ${args_schema_url}
     """
 }
@@ -93,6 +97,7 @@ workflow {
     file(params.read_group_info_tsv),
     file(params.file_info_tsv),
     file(params.extra_info_tsv),
+    file(params.metadata_payload_json),
     params.schema_url
   )
 }
