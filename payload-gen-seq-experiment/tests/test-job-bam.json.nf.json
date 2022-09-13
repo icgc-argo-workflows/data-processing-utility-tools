@@ -1,0 +1,6 @@
+{
+    "metadata_payload_json": "input/12c64309-4f21-4a86-8175-ca2340babadd.sequencing_experiment.payload.json",
+    "file_info_tsv": "input/file.v2.tsv",
+    "expected_output": "input/12c64309-4f21-4a86-8175-ca2340babadd.sequencing_experiment.payload.json",
+    "publish_dir": "outdir"
+}

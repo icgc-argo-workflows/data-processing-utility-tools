@@ -23,7 +23,6 @@
    Edmund Su <edmund.su@oicr.on.ca>
  """
 
-
 import sys
 import uuid
 import json
@@ -173,7 +172,7 @@ def load_all_tsvs(exp_tsv, rg_tsv, file_tsv):
 
 def validate_args(args):
     if args.metadata_json and \
-            not (args.experiment_info_tsv or args.read_group_info_tsv or args.file_info_tsv):
+            not (args.experiment_info_tsv and args.read_group_info_tsv and args.file_info_tsv):
         return True
     elif not args.metadata_json and \
             (args.experiment_info_tsv and args.read_group_info_tsv and args.file_info_tsv):
@@ -182,18 +181,14 @@ def validate_args(args):
         sys.exit(textwrap.dedent(
             """
             Usage:
-                When '-m' is provided, no other arguments can be used
-                When '-m' is not provided, please provide all of these arguments: -x, -r and -f
+                When '-m' is provided, '-x','-r' and '-f' are ignored arguments can be used
+                When '-m' is not provided, please provide all of these arguments: '-x', '-r' and '-f'
                 Optionally '-s' a schema URL can be provided, which the payload will be validated against
             """
         ))
 
-def validatePayload(payload,args):
-    if args.schema_url:
-        url=args.schema_url
-    else:
-        url="https://submission-song.rdpc.cancercollaboratory.org/schemas/sequencing_experiment"
-    
+def validatePayload(payload,url):
+
     resp=requests.get(url)
     if not resp.status_code==200:
         sys.exit("Unable to retrieve schema. Please check URL\n")
@@ -208,7 +203,7 @@ def validatePayload(payload,args):
         
 
 
-def main(metadata, extra_info=dict()):
+def main(metadata,url,extra_info=dict()):
     empty_str_to_null(metadata)
 
     payload = {
@@ -290,8 +285,11 @@ def main(metadata, extra_info=dict()):
                     sys.exit(f"Field '%s' in file '%s' with value '%s' does not match expected regex pattern '^%s[0-9]{1,32}$'" % (optional_file_field,input_file.get('name'),input_file.get(optional_file_field),EGA_FIELDS[optional_file_field]))
 
     for rg in metadata.get("read_groups"):
-        rg.pop('type')  # remove 'type' field
-        rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
+        if "type" in rg:
+            print(rg)
+            rg.pop('type')  # remove 'type' field
+        if "submitter_sequencing_experiment_id" in rg:
+            rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
         payload['read_groups'].append(rg)
 
 
@@ -327,8 +325,8 @@ def main(metadata, extra_info=dict()):
                         existing_ele['info'].update(extra_info[item][ele_to_update])
                     else:
                         existing_ele.update(extra_info[item][ele_to_update])
-
-    validatePayload(payload,args)
+                         
+    validatePayload(payload,url)
     with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
 
@@ -351,9 +349,17 @@ if __name__ == "__main__":
 
     validate_args(args)
 
+    if args.schema_url:
+        url=args.schema_url
+    else:
+        url="https://submission-song.rdpc.cancercollaboratory.org/schemas/sequencing_experiment"
+
     if args.metadata_json:
         with open(args.metadata_json, 'r') as f:
             metadata = json.load(f)
+        validatePayload(metadata,url)
+        with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
+            f.write(json.dumps(metadata, indent=2))
     else:
         # firstly TSV format conformity check, if not well-formed no point to continue
         tsv_confomity_check('experiment', args.experiment_info_tsv)
@@ -367,28 +373,28 @@ if __name__ == "__main__":
                             args.file_info_tsv
                         )
 
-    extra_info = dict()
-    if args.extra_info_tsv:
-        with open(args.extra_info_tsv, 'r') as f:
-            for row in csv.DictReader(f, delimiter='\t'):
-            
-                for row_type in ['type','submitter_id','submitter_field','field_value']:
-                    if row_type not in row.keys():
-                        sys.exit(f"Incorrect formatting of : {args.extra_info_tsv}. {row_type} is missing") 
-
-                row_type = row['type']
-                row_id= row['submitter_id']
-                row_field= row['submitter_field']
-                row_val= row['field_value']
-    
-                if (row_type!="sample") and (row_type!="donor") and (row_type!="specimen") and (row_type!="files") and (row_type!="experiment"):
-                    sys.exit(f"Incorrect identifier supplied. Must be on the following : 'sample','donor','specimen','files','experiments'. Offending value: {type}, in file: {args.extra_info_tsv}")
-        
-                if row_type not in extra_info:
-                    extra_info[row_type]=dict()
-                if row_id not in extra_info[row_type]:
-                    extra_info[row_type][row_id]=dict()
-                extra_info[row_type][row_id][row_field]=row_val
+        extra_info = dict()
+        if args.extra_info_tsv:
+            with open(args.extra_info_tsv, 'r') as f:
+                for row in csv.DictReader(f, delimiter='\t'):
                 
+                    for row_type in ['type','submitter_id','submitter_field','field_value']:
+                        if row_type not in row.keys():
+                            sys.exit(f"Incorrect formatting of : {args.extra_info_tsv}. {row_type} is missing") 
 
-    main(metadata, extra_info)
+                    row_type = row['type']
+                    row_id= row['submitter_id']
+                    row_field= row['submitter_field']
+                    row_val= row['field_value']
+        
+                    if (row_type!="sample") and (row_type!="donor") and (row_type!="specimen") and (row_type!="files") and (row_type!="experiment"):
+                        sys.exit(f"Incorrect identifier supplied. Must be on the following : 'sample','donor','specimen','files','experiments'. Offending value: {type}, in file: {args.extra_info_tsv}")
+            
+                    if row_type not in extra_info:
+                        extra_info[row_type]=dict()
+                    if row_id not in extra_info[row_type]:
+                        extra_info[row_type][row_id]=dict()
+                    extra_info[row_type][row_id][row_field]=row_val
+                    
+
+        main(metadata,url, extra_info)
