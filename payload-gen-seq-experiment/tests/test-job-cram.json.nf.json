@@ -1,0 +1,11 @@
+{
+  "metadata_payload_json": "input/9296dd00-d1a8-46d5-8dd8-6cd7628530db.sequencing_experiment.payload.json",
+  "file_info_tsv": "input/file.cram.tsv",
+  "cram_reference": "input/hello.fasta",
+  "converted_files":[
+    "input/example1.bam",
+    "input/example2.bam"
+  ],
+  "expected_output": "input/318a3b7c-f382-44ed-9c36-221c6254b958.sequencing_experiment.payload.json",
+  "publish_dir": "outdir"
+}

@@ -1,0 +1,4 @@
+type	name	format	size	md5sum	path	ega_file_id
+file	test_rg_3.bam	BAM	14911	178f97f7b1ca8bfc28fd5586bdd56799	test_rg_3.bam	EGAF000001
+file	example1.cram	CRAM	9	69e5bd0f686feb422ac4592bab5d74af	example1.cram	EGAF000002
+file	example2.cram	CRAM	11	4dfbb139c7ee52270157abc5ed3f7842	example2.cram	EGAF000003
