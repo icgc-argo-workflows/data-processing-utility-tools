@@ -32,6 +32,8 @@ import argparse
 import requests
 import re
 import jsonschema
+import os
+import hashlib
 
 
 TSV_FIELDS = {}
@@ -201,9 +203,38 @@ def validatePayload(payload,url):
     else:
         return True
         
+def calculate_size(file_path):
+    return os.stat(file_path).st_size
 
+def calculate_md5(file_path):
+    md5 = hashlib.md5()
+    with open(file_path, 'rb') as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b''):
+            md5.update(chunk)
+    return md5.hexdigest()
 
-def main(metadata,url,extra_info=dict()):
+def replace_cram_with_bam(payload,bam_from_cram,bam_from_cram_reference):
+    for bam in bam_from_cram:
+        for cram in payload['files']:
+            if re.sub('\.cram$','',cram['fileName'])==re.sub('\.bam$','',bam) and cram['fileType']=='CRAM':
+                cram['info']['original_cram_info']={}
+                cram['info']['original_cram_info']['fileName']=cram['fileName']
+                cram['info']['original_cram_info']['fileSize']=cram['fileSize']
+                cram['info']['original_cram_info']['fileMd5sum']=cram['fileMd5sum']
+                cram['info']['original_cram_info']['fileType']=cram['fileType']
+                cram['info']['original_cram_info']['referenceFileName']=bam_from_cram_reference
+                cram['fileName']=bam
+                cram['fileSize']=calculate_size(bam)
+                cram['fileMd5sum']=calculate_md5(bam)
+                cram['fileType']="BAM"
+        for rg in payload["read_groups"]:
+            if re.sub('\.cram$','',rg['file_r1'])==re.sub('\.bam$','',bam):
+                rg['file_r1']=bam
+                if rg['is_paired_end']:
+                    rg['file_r2']=bam
+    return(payload)
+    
+def main(metadata,url,bam_from_cram,bam_from_cram_reference,extra_info=dict()):
     empty_str_to_null(metadata)
 
     payload = {
@@ -280,13 +311,16 @@ def main(metadata,url,extra_info=dict()):
         for optional_file_field in TSV_FIELDS['file']["conditional"]:
             if input_file.get(optional_file_field):
                 if re.findall("^"+EGA_FIELDS[optional_file_field]+'[0-9]{1,32}$',input_file.get(optional_file_field)):
-                    payload['files'][-1]['info'][optional_file_field]=input_file.get(optional_file_field)
+                    if payload['files'][-1]['info'].get("ega"):
+                        payload['files'][-1]['info']['ega'][optional_file_field]=input_file.get(optional_file_field)
+                    else:
+                        payload['files'][-1]['info']['ega']={}
+                        payload['files'][-1]['info']['ega'][optional_file_field]=input_file.get(optional_file_field)
                 else:
                     sys.exit(f"Field '%s' in file '%s' with value '%s' does not match expected regex pattern '^%s[0-9]{1,32}$'" % (optional_file_field,input_file.get('name'),input_file.get(optional_file_field),EGA_FIELDS[optional_file_field]))
 
     for rg in metadata.get("read_groups"):
         if "type" in rg:
-            print(rg)
             rg.pop('type')  # remove 'type' field
         if "submitter_sequencing_experiment_id" in rg:
             rg.pop('submitter_sequencing_experiment_id')  # remove 'submitter_sequencing_experiment_id' field
@@ -325,7 +359,9 @@ def main(metadata,url,extra_info=dict()):
                         existing_ele['info'].update(extra_info[item][ele_to_update])
                     else:
                         existing_ele.update(extra_info[item][ele_to_update])
-                         
+    if len(bam_from_cram)>0:
+        payload=replace_cram_with_bam(payload,bam_from_cram,bam_from_cram_reference)
+
     validatePayload(payload,url)
     with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
@@ -345,6 +381,10 @@ if __name__ == "__main__":
                         help="tsv file containing additional information pertaining to existing experiment, read_group, and file information submitted from user that does not fit within existing schemas")
     parser.add_argument("-s", "--schema-url",
                         help="URL to validate schema against")
+    parser.add_argument("-b", "--bam-from-cram",nargs="+",default=[],
+                        help="BAM files that have converted from CRAM")
+    parser.add_argument("-br", "--bam-from-cram-reference",default=None,
+                        help="Name of reference file used in cram2bam conversion")
     args = parser.parse_args()
 
     validate_args(args)
@@ -357,6 +397,9 @@ if __name__ == "__main__":
     if args.metadata_json:
         with open(args.metadata_json, 'r') as f:
             metadata = json.load(f)
+
+        if len(args.bam_from_cram)>0:
+            payload=replace_cram_with_bam(metadata,args.bam_from_cram,args.bam_from_cram_reference)
         validatePayload(metadata,url)
         with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
             f.write(json.dumps(metadata, indent=2))
@@ -397,4 +440,4 @@ if __name__ == "__main__":
                     extra_info[row_type][row_id][row_field]=row_val
                     
 
-        main(metadata,url, extra_info)
+        main(metadata,url,args.bam_from_cram,args.bam_from_cram_reference,extra_info)

@@ -31,7 +31,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.7.1'
+version = '0.8.0'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/data-processing-utility-tools.payload-gen-seq-experiment'
@@ -51,6 +51,8 @@ params.file_info_tsv = "NO_FILE3"
 params.extra_info_tsv = "NO_FILE4"
 params.schema_url = "NO_FILE5"
 params.metadata_payload_json = "NO_FILE6"
+params.converted_files=["NO_FILE7"]
+params.cram_reference="NO_FILE8"
 
 params.expected_output = ""
 
@@ -88,6 +90,8 @@ workflow checker {
     expected_output
     metadata_payload_json
     schema_url
+    converted_files
+    cram_reference
 
   main:
     payloadGenSeqExperiment(
@@ -96,7 +100,9 @@ workflow checker {
       file_info_tsv,
       extra_info_tsv,
       metadata_payload_json,
-      schema_url
+      schema_url,
+      converted_files,
+      cram_reference
     )
 
     file_smart_diff(
@@ -114,6 +120,8 @@ workflow {
     file(params.extra_info_tsv),
     file(params.expected_output),
     file(params.metadata_payload_json),
-    params.schema_url
+    params.schema_url,
+    Channel.fromPath(params.converted_files).collect(),
+    file(params.cram_reference)
   )
 }

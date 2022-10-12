@@ -26,7 +26,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.7.1'
+version = '0.8.0'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/data-processing-utility-tools.payload-gen-seq-experiment'
@@ -52,6 +52,8 @@ params.file_info_tsv = "NO_FILE3"
 params.extra_info_tsv = "NO_FILE4"
 params.schema_url="NO_FILE5"
 params.metadata_payload_json="NO_FILE6"
+params.converted_files=["NO_FILE7"]
+params.cram_reference="NO_FILE8"
 
 process payloadGenSeqExperiment {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -67,6 +69,8 @@ process payloadGenSeqExperiment {
     path extra_info_tsv
     path metadata_payload_json
     val schema_url
+    path converted_files
+    path cram_reference
 
   output:
     path "*.sequencing_experiment.payload.json", emit: payload
@@ -78,6 +82,7 @@ process payloadGenSeqExperiment {
     args_extra_info_tsv = !extra_info_tsv.name.startsWith("NO_FILE") ? "-e ${extra_info_tsv}" : ""
     args_metadata_payload_json= !metadata_payload_json.name.startsWith("NO_FILE") ? "-m ${metadata_payload_json}" : ""
     args_schema_url = !schema_url.startsWith("NO_FILE")  ? "-s ${schema_url}" : ""
+    args_converted_file_args = !cram_reference.startsWith("NO_FILE")  ? "-br ${cram_reference} -b ${converted_files}" : ""
     """
     main.py \
          ${args_experiment_info_tsv} \
@@ -85,10 +90,10 @@ process payloadGenSeqExperiment {
          ${args_file_info_tsv} \
          ${args_extra_info_tsv} \
          ${args_metadata_payload_json} \
-         ${args_schema_url}
+         ${args_schema_url} \
+         ${args_converted_file_args}
     """
 }
-
 
 // this provides an entry point for this main script, so it can be run directly without clone the repo
 // using this command: nextflow run <git_acc>/<repo>/<pkg_name>/<main_script>.nf -r <pkg_name>.v<pkg_version> --params-file xxx
@@ -99,6 +104,8 @@ workflow {
     file(params.file_info_tsv),
     file(params.extra_info_tsv),
     file(params.metadata_payload_json),
-    params.schema_url
+    params.schema_url,
+    Channel.fromPath(params.converted_files).collect(),
+    file(params.cram_reference)
   )
 }
