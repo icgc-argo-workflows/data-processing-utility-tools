@@ -100,7 +100,7 @@
         "original_cram_info": {
           "fileName": "example1.cram",
           "fileSize": 9,
-          "fileM5dsum": "69e5bd0f686feb422ac4592bab5d74af",
+          "filedMd5sum": "69e5bd0f686feb422ac4592bab5d74af",
           "fileType": "CRAM",
           "referenceFileName": "hello.fa"
         }

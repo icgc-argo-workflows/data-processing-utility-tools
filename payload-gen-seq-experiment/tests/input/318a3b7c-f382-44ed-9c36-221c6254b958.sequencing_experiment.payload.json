@@ -100,7 +100,7 @@
         "original_cram_info": {
           "fileName": "example1.cram",
           "fileSize": 9,
-          "fileM5dsum": "69e5bd0f686feb422ac4592bab5d74af",
+          "fileMd5sum": "69e5bd0f686feb422ac4592bab5d74af",
           "fileType": "CRAM",
           "referenceFileName": "hello.fasta"
         }
@@ -121,7 +121,7 @@
         "original_cram_info": {
           "fileName": "example2.cram",
           "fileSize": 11,
-          "fileM5dsum": "4dfbb139c7ee52270157abc5ed3f7842",
+          "fileMd5sum": "4dfbb139c7ee52270157abc5ed3f7842",
           "fileType": "CRAM",
           "referenceFileName": "hello.fasta"
         }
