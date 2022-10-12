@@ -220,7 +220,7 @@ def replace_cram_with_bam(payload,bam_from_cram,bam_from_cram_reference):
                 cram['info']['original_cram_info']={}
                 cram['info']['original_cram_info']['fileName']=cram['fileName']
                 cram['info']['original_cram_info']['fileSize']=cram['fileSize']
-                cram['info']['original_cram_info']['fileM5dsum']=cram['fileMd5sum']
+                cram['info']['original_cram_info']['fileMd5sum']=cram['fileMd5sum']
                 cram['info']['original_cram_info']['fileType']=cram['fileType']
                 cram['info']['original_cram_info']['referenceFileName']=bam_from_cram_reference
                 cram['fileName']=bam
