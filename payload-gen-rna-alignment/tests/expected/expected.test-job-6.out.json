@@ -1,15 +1,15 @@
 {
   "analysisType": {
-    "name": "supplement"
+    "name": "sequencing_alignment"
   },
   "studyId": "TEST-PRO",
   "workflow": {
     "workflow_name": "RNA Seq Alignment",
-    "workflow_version": "0.1.0",
+    "workflow_version": "0.2.0",
     "genome_build": "GRCh38_Verily_v1",
     "genome_annotation": "GENCODE v40",
-    "run_id": "peaceful_lamarr",
-    "session_id": "69bb68a1-8e00-4fca-8919-dd476f8deb53",
+    "run_id": "pedantic_brenner",
+    "session_id": "b65970c3-192f-40dc-99f1-aedba8b987fe",
     "inputs": [
       {
         "analysis_type": "sequencing_experiment",
@@ -19,28 +19,21 @@
   },
   "files": [
     {
-      "fileSize": 1985,
-      "fileMd5sum": "ef7925492346751fe88557acbffef877",
+      "fileSize": 51177,
+      "fileMd5sum": "f1c42eb0bc3aa8dc83cc3acac8632484",
       "fileAccess": "controlled",
       "info": {
-        "data_category": "Supplement",
+        "data_category": "Sequencing Reads",
         "data_subtypes": [
-          null
+          "Transcriptome Alignment"
         ],
         "analysis_tools": [
-          "HiSAT2"
-        ],
-        "files_in_tgz": [
-          "SA001_RG_S01L1_metrics.txt",
-          "SA001_RG_S01L2_metrics.txt",
-          "SA001_RG_S01L1_summary.txt",
-          "SA001_RG_S01L2_summary.txt",
-          "align.log"
+          "STAR"
         ]
       },
-      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20211207.hisat2.supplement.tgz",
-      "fileType": "TGZ",
-      "dataType": "Running Logs"
+      "fileName": "TEST-PRO.DO001.SA001.rna-seq.20221118.star.transcriptome_aln.bam",
+      "fileType": "BAM",
+      "dataType": "Aligned Reads"
     }
   ],
   "samples": [
@@ -67,5 +60,21 @@
     "platform_model": "Polyester",
     "experimental_strategy": "RNA-Seq",
     "sequencing_date": "2021-04-21"
-  }
+  },
+  "read_group_count": 1,
+  "read_groups": [
+    {
+      "submitter_read_group_id": "S01L1",
+      "read_group_id_in_bam": null,
+      "platform_unit": "sim01",
+      "is_paired_end": true,
+      "file_r1": "sample_01_L1_1.fastq.gz",
+      "file_r2": "sample_01_L1_2.fastq.gz",
+      "read_length_r1": 100,
+      "read_length_r2": 100,
+      "insert_size": 250,
+      "sample_barcode": null,
+      "library_name": "sim01"
+    }
+  ]
 }

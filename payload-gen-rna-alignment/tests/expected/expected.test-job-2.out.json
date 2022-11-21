@@ -6,8 +6,8 @@
   "workflow": {
     "workflow_name": "RNA Seq Alignment",
     "workflow_version": "0.1.0",
-    "genome_build": "GRCh38_hla_decoy_ebv",
-    "genome_annotation": "GENCODE v38",
+    "genome_build": "GRCh38_Verily_v1",
+    "genome_annotation": "GENCODE v40",
     "run_id": "focused_shirley",
     "session_id": "09c96e0c-b63f-450a-b5aa-97ba0a4aa4a6",
     "inputs": [
