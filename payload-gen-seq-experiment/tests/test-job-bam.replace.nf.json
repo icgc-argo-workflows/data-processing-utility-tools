@@ -1,0 +1,8 @@
+{
+  "experiment_info_tsv": "input/experiment.v2.tsv",
+  "read_group_info_tsv": "input/read_group.v2.tsv",
+  "file_info_tsv": "input/file.replace.tsv",
+  "expected_output": "input/1c1e4354-b224-4d69-afcb-5be749a183d5.sequencing_experiment.payload.json",
+  "recalculate_size_and_md5_files": ["input/example1.bam"],
+  "publish_dir": "outdir"
+}

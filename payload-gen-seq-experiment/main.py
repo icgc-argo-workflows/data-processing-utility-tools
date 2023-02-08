@@ -234,7 +234,7 @@ def replace_cram_with_bam(payload,bam_from_cram,bam_from_cram_reference):
                     rg['file_r2']=bam
     return(payload)
     
-def main(metadata,url,bam_from_cram,bam_from_cram_reference,extra_info=dict()):
+def main(metadata,url,bam_from_cram,bam_from_cram_reference,recalculate_size_and_md5_files,extra_info=dict()):
     empty_str_to_null(metadata)
 
     payload = {
@@ -362,6 +362,13 @@ def main(metadata,url,bam_from_cram,bam_from_cram_reference,extra_info=dict()):
     if len(bam_from_cram)>0:
         payload=replace_cram_with_bam(payload,bam_from_cram,bam_from_cram_reference)
 
+    if len(recalculate_size_and_md5_files)>=1:
+        for recalculate in recalculate_size_and_md5_files:
+            for file in payload['files']:
+                if file['fileName']==recalculate:
+                    file['fileMd5sum']=calculate_md5(recalculate)
+                    file['fileSize']=calculate_size(recalculate)
+
     validatePayload(payload,url)
     with open("%s.sequencing_experiment.payload.json" % str(uuid.uuid4()), 'w') as f:
         f.write(json.dumps(payload, indent=2))
@@ -385,6 +392,8 @@ if __name__ == "__main__":
                         help="BAM files that have converted from CRAM")
     parser.add_argument("-br", "--bam-from-cram-reference",default=None,
                         help="Name of reference file used in cram2bam conversion")
+    parser.add_argument("-z", "--recalculate-size-and-md5-files",default=[],nargs="+",
+                        help="Supplied files here will have their md5sum and size relcalculated")                        
     args = parser.parse_args()
 
     validate_args(args)
@@ -440,4 +449,4 @@ if __name__ == "__main__":
                     extra_info[row_type][row_id][row_field]=row_val
                     
 
-        main(metadata,url,args.bam_from_cram,args.bam_from_cram_reference,extra_info)
+        main(metadata,url,args.bam_from_cram,args.bam_from_cram_reference,args.recalculate_size_and_md5_files,extra_info)

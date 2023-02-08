@@ -54,6 +54,7 @@ params.schema_url="NO_FILE5"
 params.metadata_payload_json="NO_FILE6"
 params.converted_files=["NO_FILE7"]
 params.cram_reference="NO_FILE8"
+params.recalculate_size_and_md5_files=["NO_FILE9"]
 
 process payloadGenSeqExperiment {
   container "${params.container ?: container[params.container_registry ?: default_container_registry]}:${params.container_version ?: version}"
@@ -71,6 +72,7 @@ process payloadGenSeqExperiment {
     val schema_url
     path converted_files
     path cram_reference
+    path recalculate_size_and_md5_files
 
   output:
     path "*.sequencing_experiment.payload.json", emit: payload
@@ -83,6 +85,7 @@ process payloadGenSeqExperiment {
     args_metadata_payload_json= !metadata_payload_json.name.startsWith("NO_FILE") ? "-m ${metadata_payload_json}" : ""
     args_schema_url = !schema_url.startsWith("NO_FILE")  ? "-s ${schema_url}" : ""
     args_converted_file_args = !cram_reference.startsWith("NO_FILE")  ? "-br ${cram_reference} -b ${converted_files}" : ""
+    args_recalculate_size_and_md5_files = recalculate_size_and_md5_files.empty() ? "" : "-z ${recalculate_size_and_md5_files}"
     """
     main.py \
          ${args_experiment_info_tsv} \
@@ -91,7 +94,8 @@ process payloadGenSeqExperiment {
          ${args_extra_info_tsv} \
          ${args_metadata_payload_json} \
          ${args_schema_url} \
-         ${args_converted_file_args}
+         ${args_converted_file_args} \
+         -z ${recalculate_size_and_md5_files}
     """
 }
 
@@ -106,6 +110,7 @@ workflow {
     file(params.metadata_payload_json),
     params.schema_url,
     Channel.fromPath(params.converted_files).collect(),
-    file(params.cram_reference)
+    file(params.cram_reference),
+    Channel.fromPath(params.recalculate_size_and_md5_files).collect(),
   )
 }

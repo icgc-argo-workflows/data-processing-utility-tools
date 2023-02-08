@@ -53,6 +53,7 @@ params.schema_url = "NO_FILE5"
 params.metadata_payload_json = "NO_FILE6"
 params.converted_files=["NO_FILE7"]
 params.cram_reference="NO_FILE8"
+params.recalculate_size_and_md5_files=["NO_FILE9"]
 
 params.expected_output = ""
 
@@ -92,6 +93,7 @@ workflow checker {
     schema_url
     converted_files
     cram_reference
+    recalculate_size_and_md5_files
 
   main:
     payloadGenSeqExperiment(
@@ -102,7 +104,8 @@ workflow checker {
       metadata_payload_json,
       schema_url,
       converted_files,
-      cram_reference
+      cram_reference,
+      recalculate_size_and_md5_files
     )
 
     file_smart_diff(
@@ -122,6 +125,7 @@ workflow {
     file(params.metadata_payload_json),
     params.schema_url,
     Channel.fromPath(params.converted_files).collect(),
-    file(params.cram_reference)
+    file(params.cram_reference),
+    Channel.fromPath(params.recalculate_size_and_md5_files).collect()
   )
 }
