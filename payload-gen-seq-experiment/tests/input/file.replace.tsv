@@ -1,0 +1,2 @@
+type	name	format	size	md5sum	path
+file	example1.bam	BAM	1	AAAA	input/example1.bam
