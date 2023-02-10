@@ -85,7 +85,6 @@ process payloadGenSeqExperiment {
     args_metadata_payload_json= !metadata_payload_json.name.startsWith("NO_FILE") ? "-m ${metadata_payload_json}" : ""
     args_schema_url = !schema_url.startsWith("NO_FILE")  ? "-s ${schema_url}" : ""
     args_converted_file_args = !cram_reference.startsWith("NO_FILE")  ? "-br ${cram_reference} -b ${converted_files}" : ""
-    args_recalculate_size_and_md5_files = recalculate_size_and_md5_files.empty() ? "" : "-z ${recalculate_size_and_md5_files}"
     """
     main.py \
          ${args_experiment_info_tsv} \
