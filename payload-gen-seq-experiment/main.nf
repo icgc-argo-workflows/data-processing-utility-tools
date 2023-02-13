@@ -26,7 +26,7 @@
 /* this block is auto-generated based on info from pkg.json where   */
 /* changes can be made if needed, do NOT modify this block manually */
 nextflow.enable.dsl = 2
-version = '0.8.1'
+version = '0.8.2'
 
 container = [
     'ghcr.io': 'ghcr.io/icgc-argo-workflows/data-processing-utility-tools.payload-gen-seq-experiment'
@@ -85,7 +85,6 @@ process payloadGenSeqExperiment {
     args_metadata_payload_json= !metadata_payload_json.name.startsWith("NO_FILE") ? "-m ${metadata_payload_json}" : ""
     args_schema_url = !schema_url.startsWith("NO_FILE")  ? "-s ${schema_url}" : ""
     args_converted_file_args = !cram_reference.startsWith("NO_FILE")  ? "-br ${cram_reference} -b ${converted_files}" : ""
-    args_recalculate_size_and_md5_files = recalculate_size_and_md5_files.empty() ? "" : "-z ${recalculate_size_and_md5_files}"
     """
     main.py \
          ${args_experiment_info_tsv} \

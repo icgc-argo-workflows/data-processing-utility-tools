@@ -392,7 +392,7 @@ if __name__ == "__main__":
                         help="BAM files that have converted from CRAM")
     parser.add_argument("-br", "--bam-from-cram-reference",default=None,
                         help="Name of reference file used in cram2bam conversion")
-    parser.add_argument("-z", "--recalculate-size-and-md5-files",default=[],nargs="+",
+    parser.add_argument("-z", "--recalculate-size-and-md5-files",default=[],nargs="*",
                         help="Supplied files here will have their md5sum and size relcalculated")                        
     args = parser.parse_args()
 
