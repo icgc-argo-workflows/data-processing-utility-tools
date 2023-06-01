@@ -1,6 +1,6 @@
 {
     "name": "payload-gen-seq-experiment",
-    "version": "0.8.2",
+    "version": "0.8.3",
     "description": "SONG payload generation for sequencing experiment",
     "main": "main.nf",
     "deprecated": false,
