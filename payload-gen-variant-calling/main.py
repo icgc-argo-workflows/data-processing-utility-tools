@@ -170,12 +170,13 @@ def get_files_info(file_to_upload, wf_short_name,  wf_version, somatic_or_germli
         else:
             sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
-        tar = tarfile.open(file_to_upload)
-        for member in tar.getmembers():
-            if member.name.endswith('.extra_info.json'):
-                f = tar.extractfile(member)
-                extra_info = json.load(f)
-                break
+        ## Disable the population of qc_metrics into payload to avoid the exposure of sensitive info
+        # tar = tarfile.open(file_to_upload)
+        # for member in tar.getmembers():
+        #     if member.name.endswith('.extra_info.json'):
+        #         f = tar.extractfile(member)
+        #         extra_info = json.load(f)
+        #         break
     else:
         sys.exit('Error: unknown file type "%s"' % file_to_upload)
 
