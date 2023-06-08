@@ -45,7 +45,7 @@ TSV_FIELDS['experiment']['core']=[
     'submitter_sample_id','sample_type', 'submitter_matched_normal_sample_id', 'sequencing_center', 
     'platform', 'platform_model','experimental_strategy', 'sequencing_date', 'read_group_count']
 TSV_FIELDS['experiment']["conditional"]=[
-    "library_isolation_protocol","library_preparation_kit",
+    "library_preparation_kit",
     "library_strandedness",
     "rin","dv200",
     "target_capture_kit","number_of_genes","gene_padding","coverage",
