@@ -45,10 +45,12 @@ TSV_FIELDS['experiment']['core']=[
     'submitter_sample_id','sample_type', 'submitter_matched_normal_sample_id', 'sequencing_center', 
     'platform', 'platform_model','experimental_strategy', 'sequencing_date', 'read_group_count']
 TSV_FIELDS['experiment']["conditional"]=[
-    "library_isolation_protocol","library_preparation_kit",
-    "library_strandedness","rin","dv200","spike_ins_included",
-    "spike_ins_fasta","spike_ins_concentration",
-    "target_capture_kit"]
+    "library_preparation_kit",
+    "library_strandedness",
+    "rin","dv200",
+    "target_capture_kit","number_of_genes","gene_padding","coverage",
+    "primary_target_regions","capture_target_regions"
+    ]
 
 TSV_FIELDS['read_group']= {}
 TSV_FIELDS['read_group']["core"]=[
@@ -77,10 +79,10 @@ TSV_FIELDS['file']["conditional"]=list(EGA_FIELDS.keys())
 
 def empty_str_to_null(metadata):
     for k in metadata:
-        if k in ['read_groups', 'files']:
+        if k in ['read_groups', 'files','experiment']:
             for i in range(len(metadata[k])):
                 empty_str_to_null(metadata[k][i])
-        if isinstance(metadata[k], str) and metadata[k] in ["", "_NULL_"]:
+        if isinstance(metadata[k], str) and metadata[k] in ["", "_NULL_","null","NULL","Null","None","NONE","none"]:
             metadata[k] = None
 
 
@@ -146,10 +148,20 @@ def load_all_tsvs(exp_tsv, rg_tsv, file_tsv):
                 rg['is_paired_end'] = None
 
             for field in ('read_length_r1', 'read_length_r2', 'insert_size'):
-                if rg[field]:
+                if isinstance(rg[field],str):
+                    if re.match("^[0-9]+$", rg[field]):
+                        rg[field] = int(rg[field])
+                        continue
+                    for empty_string in ["", "_NULL_",'null',"NULL","Null","None","NONE","none"]:
+                        if rg[field]==empty_string:
+                            rg[field] = None
+                            break
+                elif isinstance(rg[field],int):
                     rg[field] = int(rg[field])
-                else:
+                elif rg[field] is None:
                     rg[field] = None
+                else:
+                    sys.exit("Unrecognnized value '%s' in field %s for '%s'" % (str(rg[field]),field,rg['submitter_read_group_id']))
 
             metadata_dict['read_groups'].append(rg)
 
@@ -262,7 +274,7 @@ def main(metadata,url,bam_from_cram,bam_from_cram_reference,recalculate_size_and
     optional_experimental_fields.remove("rin")
 
     for optional_experimental_field in optional_experimental_fields:
-        if metadata.get(optional_experimental_field):
+        if optional_experimental_field in metadata.keys():
             payload['experiment'][optional_experimental_field]=metadata.get(optional_experimental_field)
     # Int
     optional_experimental_fields=["rin"]
@@ -273,6 +285,12 @@ def main(metadata,url,bam_from_cram,bam_from_cram_reference,recalculate_size_and
     # RNA-seq library_Strandedness requirement check
     if metadata.get('experimental_strategy')=='RNA-Seq' and not metadata.get("library_strandedness"):
         sys.exit(f"'experimental_strategy' 'RNA-Seq' specified but 'library_strandedness' is missing. Resubmit with both values 'experimental_strategy' and 'library_strandedness'")
+
+    # Targetted Sequencing :
+    if metadata.get('experimental_strategy')=="Targeted-Seq" or metadata.get('experimental_strategy')=="WXS":
+        for field in ['target_capture_kit','primary_target_regions','capture_target_regions']:
+            if field not in metadata.keys():
+                sys.exit(f"'experimental_strategy' '%s' specified but '%s' is missing. Resubmit with both values 'experimental_strategy' and '%s'" % (metadata.get('experimental_strategy'),field,field))
 
     # get sample of the payload
     sample = {
